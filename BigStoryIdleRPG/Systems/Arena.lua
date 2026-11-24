@@ -39,7 +39,7 @@ A.DEFENSE_WIN_SCORE = 5
 A.DEFENSE_LOSS_SCORE = -9
 A.WIN_COINS, A.LOSS_COINS = 30, 20
 A.QUICK_BATTLE_CP = 5           -- quick battle needs 5x the opponent's CP
-A.WIN_MEDALS = { 100, 500, 1000, 2000, 3000 }   -- Main Stat +30 each
+-- win medals (100/500/1,000/2,000/3,000 attack wins, Main Stat +30 each) are in Data/Medals.lua
 -- PROVISIONAL: not published
 A.TIME_LIMIT_MS = 60000         -- typical fight ~15 s; time-over is the attacker's loss
 A.LOSS_SCORE = -10
@@ -471,13 +471,10 @@ ns.RegisterSlash("arena", "결투장 상대 찾기(정보 다시 알리기)", fu
     ns.Print("결투장: 주변 애드온 사용자에게 정보를 알렸습니다. 알려진 상대 %d명", #A.Peers())
 end)
 
--- win medals (Main Stat +30 each) and the weekly benefit buff
+-- the weekly benefit buff
 Hero.RegisterStatProvider("arena", function(hero, acc)
     local ar = hero.arena
     if not ar then return end
-    local n = 0
-    for _, need in ipairs(A.WIN_MEDALS) do if (ar.wins or 0) >= need then n = n + 1 end end
-    if n > 0 then acc:Add("MainStat", 30 * n) end
     if ar.buff then
         acc:Add("BonusGoldPercent", ar.buff.gold or 0)
         acc:Add("BonusExpPercent", ar.buff.exp or 0)

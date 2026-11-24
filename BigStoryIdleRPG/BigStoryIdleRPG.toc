@@ -28,6 +28,7 @@ Data\GrowthRewards.lua
 Data\SkinData.lua
 Data\Income.lua
 Data\JobAdvancement.lua
+Data\Medals.lua
 
 Engine\Expr.lua
 Engine\Creature.lua
@@ -62,6 +63,7 @@ Systems\JobAdvance.lua
 Systems\RelocatedRewards.lua
 Systems\Arena.lua
 Systems\Income.lua
+Systems\Medals.lua
 
 
 UI\Widgets.lua
@@ -77,3 +79,4 @@ UI\GrowthPanel.lua
 UI\ContentPanel.lua
 UI\ArenaPanel.lua
 UI\IncomePanel.lua
+UI\MedalPanel.lua

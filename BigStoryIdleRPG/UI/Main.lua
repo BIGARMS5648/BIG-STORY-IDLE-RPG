@@ -143,8 +143,9 @@ function UI.RefreshHeroBar()
     local job = ns.Hero.Job(hero)
     local skin = ns.Skin and ns.Skin.Job(job)
     bar.classIcon.icon:SetTexture(skin and skin.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
-    bar.name:SetText(string.format("%s  |cffffd100Lv.%d|r  %s", hero.name or "", hero.level,
-        skin and skin.display or (job and job.mapleNameKo) or ""))
+    local medal = ns.Medals and ns.Medals.Equipped(hero)
+    bar.name:SetText(string.format("%s%s  |cffffd100Lv.%d|r  %s", medal and ("|cffa335ee<" .. medal.name .. ">|r ") or "",
+        hero.name or "", hero.level, skin and skin.display or (job and job.mapleNameKo) or ""))
     local need = ns.Hero.ExpToNext(hero.level)
     bar.exp:SetValue(need < math.huge and hero.exp / need or 1)
     bar.exp.text:SetText(need < math.huge and string.format("%.2f%%", hero.exp / need * 100) or "MAX")

@@ -14,6 +14,7 @@ lua5.1 tools/test/test_game.lua hero | tail -2
 lua5.1 tools/test/test_progression.lua nightLord | tail -1
 lua5.1 tools/test/test_arena.lua | tail -1
 lua5.1 tools/test/test_income.lua | tail -1
+lua5.1 tools/test/test_medals.lua | tail -1
 lua5.1 tools/test/test_content.lua | tail -1
 lua5.1 tools/test/test_ui.lua 4 | tail -1
 lua5.1 tools/test/test_panels.lua | tail -1

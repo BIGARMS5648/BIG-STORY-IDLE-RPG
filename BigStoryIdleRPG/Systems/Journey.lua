@@ -311,15 +311,23 @@ function J.RerollCost(hero, ch)
     return { meso = info.change.meso, journeyToken = info.change.journeyToken }
 end
 
+-- the trail's special option is on when every slot reaches TR.specialMinGrade
+function J.SpecialActive(t)
+    for i = 1, 3 do if (t.grades[i] or 1) < TR.specialMinGrade then return false end end
+    return true
+end
+
 function J.RerollTrail(hero, ch, rng)
     local t = state(hero).trail.opened[ch]
     if not t then return false, "개방하지 않은 발자취입니다." end
     local ok, err = UP.Pay(hero, J.RerollCost(hero, ch), "journeyReroll")
     if not ok then return false, err end
     rng = UP.rng(rng)
+    local before = J.SpecialActive(t)
     for i = 1, 3 do
         if t.locked ~= i then t.grades[i] = rng:Weighted(TR.gradeOdds, 1000) end
     end
+    if not before and J.SpecialActive(t) and ns.Fire then ns.Fire("JOURNEY_SPECIAL_OPENED", hero, ch) end
     Hero.Changed(hero, "journey")
     return true
 end

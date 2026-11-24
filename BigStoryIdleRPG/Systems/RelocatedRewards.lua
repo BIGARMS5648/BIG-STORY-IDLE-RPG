@@ -23,7 +23,7 @@ R.RAID_WEEKLY_FIRST = {
     zakum = { scrollZakum1 = 9, scrollZakum2 = 4 },
     horntail = { scrollHorntail1 = 9, scrollHorntail2 = 4 },
 }
-R.RAID_MEDAL_FD = 30          -- 길드 레이드 클리어 메달: 최종 데미지 +3% (per boss)
+-- 길드 레이드 클리어 메달 (최종 데미지 +3% per boss) -> Data/Medals.lua (guildRaid); raidMedals marks the clear
 -- 길드 보스 대전 win / lose
 R.RAID_WEEK = { clear = { cubeAdditional = 10, exp = 160, gold = 160 }, tried = { cubeAdditional = 3, exp = 70, gold = 0 } }
 -- 길드 대항전 rank 1..5; PROVISIONAL: monster park stage needed for each rank
@@ -135,11 +135,6 @@ ns.On("CONTENT_FINISHED", function(hero, key, res)
     end
 end)
 
-Hero.RegisterStatProvider("relocatedMedals", function(hero, acc)
-    local s = hero.relocated
-    if not s or not s.raidMedals then return end
-    for _ in pairs(s.raidMedals) do acc:Mult("FinalDamage", R.RAID_MEDAL_FD) end
-end)
 
 -- world boss weekly: bounty rewards + 토벌전 buff, after the normal settlement
 local origSettle = C.WorldBoss and C.WorldBoss.Settle
