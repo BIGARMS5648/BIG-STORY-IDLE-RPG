@@ -15,6 +15,7 @@ ef._scripts.OnEvent(ef, "ADDON_LOADED", "BigStoryIdleRPG")
 local Hero, A = ns.Hero, ns.Arena
 local function strong(hero, lv)
     hero.level = lv
+    hero.jobStep = ns.JobAdvance.StepForLevel(lv)
     hero.masteries = ns.SkillBook.AllMasteriesAt(Hero.Job(hero), lv)
 end
 

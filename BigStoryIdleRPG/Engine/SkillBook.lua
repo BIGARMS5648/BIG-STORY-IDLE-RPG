@@ -34,10 +34,12 @@ function SB.RowLevel(row, level, bonus)
     return math.max(1, 1 + SB.Enhance(step, level) + (bonus.allSkill or 0) + (bonus[step] or 0))
 end
 
-function SB.RowUnlocked(row, level)
+-- jobStep: the hero's job advancement (전직) step; nil = not gated (AI allies, old profiles)
+function SB.RowUnlocked(row, level, jobStep)
     local step = row.JobStep or 0
     if step == 0 then return true end
     if level < (D.SkillRules.stepUnlockLevel[step] or 1) then return false end
+    if jobStep and step > jobStep then return false end
     if row.RequireLevel and level < row.RequireLevel then return false end
     return true
 end
@@ -66,7 +68,8 @@ function SB.MasteryAvailable(job, m, level, learned)
     return true
 end
 
--- hero = { jobKey, level, skillBonus = {allSkill, [1..4]}, masteries = {[MasteryIndex]=true}, disabledActives = {[sid]=true} }
+-- hero = { jobKey, level, jobStep, skillBonus = {allSkill, [1..4]}, masteries = {[MasteryIndex]=true},
+--          disabledActives = {[sid]=true} }
 -- returns skillSet, statAdds (from mastery stat nodes)
 function SB.Build(hero)
     local job = SB.JobByKey(hero.jobKey)
@@ -76,7 +79,7 @@ function SB.Build(hero)
     local set = { levels = {}, passives = {}, actives = {}, masteries = {}, extraPassives = {} }
     local basicStep = -1
     for _, row in ipairs(job.rows) do
-        if SB.RowUnlocked(row, level) then
+        if SB.RowUnlocked(row, level, hero.jobStep) then
             local sid = row.SkillIndex
             set.levels[sid] = SB.RowLevel(row, level, bonus)
             local cat = SB.Category(row)

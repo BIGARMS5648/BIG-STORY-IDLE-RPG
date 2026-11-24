@@ -248,6 +248,7 @@ function H.BuildProfile(hero, opts)
     local set, statAdds = ns.SkillBook.Build({
         jobKey = hero.jobKey,
         level = hero.level,
+        jobStep = hero.jobStep,
         skillBonus = acc.skillBonus or {
             allSkill = acc.adds.AllSkillLevel or 0,
             [1] = acc.adds.JobStep1SkillLevel or 0, [2] = acc.adds.JobStep2SkillLevel or 0,
@@ -261,6 +262,7 @@ function H.BuildProfile(hero, opts)
         name = hero.name,
         jobKey = hero.jobKey,
         level = hero.level,
+        jobStep = hero.jobStep,
         stats = { adds = acc.adds, ratios = acc.ratios, chains = acc.chains, mults = acc.mults },
         skillSet = set,
         companions = acc.companions,

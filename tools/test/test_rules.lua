@@ -74,6 +74,7 @@ check(approx(root2, root * 2, 0.002), "coefficient outside the root")
 -- 2.5 companion attack inheritance cap 90%
 local hero = Hero.New("hero", "T")
 hero.level = 140
+hero.jobStep = 4
 local profile = Hero.BuildProfile(hero)
 local bb = ns.Game.NewBattle(nil, { profile = profile, noSupporters = true })
 local s = ns.Supporters.Spawn(bb, hero, profile, { name = "동료", jobKey = "bishop", jobStep = 4, grade = 5, level = 18,

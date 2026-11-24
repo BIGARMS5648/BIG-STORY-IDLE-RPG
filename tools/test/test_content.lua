@@ -317,6 +317,31 @@ for _, def in ipairs(C.Modes()) do
 end
 check(#C.Modes() >= 17, "modes registered: " .. #C.Modes())
 
+-- 전직 시험: 2차 (collect 30) -> 3차 (clone) -> 4차 (two 13조 bosses); skills above the step stay locked
+do
+    local JA = ns.JobAdvance
+    hero.jobStep = 1
+    local function nActives(step)
+        local set = SB.Build({ jobKey = "hero", level = 140, jobStep = step })
+        return #set.actives + #set.passives
+    end
+    check(nActives(1) < nActives(2) and nActives(2) < nActives(4), "job steps unlock more skills")
+    local p1 = Hero.BuildProfile(hero)
+    check(p1.jobStep == 1, "profile carries the job step")
+    for step = 2, 4 do
+        local nx = JA.Next(hero)
+        check(nx and nx.step == step and nx.ready, "job test " .. step .. " ready")
+        run(JA.Enter(hero))
+        local res = C.LastResult(hero, "jobAdvance")
+        check(res and res.ok and hero.jobStep == step, "job advancement " .. step .. " cleared")
+    end
+    check(JA.Next(hero) == nil, "all job advancements done")
+    local low = Hero.New("paladin", "L")
+    low.level = 29
+    check(not JA.Next(low).ready and not JA.Enter(low), "2nd job test needs Lv30")
+    check(JA.StepForLevel(100) == 4 and JA.StepForLevel(59) == 2, "migration step by level")
+end
+
 print(string.format("content test: %d checks, %d failed, %d errors · Lv %d · wallet: %s", checks, failed, errors,
     hero.level, (function()
         local parts = {}

@@ -27,6 +27,7 @@ Data\Content.lua
 Data\GrowthRewards.lua
 Data\SkinData.lua
 Data\Income.lua
+Data\JobAdvancement.lua
 
 Engine\Expr.lua
 Engine\Creature.lua
@@ -57,6 +58,7 @@ Systems\Content.lua
 Systems\ContentDungeons.lua
 Systems\ContentBosses.lua
 Systems\ContentParty.lua
+Systems\JobAdvance.lua
 Systems\RelocatedRewards.lua
 Systems\Arena.lua
 Systems\Income.lua

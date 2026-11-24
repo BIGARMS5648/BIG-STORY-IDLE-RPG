@@ -9,6 +9,7 @@ local ns = H.ns
 ns.InitDB()
 local hero = ns.Hero.New("bishop")
 hero.level = 120
+hero.jobStep = 4
 local profile = ns.Hero.BuildProfile(hero)
 local got
 ns.Comm.Register("PROFILE", function(sender, payload) got = { sender = sender, p = payload } end)

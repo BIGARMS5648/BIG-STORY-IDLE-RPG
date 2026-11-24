@@ -95,7 +95,9 @@ UI.RegisterPanel("skills", {
         end, function(r, e)
             local hero = ns.Hero.Active()
             r.icon.icon:SetTexture(ns.Skin.SkillIcon(e.row.SkillIndex))
-            local lvText = e.unlocked and ("Lv." .. e.level) or string.format("|cffff6060%d레벨 해금|r", e.unlock)
+            local lvText = e.unlocked and ("Lv." .. e.level)
+                or (e.needJob and string.format("|cffff6060%d차 전직 필요|r", e.needJob))
+                or string.format("|cffff6060%d레벨 해금|r", e.unlock)
             r.name:SetText(string.format("%s  |cffffd100%s|r", ns.Skin.SkillName(e.row.SkillIndex), lvText))
             local s = D.Skills[e.row.SkillIndex]
             local cd = s and s.CoolTimeMs and string.format(" · 재사용 %.0f초", s.CoolTimeMs / 1000) or ""
@@ -120,9 +122,11 @@ UI.RegisterPanel("skills", {
         local job = ns.Hero.Job(hero)
         local list = {}
         for _, row in ipairs(job.rows) do
-            local unlocked = ns.SkillBook.RowUnlocked(row, hero.level)
+            local unlocked = ns.SkillBook.RowUnlocked(row, hero.level, hero.jobStep)
             local unlock = math.max(D.SkillRules.stepUnlockLevel[row.JobStep or 0] or 1, row.RequireLevel or 0)
-            list[#list + 1] = { row = row, unlocked = unlocked, unlock = unlock, cat = ns.SkillBook.Category(row),
+            local needJob = (row.JobStep or 0) > (hero.jobStep or 4) and hero.level >= unlock
+            list[#list + 1] = { row = row, unlocked = unlocked, unlock = unlock, needJob = needJob and row.JobStep,
+                cat = ns.SkillBook.Category(row),
                 level = ns.SkillBook.RowLevel(row, hero.level, {}) }
         end
         p.list:SetData(list)

@@ -69,6 +69,7 @@ ns.UI.Refresh()
 -- a hero with something to do everywhere
 ---------------------------------------------------------------------------
 hero.level = 120
+hero.jobStep = 4
 hero.campaign.maxChapter, hero.campaign.maxStage = 25, 1   -- chapters 1..24 cleared (journey, enchant)
 local function fund()
     for key in pairs(D.Currencies) do
