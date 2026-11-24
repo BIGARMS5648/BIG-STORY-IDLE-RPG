@@ -8,8 +8,8 @@ local BV = {}
 ns.BattleView = BV
 
 local MM_PER_PIXEL = 18          -- battle x (mm) -> screen pixels
-local GROUND_Y = 40              -- ground line from the bottom of the view
-local HERO_SCREEN_X = 0.28       -- hero anchor (fraction of width)
+local GROUND_Y = 150             -- ground line from the bottom of the view (the HUD sits below it)
+local HERO_SCREEN_X = 0.34       -- hero anchor (fraction of width)
 local MAX_MONSTER_MODELS = 14
 
 -- WoW animation ids
@@ -79,52 +79,12 @@ function BV.Create(parent)
         BV.allies[i] = m
     end
 
-    -- boss bar
-    v.bossBar = W.Bar(v, 420, 16, 0.75, 0.1, 0.1)
-    v.bossBar:SetPoint("TOP", 0, -8)
+    -- boss bar (below the stage block of the HUD)
+    v.bossBar = W.Bar(v, 440, 16, 0.85, 0.12, 0.12)
+    v.bossBar:SetPoint("TOP", 0, -132)
     v.bossBar:Hide()
-    v.bossName = W.Text(v.bossBar, 12, W.COLORS.gold, "CENTER")
+    v.bossName = W.Text(v.bossBar, 13, W.COLORS.gold, "CENTER")
     v.bossName:SetPoint("BOTTOM", v.bossBar, "TOP", 0, 2)
-
-    -- hero bars
-    v.heroHp = W.Bar(v, 120, 8, 0.2, 0.85, 0.2)
-    v.heroMp = W.Bar(v, 120, 5, 0.2, 0.45, 1)
-    v.heroHp.text:Hide(); v.heroMp.text:Hide()
-
-    -- stage label + mode + buttons
-    v.stage = W.Text(v, 13, W.COLORS.white, "LEFT")
-    v.stage:SetPoint("TOPLEFT", 10, -8)
-    v.timer = W.Text(v, 13, W.COLORS.orange, "RIGHT")
-    v.timer:SetPoint("TOPRIGHT", -10, -8)
-    v.challenge = W.Button(v, "도전", 70, 22, function()
-        local ok, err = ns.Game.StartChallenge()
-        if not ok and err then W.Toast(err) end
-    end)
-    v.challenge:SetPoint("TOPLEFT", 10, -26)
-    v.auto = CreateFrame("CheckButton", nil, v, "UICheckButtonTemplate")
-    v.auto:SetSize(22, 22)
-    v.auto:SetPoint("LEFT", v.challenge, "RIGHT", 6, 0)
-    v.autoText = W.Text(v, 11, W.COLORS.white, "LEFT")
-    v.autoText:SetPoint("LEFT", v.auto, "RIGHT", 0, 0)
-    v.autoText:SetText("자동 도전")
-    v.auto:SetScript("OnClick", function(self)
-        local hero = ns.Hero.Active()
-        if hero then
-            hero.campaign.autoChallenge = self:GetChecked() and true or false
-            hero.campaign.autoChallengeBlocked = nil
-        end
-    end)
-
-    -- skill bar (active skills with cooldown sweep)
-    v.skills = {}
-    for i = 1, 12 do
-        local b = W.Icon(v, 30)
-        b:SetPoint("BOTTOMLEFT", v, "BOTTOMLEFT", 8 + (i - 1) * 33, 4)
-        b.cd = CreateFrame("Cooldown", nil, b, "CooldownFrameTemplate")
-        b.cd:SetAllPoints()
-        b:Hide()
-        v.skills[i] = b
-    end
 
     -- floating combat text pool
     v.texts = {}
@@ -420,12 +380,6 @@ function BV.OnUpdate(elapsed)
         end
         hero.lastX = hero.x
         safe(BV.heroModel.SetFacing, BV.heroModel, hero.facing > 0 and FACE_RIGHT or FACE_LEFT)
-        v.heroHp:ClearAllPoints()
-        v.heroHp:SetPoint("BOTTOM", v, "BOTTOMLEFT", hx, GROUND_Y + 190)
-        v.heroHp:SetValue(hero.hp / math.max(1, hero:Stat("MaxHp")))
-        v.heroMp:ClearAllPoints()
-        v.heroMp:SetPoint("TOP", v.heroHp, "BOTTOM", 0, -1)
-        v.heroMp:SetValue(hero.mp / math.max(1, hero:Stat("MaxMp")))
     end
 
     -- monsters and people
@@ -484,52 +438,5 @@ function BV.OnUpdate(elapsed)
 end
 
 function BV.RefreshLabels(b)
-    local v = BV.frame
-    local heroSave = ns.Hero.Active()
-    if not heroSave then return end
-    local cp = heroSave.campaign
-    local mode = ns.Game.mode
-    local label
-    if mode == "hunt" then
-        label = ns.Campaign.StageName(cp.chapter, cp.stage)
-    elseif mode == "challenge" or mode == "boss" then
-        local ctl = b.opts.controller
-        label = (mode == "boss" and "보스 " or "도전 ") .. ns.Campaign.StageName(ctl.ch, ctl.st)
-            .. string.format("  (%d/%d)", ctl.killed or 0, ctl.total or 0)
-    else
-        label = b.opts.controller and b.opts.controller.title or ""
-    end
-    v.stage:SetText(label)
-    if b.timeLimit then
-        v.timer:SetText(string.format("%.0f초", math.max(0, (b.timeLimit - b.time) / 1000)))
-    else
-        v.timer:SetText("")
-    end
-    v.auto:SetChecked(cp.autoChallenge)
-    v.challenge:SetEnabled(mode == "hunt")
-    -- skills
-    local hc = b.heroCreature
-    local i = 0
-    if hc and hc.activeList then
-        for _, inst in ipairs(hc.activeList) do
-            i = i + 1
-            local btn = v.skills[i]
-            if not btn then break end
-            btn:Show()
-            local icon = ns.Skin and ns.Skin.SkillIcon and ns.Skin.SkillIcon(inst.id)
-            btn.icon:SetTexture(icon or "Interface\\Icons\\INV_Misc_QuestionMark")
-            local rem = hc.cooldowns[inst.id] or 0
-            local total = ns.Battle.CooldownFor(b, hc, inst)
-            if rem > 0 and total > 0 and GetTime then
-                btn.cd:SetCooldown(GetTime() - (total - rem) / 1000, total / 1000)
-            elseif btn.cd.Clear then
-                btn.cd:Clear()
-            end
-            W.Tooltip(btn, function(tt)
-                tt:AddLine(ns.Skin and ns.Skin.SkillName(inst.id) or tostring(inst.id), 1, 0.82, 0)
-                tt:AddLine(string.format("스킬 레벨 %d · 재사용 %.1f초", inst.level, total / 1000), 1, 1, 1)
-            end)
-        end
-    end
-    for k = i + 1, #v.skills do v.skills[k]:Hide() end
+    if ns.UI and ns.UI.RefreshLive then ns.UI.RefreshLive() end
 end
