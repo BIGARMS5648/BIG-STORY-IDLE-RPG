@@ -92,6 +92,33 @@ hero.masteries = ns.SkillBook.AllMasteriesAt(Hero.Job(hero), 140)
 local p1 = Hero.BuildProfile(hero)
 check(Hero.CombatPower(p1) > cp * 5, "learned masteries multiply combat power")
 
+-- Lv1 stat window (KR screenshot): 공격력 50, 방어력 10, HP 300, MP 500, 크리 데미지 30%, 전투력 232;
+-- 메이플 등급 주 스탯 +5 -> 공격력 55 / 전투력 252, +10 -> 60 / 272
+local fresh = Hero.New("hero", "S")
+fresh.level = 3   -- 10 stat points
+local function sw(h)
+    local pr = Hero.BuildProfile(h)
+    local cc = Hero.ProfileCreature(pr)
+    return cc:Stat("Attack"), cc:Stat("Defence"), cc:Stat("MaxHp"), cc:Stat("MaxMp"), cc:Stat("CriticalPower"),
+        Hero.CombatPower(pr)
+end
+local a0, d0, h0, m0, cr0, cp0 = sw(fresh)
+check(a0 == 50 and d0 == 10 and h0 == 300 and m0 == 500 and cr0 == 300, "Lv1 base stats as in the stat window")
+check(cp0 == 232, "Lv1 combat power 232 (got " .. cp0 .. ")")
+ns.MapleRank.Upgrade(fresh, "main", 5)
+local a5, _, _, _, _, cp5 = sw(fresh)
+check(a5 == 55 and cp5 == 252, "main stat +5 -> attack 55, CP 252 (got " .. a5 .. ", " .. cp5 .. ")")
+ns.MapleRank.Upgrade(fresh, "main", 5)
+local a10, _, _, _, _, cp10 = sw(fresh)
+check(a10 == 60 and cp10 == 272, "main stat +10 -> attack 60, CP 272 (got " .. a10 .. ", " .. cp10 .. ")")
+check(not ns.MapleRank.Upgrade(fresh, "main", 1), "main stat capped at 10/10 in rank 1")
+-- all 28 ranks are completed exactly at Lv140
+local maxed = Hero.New("hero", "M")
+maxed.level = 140
+ns.MapleRank.AutoUpgrade(maxed)
+local stM = ns.MapleRank.State(maxed)
+check(stM.rank == 28 and stM.maxed and stM.pointsFree == 0, "Lv140 completes all 28 ranks with 0 points left")
+
 print(string.format("rules: %d checks, %d failed, errors %d (CP %s, PvP CP %s)", checks, failed, errors,
     ns.U.FormatNumber(cp), ns.U.FormatNumber(pvp)))
 if failed > 0 or errors > 0 then os.exit(1) end

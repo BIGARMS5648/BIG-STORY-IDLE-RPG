@@ -20,6 +20,7 @@ Data\Weapons.lua
 Data\Companions.lua
 Data\Equipment.lua
 Data\Upgrades.lua
+Data\MapleRank.lua
 Data\BaseStats.lua
 Data\RewardTables.lua
 Data\Content.lua
@@ -35,6 +36,7 @@ Engine\SkillBook.lua
 Net\Comm.lua
 
 Systems\Hero.lua
+Systems\MapleRank.lua
 Systems\Weapons.lua
 Systems\Companions.lua
 Systems\Equipment.lua
@@ -64,6 +66,7 @@ UI\Widgets.lua
 UI\Main.lua
 UI\BattleView.lua
 UI\CorePanels.lua
+UI\MapleRankPanel.lua
 UI\SummonPanel.lua
 UI\WeaponPanel.lua
 UI\CompanionPanel.lua
