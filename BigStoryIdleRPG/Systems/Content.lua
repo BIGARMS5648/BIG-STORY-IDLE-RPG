@@ -1,6 +1,7 @@
 -- Content core (던전/보스/길드): shared state, resets, AI allies, battle controller base,
 -- reward granting, score conversion and the mode registry used by UI/ContentPanel.lua.
--- The modes live in Systems/ContentDungeons.lua, ContentBosses.lua, ContentParty.lua, ContentGuild.lua.
+-- The modes live in Systems/ContentDungeons.lua, ContentBosses.lua, ContentParty.lua (guild content removed;
+-- its rewards moved to other content in Systems/RelocatedRewards.lua).
 --
 -- API
 --   ns.Content.RegisterMode(key, def)        -- def = { order, title, group, info(hero, sel) -> lines,
@@ -10,12 +11,11 @@
 --   ns.Content.NewFight(proto, fields)       -> controller (base class C.Fight; proto overrides Setup/Tick/Finish...)
 --   ns.Content.MakeAllies(hero, profile, n, rng) -> list of creature defs (AI party members)
 --   ns.Content.Grant(hero, rewards, reason)  -- {key = n, exp = n, gear = {{code=...}}}; returns display lines
---   ns.Content.ConvertScore(raw, brackets)   -- guild nested-root score conversion
 --   ns.Content.StageReached(hero, ch, st)    -- chapter progress gate (st = 0: chapter boss)
 --   ns.Content.LastResult(hero, key)         -> { ok, reason, lines, at }
 -- Events: "CONTENT_FINISHED"(hero, modeKey, result)
 --
--- Co-op content (party quests, boss raids, guild raids, 마왕 발록 group) is entered SOLO; the empty
+-- Co-op content (party quests, boss raids, 마왕 발록 group) is entered SOLO; the empty
 -- party slots are filled with AI allies generated from the player's own profile (user decision).
 local ADDON, ns = ...
 local U = ns.U
@@ -30,8 +30,6 @@ C.REVIVE_MS = 3000            -- same revive delay as chapter hunting (Systems/C
 -- PROVISIONAL: AI ally strength = player profile x random factor in [MIN, MAX] (flat stats only).
 C.ALLY_STAT_MIN = 0.8
 C.ALLY_STAT_MAX = 1.0
--- PROVISIONAL: guild content needs the player to be in a WoW guild ("길드 = 플레이어의 WoW 길드").
-C.REQUIRE_GUILD = true
 
 C.ALLY_NAMES = { "하늘", "바람", "별빛", "노을", "새벽", "구름", "은하", "단비", "가람", "누리", "다온", "라온",
     "미르", "보라", "솔빛", "아라", "여울", "윤슬", "이든", "한결", "해솔", "초롱", "푸름", "온새" }
@@ -130,19 +128,6 @@ function C.GateText(ch, st)
     return string.format("%d-%d 클리어", ch, st)
 end
 
-function C.InGuild()
-    if not C.REQUIRE_GUILD then return true end
-    if IsInGuild then return IsInGuild() and true or false end
-    return true
-end
-
-function C.GuildName()
-    if GetGuildInfo then
-        local name = GetGuildInfo("player")
-        if name then return name end
-    end
-    return "길드"
-end
 
 ---------------------------------------------------------------------------
 -- Look (WoW skin): ns.Skin.ContentModel(kind, key) -> model, name
@@ -245,9 +230,9 @@ function C.PickPermille(rows, rng, field)
 end
 
 ---------------------------------------------------------------------------
--- Timed buffs from content rewards (EXP / meso %), e.g. 길드 보스 대전 win +16% for 7 days
+-- Timed buffs from content rewards (EXP / meso %), e.g. the weekly boss-raid benefit +16% for 7 days
 ---------------------------------------------------------------------------
--- buff = { id, nameKo, until (epoch s), stats = {StatType = raw} , excludeGuild = bool }
+-- buff = { id, nameKo, until (epoch s), stats = {StatType = raw} }
 function C.AddBuff(hero, buff)
     local list = hero.content.buffs
     for i = #list, 1, -1 do if list[i].id == buff.id then table.remove(list, i) end end
@@ -266,30 +251,9 @@ end
 Hero.RegisterStatProvider("contentBuffs", function(hero, acc)
     if not hero.content then return end
     for _, b in ipairs(C.ActiveBuffs(hero)) do
-        if not (b.excludeGuild and C.buildingGuildProfile) then
-            for stat, v in pairs(b.stats or {}) do acc:Add(stat, v) end
-        end
+        for stat, v in pairs(b.stats or {}) do acc:Add(stat, v) end
     end
 end)
-
----------------------------------------------------------------------------
--- Guild score conversion (19 brackets of nested roots, guild.html)
--- candidate = A + R^(1/n); above cap T: R = (candidate - T)^n, A = T, next bracket.
----------------------------------------------------------------------------
-function C.ConvertScore(raw, brackets)
-    if not raw or raw <= 0 then return 0 end
-    local A, R = 0, raw
-    for _, br in ipairs(brackets) do
-        local cand = A + R ^ (1 / br.n)
-        if br.cap and cand > br.cap then
-            R = (cand - br.cap) ^ br.n
-            A = br.cap
-        else
-            return math.floor(cand)
-        end
-    end
-    return math.floor(A)
-end
 
 -- thresholds = { {min = score, ...row}, ... } sorted best first; returns the first row met
 function C.TierFor(score, rows, field)
@@ -460,9 +424,7 @@ function C.Start(hero, ctl, opts)
     opts.dungeonType = opts.dungeonType or ctl.dungeonType or "Campaign"
     opts.difficulty = opts.difficulty or ctl.difficulty
     opts.noSupporters = opts.noSupporters or ctl.noSupporter
-    if ctl.guildContent then C.buildingGuildProfile = true end
     local okP, prof = pcall(C.ProfileFor, hero)
-    C.buildingGuildProfile = nil
     if not okP then return nil, tostring(prof) end
     opts.profile = opts.profile or prof
     ctl.profile = opts.profile

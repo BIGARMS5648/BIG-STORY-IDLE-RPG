@@ -55,7 +55,7 @@ Systems\Content.lua
 Systems\ContentDungeons.lua
 Systems\ContentBosses.lua
 Systems\ContentParty.lua
-Systems\ContentGuild.lua
+Systems\RelocatedRewards.lua
 Systems\Arena.lua
 Systems\Income.lua
 

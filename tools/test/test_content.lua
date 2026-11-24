@@ -16,7 +16,6 @@ loadIfMissing("Systems/Content.lua", function() return ns.Content end)
 loadIfMissing("Systems/ContentDungeons.lua", function() return ns.Content.Growth end)
 loadIfMissing("Systems/ContentBosses.lua", function() return ns.Content.Raid end)
 loadIfMissing("Systems/ContentParty.lua", function() return ns.Content.PartyQuest end)
-loadIfMissing("Systems/ContentGuild.lua", function() return ns.Content.Guild end)
 loadIfMissing("UI/ContentPanel.lua", function() return ns.UI.panels.content end)
 
 local C = ns.Content
@@ -76,13 +75,6 @@ local function show(key)
     local r = last(key)
     print(string.format("  %-20s %s", key, table.concat(r.lines or { "-" }, " | ")))
 end
-
--- 0. score conversion against the published examples ---------------------------
-local GD = D.ContentGuild
-check(approx(C.ConvertScore(1e8, GD.boss.brackets), 9.585e6, 0.002), "토벌전 1억 -> 958.5만")
-check(approx(C.ConvertScore(1e12, GD.boss.brackets), 2.315e9, 0.002), "토벌전 1조 -> 23.15억")
-check(approx(C.ConvertScore(1e8, GD.league.brackets), 1.2917e6, 0.002), "대항전 1억 -> 129.17만")
-check(approx(C.ConvertScore(1e16, GD.league.brackets), 2.6889e10, 0.002), "대항전 1경 -> 268.89억")
 
 -- 1. AI allies ----------------------------------------------------------------
 local allies = C.MakeAllies(hero, C.profileOverride, 7, U.NewRNG(3))
@@ -241,20 +233,6 @@ local red1, rt = W("redDia"), W("bossRaidTicket")
 Hero.Add(hero, "redDia", 2000)
 check(R.BuyTicket(hero) and W("redDia") == red1 and W("bossRaidTicket") == rt + 1, "raid ticket refill 2000 red")
 
--- 8. guild raids
-local GR = C.GuildRaid
-run(GR.Enter(hero, "zakum"), 600000)
-show("guildRaid_zakum")
-check(GR.Progress(hero, "zakum") > 0, "guild raid zakum damage")
-check(W("scrollZakum1") >= 3, "guild raid cumulative scroll reward")
-run(GR.Enter(hero, "horntail"), 600000)
-show("guildRaid_horntail")
-run(GR.Enter(hero, "pinkbean"), 600000)
-show("guildRaid_pinkbean")
-check(GR.Progress(hero, "pinkbean") > 0, "pink bean guild raid body damage")
-check(hero.content.guildRaid.pinkbean.snapshot and (hero.content.guildRaid.pinkbean.snapshot.seals or 0) > 0,
-    "pink bean statues sealed")
-
 -- 9. 마왕 발록
 local BL = C.Balrog
 local tk = W("balrogTicket")
@@ -282,25 +260,26 @@ run(MP.Enter(hero, 1), 1800000)
 show("monsterPark")
 check(last("monsterPark").ok and W("monsterParkTicket") == mt - 1, "monster park clear uses a ticket")
 
--- 11. guild content
-local GC = C.Guild
-for _, mode in ipairs({ "boss", "league", "match", "training" }) do
-    run(GC.Enter(hero, mode), 400000)
-    show("guild_" .. mode)
-    check((last("guild_" .. mode).score or 0) > 0, "guild " .. mode .. " score")
-end
-run(GC.Enter(hero, "bounty", 1), 200000)
-show("guild_bounty")
-check(hero.content.guild.bounty.score == 100, "bounty first clear hunt score 100")
--- weekly settlement (Monday) + bounty settlement (Sunday)
-local cubes, add, wolf = W("cubeMiracle"), W("cubeAdditional"), W("wolfCoin")
+-- 11. rewards moved from the removed guild content
+local Rl = ns.Relocated
+check(Rl ~= nil and C.Guild == nil and C.GuildRaid == nil, "guild content removed")
+check(D.Currencies.guildCoin == nil and D.Currencies.wolfCoin == nil, "guild coins removed")
+hero.relocated.raidWeek.cleared.zakum = true
+hero.relocated.parkBest = 10
+hero.relocated.trainingPlayed = true
+hero.content.growth.training.max = math.max(hero.content.growth.training.max, 1)
+hero.content.worldBoss.weekBest = 1e30
+local add, cubes, wt2, wbc, stones = W("cubeAdditional"), W("cubeMiracle"), W("weaponTicket"), W("worldBossCoin"), W("subOptionStone")
 clock = clock + 7 * 86400
 Hero.CheckResets(hero)
-check(W("cubeAdditional") > add, "guild boss battle weekly reward")
--- bounty settles Sunday 00:00: score 100 meets the "501~1,000위 (min 100)" row -> 6,800 coins
-check(W("wolfCoin") == wolf + 6800, "bounty weekly rank reward (score 100 -> 6,800 coins)")
-check(#C.ActiveBuffs(hero) > 0, "guild weekly buffs")
-print("  guild settle: " .. table.concat(hero.content.guild.lastSettle and hero.content.guild.lastSettle.lines or {}, ", "))
+check(W("cubeAdditional") >= add + 10, "boss raid week -> 에디셔널 큐브 10 (former 길드 보스 대전)")
+check(W("cubeMiracle") >= cubes + 15, "monster park week -> 미라클 큐브 15 (former 길드 대항전)")
+check(W("weaponTicket") >= wt2 + 100, "용사의 수련장 week -> 무기 소환권 (former 길드 수련장)")
+check(W("worldBossCoin") >= wbc + 14000 and W("subOptionStone") >= stones + 300, "world boss week -> bounty rewards")
+check(#C.ActiveBuffs(hero) > 0, "relocated weekly buffs")
+Hero.Add(hero, "worldBossCoin", 5000)
+check(Rl.BuyWB(hero, 6), "world boss coin shop (최상급 마법 부여 주머니)")
+print("  relocated: " .. table.concat(hero.relocated.lastWeek.lines, ", "))
 
 -- 12. UI panel
 ns.UI.Toggle()
@@ -310,7 +289,7 @@ for _, def in ipairs(C.Modes()) do
     p.current = def.key
     ns.UI.RefreshPanel()
 end
-check(#C.Modes() >= 20, "modes registered: " .. #C.Modes())
+check(#C.Modes() >= 17, "modes registered: " .. #C.Modes())
 
 print(string.format("content test: %d checks, %d failed, %d errors · Lv %d · wallet: %s", checks, failed, errors,
     hero.level, (function()

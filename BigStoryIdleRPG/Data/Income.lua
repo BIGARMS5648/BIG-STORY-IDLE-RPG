@@ -50,8 +50,17 @@ D.WeeklyMission = {
         { need = 20, rewards = { redDia = 3000 } },
         { need = 30, rewards = { redDia = 3000, weaponTicket = 500 } },
         { need = 40, rewards = { redDia = 3500 } },
-        { need = 50, rewards = { redDia = 3500 } },
+        -- + the former guild warehouse / guild shop weekly items (warehouse Lv12 list, research-income §6.3)
+        { need = 50, rewards = { redDia = 3500, weaponStone = 60000, eliteSummonPoint = 1000, spellTrace = 2000,
+            honorMedal = 4000, expBooster50 = 10, starforceScroll = 5, cubeMiracle = 3, memorialScroll = 6,
+            subOptionStone = 200, timeSkip1m = 500 } },
     },
+}
+
+-- usable EXP boosters. PROVISIONAL: durations are not published (30 minutes each).
+D.Boosters = {
+    expBooster = { exp = 1000, seconds = 1800 },
+    expBooster50 = { exp = 500, seconds = 1800 },
 }
 
 -- ad rewards -> one free claim a day each
@@ -82,6 +91,8 @@ D.RedShop = {
 
 -- 14일 특별 미션 (newcomer): 10 weapon tickets per mission + a daily all-clear reward;
 -- 79 missions -> a unique companion. Conditions are parsed by Systems/Income.lua.
+-- The 4 guild missions of the original were replaced (guild content removed): 보스 레이드 클리어,
+-- 몬스터파크 클리어, 용사의 수련장 40 / 50단계.
 D.Newcomer14 = {
     perMission = { weaponTicket = 10 },
     finalAt = 79,
@@ -90,15 +101,15 @@ D.Newcomer14 = {
         { m = { "kill:10000", "dungeon_weapon:15", "summonLv_companion:3", "ability:2", "worldboss:4" }, clear = { companionTicket = 60 } },
         { m = { "kill:10000", "dungeon_gear:15", "enchant:5", "summonLv_weapon:8", "chapterBoss:6" }, clear = { spellTrace = 1500 } },
         { m = { "free:파티 퀘스트 반지 장착", "star:3", "dungeon_weapon:22", "dungeon_exp:20", "worldboss:5" }, clear = { starforceScroll = 6 } },
-        { m = { "free:길드원에게 도움 요청", "arena:5", "summonLv_weapon:9", "summonLv_companion:4", "chapterBoss:8" }, clear = { eliteSummonPoint = 2000 } },
+        { m = { "raidClear:1", "arena:5", "summonLv_weapon:9", "summonLv_companion:4", "chapterBoss:8" }, clear = { eliteSummonPoint = 2000 } },
         { m = { "kill:10000", "dungeon_gear:20", "dungeon_enhance:18", "elite:15", "heroPower:3" }, clear = { honorMedal = 2500 } },
-        { m = { "kill:10000", "worldboss:6", "free:길드 토벌전 참여", "potential:3", "chapterBoss:9" }, clear = { cubeMiracle = 3 } },
+        { m = { "kill:10000", "worldboss:6", "monsterPark:1", "potential:3", "chapterBoss:9" }, clear = { cubeMiracle = 3 } },
         { m = { "kill:10000", "level:60", "elite:16", "summonLv_weapon:10", "summonLv_companion:5" }, clear = { weaponTicket = 250 } },
         { m = { "dungeon_weapon:30", "dungeon_exp:25", "ability:3", "enchant:10", "worldboss:7" }, clear = { companionTicket = 80 } },
         { m = { "kill:20000", "dungeon_gear:30", "dungeon_enhance:25", "star:7", "arenaTier:4" }, clear = { spellTrace = 2500 } },
         { m = { "kill:10000", "potentialGrade:2", "dungeon_weapon:35", "dungeon_exp:30", "free:MP 물약 6단계" }, clear = { starforceScroll = 10 } },
-        { m = { "free:길드 토벌전 1,000만점", "arenaTier:5", "summonLv_weapon:12", "ability:4", "summonLv_companion:6" }, clear = { eliteSummonPoint = 2500 } },
-        { m = { "free:길드 토벌전 1,500만점", "potentialGrade:3", "companionGrade:3", "heroPower:4", "elite:20" }, clear = { honorMedal = 3000 } },
+        { m = { "dungeon_training:40", "arenaTier:5", "summonLv_weapon:12", "ability:4", "summonLv_companion:6" }, clear = { eliteSummonPoint = 2500 } },
+        { m = { "dungeon_training:50", "potentialGrade:3", "companionGrade:3", "heroPower:4", "elite:20" }, clear = { honorMedal = 3000 } },
         { m = { "kill:20000", "dungeon_gear:33", "arenaTier:6", "worldboss:8", "star:10" }, clear = { cubeMiracle = 5 } },
     },
 }

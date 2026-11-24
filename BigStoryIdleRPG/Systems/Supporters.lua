@@ -13,11 +13,11 @@ local SB = ns.SkillBook
 local S = {}
 ns.Supporters = S
 
--- client ratios: weapon/enhancement dungeon 100, world boss / guild content 200
+-- client ratios: weapon/enhancement dungeon 100, world boss 200
 -- PROVISIONAL: the chapter-hunt ratio is not in the extracted data; 100 (6 s) is used.
 S.CONTENT_RATIO = {
     Campaign = 100, WeaponDungeon = 100, EnhancementDungeon = 100, ExpDungeon = 100, GearDungeon = 100,
-    WorldBoss = 200, GuildBoss = 200, GuildLeague = 200,
+    WorldBoss = 200,
 }
 
 -- Skill set for a companion: its job's rows up to its job step (노말 0차 .. 레전드리 4차).

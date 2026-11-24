@@ -590,15 +590,16 @@ def main(argv):
         ("D.ContentGrowth", growth, None),
         ("D.ContentWorldBoss", wb, None),
         ("D.ContentRaids", raids, None),
-        ("D.ContentGuildRaids", graids, None),
+        # guild content was removed (user decision); only the Pink Bean seal mechanics remain,
+        # shared by the normal Pink Bean boss raid
+        ("D.ContentPinkBeanSeal", graids["pinkbean"], None),
         ("D.ContentBalrog", balrog, None),
         ("D.ContentPartyQuests", pq, None),
         ("D.ContentMonsterPark", park, None),
-        ("D.ContentGuild", guild, None),
         ("D.ContentQuickHunt", quick, None),
         ("D.ContentBurning", burning, None),
-    ], note="Content modes (tools/gen_content.py): growth dungeons, world boss, boss raids, guild raids,\n"
-            "마왕 발록, party quests, monster park, guild content, quick hunt. Client 1.18.0 numbers\n"
+    ], note="Content modes (tools/gen_content.py): growth dungeons, world boss, boss raids,\n"
+            "마왕 발록, party quests, monster park, quick hunt (guild content removed). Client 1.18.0 numbers\n"
             "(content.json / combat-stages.json), KR rules (research-progression), drops (items-gacha).\n"
             "Fields named *Provisional are derived placeholders (see Systems/Content.lua).")
     print("ok: growth %d stages, world boss %d levels, raids %d, PQ %d" % (

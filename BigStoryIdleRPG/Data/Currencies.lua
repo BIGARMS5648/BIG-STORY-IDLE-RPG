@@ -48,6 +48,7 @@ D.Currencies = {
     enchantPouchHigh  = { maple = "상급 마법 부여 주머니", name = "상급 마법 부여 주머니", icon = "Interface\\Icons\\INV_Misc_Bag_11", order = 90 },
     enchantPouchTop   = { maple = "최상급 마법 부여 주머니", name = "최상급 마법 부여 주머니", icon = "Interface\\Icons\\INV_Misc_Bag_17", order = 91 },
     quickHuntTicket   = { maple = "빠른 사냥 티켓", name = "빠른 사냥권", icon = "Interface\\Icons\\INV_Misc_PocketWatch_01", order = 40 },
+    expBooster50      = { maple = "경험치 부스터(50%)", name = "작은 경험의 비약", icon = "Interface\\Icons\\INV_Potion_42", order = 41 },
     expBooster        = { maple = "경험치 부스터(100%)", name = "경험의 비약", icon = "Interface\\Icons\\INV_Potion_43", order = 41 },
     burningBooster    = { maple = "버닝 필드 부스터", name = "불타는 전장 부스터", icon = "Interface\\Icons\\Spell_Fire_Fire", order = 42 },
     timeSkip1m        = { maple = "시간 단축 티켓(1분)", name = "시간 단축권(1분)", icon = "Interface\\Icons\\INV_Misc_PocketWatch_02", order = 43 },
@@ -67,9 +68,7 @@ D.Currencies = {
     legendaryArtifactSummon = { maple = "레전드리 유물 소환", name = "전설 유물 소환권", icon = "Interface\\Icons\\INV_Misc_Rune_06", order = 36 },
     worldBossCoin     = { maple = "월드보스 코인", name = "세계 우두머리 주화", icon = "Interface\\Icons\\INV_Misc_Coin_04", order = 70 },
     arenaCoin         = { maple = "아레나 코인", name = "결투장 주화", icon = "Interface\\Icons\\INV_Misc_Coin_05", order = 71 },
-    guildCoin         = { maple = "길드 코인", name = "길드 주화", icon = "Interface\\Icons\\INV_Misc_Coin_06", order = 72 },
     -- Systems/Content*.lua (현상수배 weekly rank / 마왕 발록 challenge boss)
-    wolfCoin          = { maple = "불꽃 늑대 코인", name = "화염 늑대 주화", icon = "Interface\\Icons\\INV_Misc_Coin_07", order = 73 },
     balrogTicket      = { maple = "마왕 발록 입장권", name = "마왕 도전권", icon = "Interface\\Icons\\INV_Misc_Key_15", order = 59 },
 }
 

@@ -89,6 +89,21 @@ UI.RegisterPanel("income", {
                 rows[#rows + 1] = { "매일 무료: " .. f.text, fc[f.id] and "완료" or "받기", not fc[f.id],
                     function() act(I.ClaimFree, hero, f.id) end }
             end
+            for _, key in ipairs({ "expBooster", "expBooster50" }) do
+                local n = ns.Hero.Count(hero, key)
+                local active = hero.expBoosterBuff and ns.U.Now() < (hero.expBoosterBuff.untilTime or 0)
+                rows[#rows + 1] = { string.format("부스터: %s 보유 %d%s", D.CurrencyName(key), n,
+                    active and "  |cff40ff40(사용 중)|r" or ""), "사용", n > 0, function() act(I.UseBooster, hero, key) end }
+            end
+            if ns.Relocated and D.WorldBossShop then
+                local s2 = hero.relocated or {}
+                for i, r in ipairs(D.WorldBossShop) do
+                    local lim = r.weekly and string.format("주 %d/%d", (s2.wbShopWeek or {})[i] or 0, r.weekly)
+                        or (r.perChar and string.format("%d/%d", (s2.wbShopTotal or {})[i] or 0, r.perChar)) or "∞"
+                    rows[#rows + 1] = { string.format("월드보스 상점: %s  %s  (%s)", r.name, (W.Money("worldBossCoin", r.price)), lim),
+                        "구매", true, function() act(ns.Relocated.BuyWB, hero, i) end }
+                end
+            end
             for i, r in ipairs(D.RedShop) do
                 local bought = hero.income.weekShop[i] or 0
                 local unlocked = I.ShopUnlocked(hero, r)

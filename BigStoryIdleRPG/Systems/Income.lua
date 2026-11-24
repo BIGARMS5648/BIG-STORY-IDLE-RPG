@@ -103,6 +103,14 @@ ns.On("POTENTIAL_ROLLED", function(hero, item)
 end)
 ns.On("STARFORCE_RESULT", function(hero, item) if item then setMax(hero, "star", item.star) end end)
 ns.On("STAGE_CLEARED", function(hero, ch, st, kind) if kind == "boss" then setMax(hero, "chapterBoss", ch) end end)
+ns.On("BOSS_RAID_CLEARED", function(hero)
+    setMax(hero, "raidClear", (hero.income.progress.raidClear or 0) + 1)
+end)
+ns.On("CONTENT_FINISHED", function(hero, key, res)
+    if key == "monsterPark" and res and res.ok then
+        setMax(hero, "monsterPark", (hero.income.progress.monsterPark or 0) + 1)
+    end
+end)
 
 ---------------------------------------------------------------------------
 -- daily / weekly missions
@@ -250,6 +258,21 @@ function I.ClaimFree(hero, id)
     end
     return false, "알 수 없는 보상"
 end
+
+-- wallet EXP boosters (경험치 부스터 100% / 50%); a new one replaces the running one
+function I.UseBooster(hero, key)
+    local b = D.Boosters[key]
+    if not b then return false end
+    if not Hero.Spend(hero, key, 1, "booster") then return false, D.CurrencyName(key) .. "이(가) 없습니다." end
+    hero.expBoosterBuff = { untilTime = U.Now() + b.seconds, exp = b.exp }
+    Hero.Changed(hero, "booster")
+    return true
+end
+
+Hero.RegisterStatProvider("expBoosterItem", function(hero, acc)
+    local b = hero.expBoosterBuff
+    if b and U.Now() < (b.untilTime or 0) then acc:Add("BonusExpPercent", b.exp or 0) end
+end)
 
 Hero.RegisterStatProvider("booster", function(hero, acc)
     local b = hero.booster

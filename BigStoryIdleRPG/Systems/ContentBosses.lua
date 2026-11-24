@@ -2,7 +2,7 @@
 -- Numbers: Data/Content.lua (client 1.18.0 boss.html tables, KR rules research-progression §10-§11,
 -- research-income §2.14 / §3.8 / §6.1 / §6.4, drops items-gacha dropTables).
 --
--- Party content is entered solo: party mode = player + 3 AI allies, guild raids = player + 7 AI allies,
+-- Party content is entered solo: party mode = player + 3 AI allies,
 -- 마왕 발록 group = player + 3 AI allies (group size PROVISIONAL).
 --
 -- API
@@ -10,7 +10,6 @@
 --   ns.Content.Raid:      R.Enter(hero, boss, diffIndex, mode ("party"|"single"), { challenge, double })
 --                         R.Sweep(hero, boss, diffIndex, double) ; R.Entries(hero, boss) ; R.BuyTicket(hero)
 --                         R.RollReward(boss, diffIndex, rng) -> rewards
---   ns.Content.GuildRaid: GR.Enter(hero, key) ; GR.Progress(hero, key) -> pct
 --   ns.Content.Balrog:    BL.Enter(hero, stage)
 local ADDON, ns = ...
 local U = ns.U
@@ -201,10 +200,10 @@ C.RegisterMode("worldBoss", {
 })
 
 ---------------------------------------------------------------------------
--- Multi-part boss fight shared by boss raids and guild raids
+-- Multi-part boss fight (boss raids)
 ---------------------------------------------------------------------------
 -- spec = { kind = "zakum"|"horntail"|"pinkbean", primary, part, partCount, atk, def, avoid, hit,
---          persist = table (guild raid: remaining HP per target), statues..., names }
+--          persist = table (remaining HP per target carried over), statues..., names }
 local PartFight = C.Proto()
 C.PartFight = PartFight
 
@@ -346,7 +345,7 @@ function PartFight:TickPinkBean(b, dt)
     if self.bodyAppearAt and b.time >= self.bodyAppearAt and body.untargetable then
         body.untargetable = nil
     end
-    -- guild raid: body damage reduction 0% at 100% HP rising to 95% at 5% HP (re-evaluated every 0.5 s),
+    -- Pink Bean body damage reduction 0% at 100% HP rising to 95% at 5% HP (re-evaluated every 0.5 s),
     -- groggy: damage taken x(2 - reduction) for 10 s
     if sp.bodyReduction and body.alive and (not self.nextRed or b.time >= self.nextRed) then
         self.nextRed = b.time + (sp.bodyReductionCheckMs or 500)
@@ -517,9 +516,9 @@ function R.Spec(boss, diffIndex, mode)
         spec.statueBaseHp = m.part
         spec.statues = b.statues
         spec.firstWakeHpRatio = b.firstWakeHpRatio
-        local gp = D.ContentGuildRaids.pinkbean
-        -- seal mechanics shared with the guild version (PROVISIONAL for the normal raid: growth / heal
-        -- values are published for the guild raid; the normal raid notes "이후 체력 변화·회복" too)
+        local gp = D.ContentPinkBeanSeal
+        -- seal mechanics (PROVISIONAL for the normal raid: the growth / heal values were published for
+        -- the former guild raid; the normal raid notes "이후 체력 변화·회복" too)
         spec.statueHpGrowth = gp.statueHpGrowth
         spec.healOnSealMin, spec.healOnSealMax = gp.healOnSealMin, gp.healOnSealMax
         spec.sealSec, spec.bodyAppearMs = gp.sealSec, gp.bodyAppearMs
@@ -636,150 +635,6 @@ for i, boss in ipairs(R.BOSSES) do
             { label = "소탕", fn = function(hero, sel) return R.Sweep(hero, boss, sel.diff or 1, sel.double) end },
             { label = "입장권 충전", fn = function(hero) return R.BuyTicket(hero) end },
         },
-    })
-end
-
----------------------------------------------------------------------------
--- Guild raids (8 members -> player + 7 AI allies). Cumulative damage and the boss HP are shared by
--- the guild for the week (here: the player's own attempts accumulate, reset Monday 00:00).
----------------------------------------------------------------------------
-local GR = {}
-C.GuildRaid = GR
-local GRD = D.ContentGuildRaids
-GR.KEYS = { "zakum", "horntail", "pinkbean" }
--- PROVISIONAL: weekly attempts per guild raid are not in the data.
-GR.WEEKLY_ENTRIES = 3
-
-C.RegisterState("guildRaid", {
-    init = function(hero, ct)
-        ct.guildRaid = ct.guildRaid or {}
-        for _, k in ipairs(GR.KEYS) do
-            ct.guildRaid[k] = ct.guildRaid[k] or { damage = 0, used = 0, claimed = {}, snapshot = nil }
-        end
-    end,
-    weekly = function(hero, ct)
-        for _, k in ipairs(GR.KEYS) do ct.guildRaid[k] = { damage = 0, used = 0, claimed = {}, snapshot = nil } end
-    end,
-})
-
-function GR.Total(key)
-    local g = GRD[key]
-    if key == "pinkbean" then return g.body.hp end
-    return g.visibleTotal
-end
-
-function GR.Progress(hero, key)
-    return math.min(100, hero.content.guildRaid[key].damage / GR.Total(key) * 100)
-end
-
-local GRFight = setmetatable({}, { __index = PartFight })
-GRFight.__index = GRFight
-
-function GRFight:Finish(b, reason)
-    local hero = self.hero
-    local st = hero.content.guildRaid[self.key]
-    local g = GRD[self.key]
-    -- damage counted toward the guild total: body damage for 핑크빈, every part for 자쿰/혼테일
-    local dealt = 0
-    if self.key == "pinkbean" then
-        dealt = self.body and (self.body.damageTaken or 0) or 0
-    else
-        dealt = self.damage
-    end
-    st.damage = st.damage + dealt
-    st.snapshot = self:Snapshot()
-    local pct = GR.Progress(hero, self.key)
-    local rewards = {}
-    for _, r in ipairs(g.damageRewards or {}) do
-        if pct >= r.pct and not st.claimed[r.pct] then
-            st.claimed[r.pct] = true
-            C.AddReward(rewards, r.key, r.n)
-        end
-    end
-    local lines = C.Grant(hero, rewards, "guildRaid")
-    if self.key == "pinkbean" then
-        lines[#lines + 1] = "|cff999999핑크빈 길드레이드 보상은 원본 데이터 미공개|r"
-    end
-    return C.Result(true, reason, string.format("%s 길드레이드 %s · 피해 %s · 누적 %.1f%%", g.nameKo,
-        C.REASON_KO[reason] or reason, F(dealt), pct), lines, { rewards = rewards })
-end
-
-function GR.CanEnter(hero, key)
-    if not C.InGuild() then return false, "길드에 가입해야 합니다." end
-    local st = hero.content.guildRaid[key]
-    if st.used >= GR.WEEKLY_ENTRIES then return false, "이번 주 입장 횟수를 모두 사용했습니다." end
-    if key == "pinkbean" then
-        local cl = hero.content.raids.pinkbean.cleared
-        if not (cl[2] or cl[3]) then return false, GRD.pinkbean.unlockKo .. " 후 입장할 수 있습니다." end
-    end
-    if GR.Progress(hero, key) >= 100 then return false, "이번 주 레이드를 완료했습니다." end
-    return true
-end
-
-function GR.Enter(hero, key)
-    local ok, err = GR.CanEnter(hero, key)
-    if not ok then return nil, err end
-    local g = GRD[key]
-    local st = hero.content.guildRaid[key]
-    st.used = st.used + 1
-    local members = g.members
-    local spec
-    if key == "pinkbean" then
-        spec = { kind = "pinkbean", nameKo = g.nameKo, bodyHp = g.body.hp, atk = g.body.atk, def = g.body.def,
-            hit = g.body.hit, bodyHit = g.body.hit, avoid = g.body.avoid, statues = g.statues,
-            statueBaseHp = g.statueBaseHp, firstWakeHpRatio = g.firstWakeHpRatio, statueHpGrowth = g.statueHpGrowth,
-            healOnSealMin = g.healOnSealMin, healOnSealMax = g.healOnSealMax, sealSec = g.sealSec,
-            bodyAppearMs = g.bodyAppearMs, groggySec = g.groggySec, sealBuffs = g.sealBuffs,
-            bodyReduction = g.bodyReduction, bodyReductionMaxPct = g.bodyReductionMaxPct,
-            bodyReductionCheckMs = g.bodyReductionCheckMs, persist = st.snapshot }
-    else
-        spec = { kind = key, nameKo = g.nameKo, primary = g.primary, part = g.part, partCount = g.partCount,
-            atk = g.atk, def = g.def, avoid = g.avoid, partLabelShort = R.PART_SHORT[key], persist = st.snapshot }
-    end
-    local _, _, bg = C.Look("raids", key)
-    local ctl = C.NewFight(GRFight, {
-        kind = "guildRaid", modeKey = "guildRaid_" .. key, key = key, spec = spec, allies = members - 1,
-        timeLimit = g.time * 1000, guildContent = true,
-        teamDeaths = g.teamDeaths or (g.revivesBase + g.revivesPerMember * members),
-        perUserDeaths = g.perUserDeaths, dungeonType = "GuildRaid", noSupporter = key == "pinkbean",
-        background = bg, baseTitle = g.nameKo .. " 길드레이드",
-    })
-    ctl.title = ctl.baseTitle
-    local b, err = C.Start(hero, ctl)
-    if not b then st.used = st.used - 1 end
-    return b, err
-end
-
-for i, key in ipairs(GR.KEYS) do
-    local g = GRD[key]
-    C.RegisterMode("guildRaid_" .. key, {
-        order = 60 + i, group = "길드", title = g.nameKo .. " 길드레이드",
-        info = function(hero)
-            local st = hero.content.guildRaid[key]
-            local lines = {
-                string.format("%s · 길드원 %d명 (나 + AI %d명) · %d초 · 사망 %s", C.GuildName(), g.members, g.members - 1,
-                    g.time, g.teamDeaths and string.format("팀 %d회 / 1인 %d회", g.teamDeaths, g.perUserDeaths)
-                        or string.format("기본 %d + 인원당 %d회", g.revivesBase, g.revivesPerMember)),
-                string.format("이번 주 누적 피해 %s / %s (%.1f%%) · 입장 %d/%d", F(st.damage), F(GR.Total(key)),
-                    GR.Progress(hero, key), st.used, GR.WEEKLY_ENTRIES),
-            }
-            if key == "pinkbean" then
-                lines[#lines + 1] = string.format("본체 HP %s · 석상 5기 (봉인 시 버프, 다른 석상 회복) · %s 필요",
-                    F(g.body.hp), g.unlockKo)
-            else
-                lines[#lines + 1] = string.format("%s %s · %s %s ×%d · 공격력 %s · 방어력 %s", g.primaryLabel,
-                    F(g.primary), g.partLabel, F(g.part), g.partCount, F(g.atk), F(g.def))
-                local parts = {}
-                for _, r in ipairs(g.damageRewards) do
-                    parts[#parts + 1] = string.format("%d%% %s %d%s", r.pct, D.CurrencyName(r.key), r.n,
-                        st.claimed[r.pct] and "✓" or "")
-                end
-                lines[#lines + 1] = "누적 보상: " .. table.concat(parts, ", ")
-            end
-            lines[#lines + 1] = "|cff999999주간 입장 횟수는 임시값|r"
-            return lines
-        end,
-        actions = { { label = "입장", fn = function(hero) local b, e = GR.Enter(hero, key); return b ~= nil, e end } },
     })
 end
 

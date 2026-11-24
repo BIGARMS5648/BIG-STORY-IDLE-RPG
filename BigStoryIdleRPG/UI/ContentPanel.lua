@@ -1,5 +1,5 @@
 -- "던전/보스" tab: every content mode registered with ns.Content.RegisterMode (growth dungeons, quick hunt,
--- burning field, world boss, 마왕 발록, boss raids, party quests, monster park, guild raids, guild content).
+-- burning field, world boss, 마왕 발록, boss raids, party quests, monster park).
 -- Left: mode list grouped by category. Right: info lines, stage / difficulty selectors, action buttons,
 -- last result + rewards.
 local ADDON, ns = ...
