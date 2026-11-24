@@ -165,8 +165,10 @@ check(Q.Use(hero), "quick hunt free")
 check(Q.Kills(hero) == 1005, "quick hunt +5 per use")
 check(Q.Use(hero), "quick hunt ad->free")
 Hero.Add(hero, "redDia", 600)
+local red0 = W("redDia")
 check(Q.Use(hero), "quick hunt red 500")
-check(W("redDia") == 100, "quick hunt cost 500 red")
+check(W("redDia") == red0 - 500 + (last("quickHunt").rewards.redDia or 0), "quick hunt cost 500 red")
+Hero.Spend(hero, "redDia", W("redDia"))
 check(not Q.Use(hero, "red"), "second red use needs 750")
 show("quickHunt")
 nextDay(1)
@@ -235,8 +237,9 @@ Hero.CheckResets(hero)
 Stub.RunTimers()
 check(R.Entries(hero, "zakum") == 2 and R.Entries(hero, "pinkbean") == 2, "weekly raid entries 2 per boss")
 check(W("bossRaidTicket") >= 2, "weekly shared raid tickets")
+local red1, rt = W("redDia"), W("bossRaidTicket")
 Hero.Add(hero, "redDia", 2000)
-check(R.BuyTicket(hero) and W("redDia") == 0, "raid ticket refill 2000 red")
+check(R.BuyTicket(hero) and W("redDia") == red1 and W("bossRaidTicket") == rt + 1, "raid ticket refill 2000 red")
 
 -- 8. guild raids
 local GR = C.GuildRaid
@@ -294,7 +297,8 @@ local cubes, add, wolf = W("cubeMiracle"), W("cubeAdditional"), W("wolfCoin")
 clock = clock + 7 * 86400
 Hero.CheckResets(hero)
 check(W("cubeAdditional") > add, "guild boss battle weekly reward")
-check(W("wolfCoin") == wolf + 6600, "bounty weekly rank reward (score 100 -> 6,600 coins)")
+-- bounty settles Sunday 00:00: score 100 meets the "501~1,000위 (min 100)" row -> 6,800 coins
+check(W("wolfCoin") == wolf + 6800, "bounty weekly rank reward (score 100 -> 6,800 coins)")
 check(#C.ActiveBuffs(hero) > 0, "guild weekly buffs")
 print("  guild settle: " .. table.concat(hero.content.guild.lastSettle and hero.content.guild.lastSettle.lines or {}, ", "))
 

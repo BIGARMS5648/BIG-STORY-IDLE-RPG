@@ -560,8 +560,6 @@ def check_income(path, balrog, guild):
         assert row["cubeMiracle"] == ref[2]
     for row, ref in zip(guild["bounty"]["weekly"], inc["guild"]["bountyWeekly"]):
         assert row["min"] == ref[1]
-    for row, ref in zip(inc["worldBoss"]["tierRewards_after_0922"], []):
-        pass
     print("research-income cross-check ok")
 
 

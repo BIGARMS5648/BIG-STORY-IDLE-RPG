@@ -537,9 +537,14 @@ function Q.Options(hero)
 end
 
 function Q.Rewards(hero, kills)
+    -- highest hunting stage reached (the chapter boss stage has no hunting field)
     local cp = hero.campaign
     local ch, st = cp.maxChapter, cp.maxStage
     local sd = ns.Campaign.StageData(ch, st)
+    while st > 1 and not (sd and sd.hunt) do
+        st = st - 1
+        sd = ns.Campaign.StageData(ch, st)
+    end
     if not sd or not sd.hunt then ch, st, sd = ns.Campaign.Stage(hero) end
     if not sd then return {} end
     -- highest stage reached; EXP / meso / drop boosts are not applied (deterministic like offline)
@@ -590,8 +595,8 @@ C.RegisterMode("quickHunt", {
         local o = Q.Options(hero)
         local cp = hero.campaign
         return {
-            string.format("다음 사용: %s마리 처치 (최고 도달 %s 기준, 부스터·경험치%% 미적용)", U.Comma(Q.Kills(hero)),
-                ns.Campaign.StageName(cp.maxChapter, cp.maxStage)),
+            string.format("다음 사용: %s마리 처치 (최고 도달 사냥터 %s 기준, 부스터·경험치%% 미적용)",
+                U.Comma(Q.Kills(hero)), ns.Campaign.StageName(cp.maxChapter, cp.maxStage)),
             string.format("무료 %d회 · 추가 무료 %d회 · 티켓 %d장 · 레드 다이아 구매 %d회 남음%s", o.free, o.ad, o.ticket,
                 o.redLeft, o.red and string.format(" (다음 %s)", U.Comma(o.red)) or ""),
             "사용할 때마다 처치 수 +5 (최대 3,000)",
