@@ -521,6 +521,7 @@ function E.EliteSummon(hero)
     local row = eliteRow(el.level)
     H.Spend(hero, "eliteSummonPoint", row.cost, "eliteSummon")
     el.summons = (el.summons or 0) + 1
+    ns.Fire("ELITE_SUMMONED", hero, el.level)
     return { level = el.level, creature = row.creature, drops = row.drops, cost = row.cost }
 end
 

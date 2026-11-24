@@ -1,4 +1,4 @@
--- 보상 panel: daily missions, weekly gauge, daily pass, attendance, free claims,
+-- 보상 panel: daily / weekly missions, daily pass, attendance, free claims,
 -- red-diamond shop, 14-day newcomer missions.
 local ADDON, ns = ...
 local W = ns.W
@@ -18,7 +18,28 @@ local function act(fn, ...)
     UI.RefreshPanel()
 end
 
-local SECTIONS = { "미션", "패스·출석", "무료·상점", "신규 14일" }
+local SECTIONS = { "일일 미션", "주간 미션", "패스·출석", "무료·상점", "신규 14일" }
+
+-- rows of the 미션 window: clear header, the missions, 일괄 수령
+local function missionRows(rows, hero, weekly)
+    local I = ns.Income
+    local list, done = (weekly and I.WeeklyMissions or I.DailyMissions)(hero)
+    local clear = weekly and D.WeeklyMissionClear or D.DailyMissionClear
+    local claimed = (weekly and hero.income.week.claimed or hero.income.dayClaimed).__clear
+    local text = string.format("%s 미션 클리어 (%d/%d)  %s", weekly and "주간" or "일일", math.min(done, clear.need),
+        clear.need, rewardText(clear.rewards))
+    if clear.relocated then text = text .. "  |cffa0a0a0+ 구 길드 보상|r" end
+    rows[#rows + 1] = { text, claimed and "완료" or (done >= clear.need and "보상수령" or "진행 중"),
+        not claimed and done >= clear.need,
+        function() act(weekly and I.ClaimWeeklyClear or I.ClaimDailyClear, hero) end }
+    for _, m in ipairs(list) do
+        rows[#rows + 1] = { string.format("   %s  (%s/%s)  %s", m.def.text, U.Comma(m.progress), U.Comma(m.def.goal),
+            rewardText(m.def.rewards)), m.claimed and "완료" or (m.done and "보상수령" or "진행 중"),
+            m.done and not m.claimed,
+            function() act(weekly and I.ClaimWeeklyMission or I.ClaimMission, hero, m.def.id) end }
+    end
+    rows[#rows + 1] = { "", "일괄 수령", true, function() act(I.ClaimAllMissions, hero, weekly) end }
+end
 
 UI.RegisterPanel("income", {
     title = "보상", order = 3,
@@ -52,22 +73,9 @@ UI.RegisterPanel("income", {
         local I = ns.Income
         local rows = {}
         local sec = p.section
-        if sec == 1 then
-            local list, done = I.DailyMissions(hero)
-            for _, m in ipairs(list) do
-                rows[#rows + 1] = { string.format("%s  (%d/%d)  %s", string.format(m.def.text, m.def.goal), m.progress,
-                    m.def.goal, rewardText(m.def.rewards)), m.claimed and "완료" or "받기", not m.claimed and m.done,
-                    function() act(I.ClaimMission, hero, m.def.id) end }
-            end
-            rows[#rows + 1] = { string.format("일일 미션 클리어 (%d/%d)  %s", done, D.DailyMissionClear.need,
-                rewardText(D.DailyMissionClear.rewards)), "받기", true, function() act(I.ClaimDailyClear, hero) end }
-            local wk = hero.income.week
-            for i, st in ipairs(D.WeeklyMission.stages) do
-                rows[#rows + 1] = { string.format("주간 미션 %d단계 (%d/%d)  %s", i, math.min(wk.points, st.need), st.need,
-                    rewardText(st.rewards)), wk.claimed[i] and "완료" or "받기", not wk.claimed[i] and wk.points >= st.need,
-                    function() act(I.ClaimWeekly, hero, i) end }
-            end
-        elseif sec == 2 then
+        if sec == 1 or sec == 2 then
+            missionRows(rows, hero, sec == 2)
+        elseif sec == 3 then
             local kills, reached, claimed = I.PassState(hero)
             local nextStep = D.DailyPass[reached + 1]
             rows[#rows + 1] = { string.format("데일리 패스: 오늘 처치 %s · %d/%d단계 달성 (다음 %s마리)", U.Comma(kills), reached,
@@ -83,7 +91,7 @@ UI.RegisterPanel("income", {
                     rows[#rows + 1] = { string.format("   %d일차: %s", i, (W.Money(d[1], d[2]))), "", false, nil }
                 end
             end
-        elseif sec == 3 then
+        elseif sec == 4 then
             local fc = hero.income.freeClaimed
             for _, f in ipairs(D.FreeDaily) do
                 rows[#rows + 1] = { "매일 무료: " .. f.text, fc[f.id] and "완료" or "받기", not fc[f.id],

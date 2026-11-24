@@ -4,8 +4,10 @@
 --
 -- API
 --   ns.Income.Track(hero, key, n)               -- progress counters (kill, summon_weapon, dungeon, ...)
---   ns.Income.DailyMissions(hero)               -> { {def, progress, done, claimed}, ... }, clearCount
---   ns.Income.ClaimMission(hero, id) / ClaimDailyClear(hero) / ClaimWeekly(hero, stage)
+--   ns.Income.DailyMissions(hero) / WeeklyMissions(hero) -> { {def, progress, done, claimed}, ... }, claimedCount
+--   ns.Income.ClaimMission(hero, id) / ClaimDailyClear(hero)
+--   ns.Income.ClaimWeeklyMission(hero, id) / ClaimWeeklyClear(hero)
+--   ns.Income.ClaimAllMissions(hero, weekly)     -- 일괄 수령 (missions, then the clear reward)
 --   ns.Income.PassState(hero) / ClaimPass(hero)  -> claims every reached step
 --   ns.Income.AttendanceState(hero) / ClaimAttendance(hero)
 --   ns.Income.ClaimFree(hero, id)
@@ -32,7 +34,7 @@ Hero.RegisterSystem("income", {
         s.dayClaimed = s.dayClaimed or {}
         s.passClaimed = s.passClaimed or 0
         s.freeClaimed = s.freeClaimed or {}
-        s.week = s.week or { points = 0, claimed = {} }
+        if not (s.week and s.week.count) then s.week = { count = {}, claimed = {} } end
         s.weekShop = s.weekShop or {}
         s.shopOnce = s.shopOnce or {}
         s.att = s.att or { month = monthIndex(), claimedDays = 0, lastDay = -1 }
@@ -46,7 +48,7 @@ Hero.RegisterSystem("income", {
     end,
     weekly = function(hero)
         local s = hero.income
-        s.week = { points = 0, claimed = {} }
+        s.week = { count = {}, claimed = {} }
         s.weekShop = {}
     end,
 })
@@ -56,8 +58,10 @@ Hero.RegisterSystem("income", {
 ---------------------------------------------------------------------------
 function I.Track(hero, key, n)
     if not (hero and hero.income) then return end
-    local d = hero.income.day
-    d[key] = (d[key] or 0) + (n or 1)
+    n = n or 1
+    local d, w = hero.income.day, hero.income.week.count
+    d[key] = (d[key] or 0) + n
+    w[key] = (w[key] or 0) + n
 end
 
 local function setMax(hero, key, v)
@@ -81,8 +85,16 @@ ns.On("SUMMON_RESULT", function(hero, kind, results)
 end)
 ns.On("GROWTH_DUNGEON_CLEARED", function(hero, key, stage)
     I.Track(hero, "dungeon", 1)
+    I.Track(hero, "dungeon_" .. tostring(key), 1)
     setMax(hero, "dungeon_" .. tostring(key), stage)
 end)
+-- a sweep (소탕) counts as a clear for missions
+ns.On("GROWTH_DUNGEON_SWEPT", function(hero, key, count)
+    I.Track(hero, "dungeon", count or 1)
+    I.Track(hero, "dungeon_" .. tostring(key), count or 1)
+end)
+ns.On("ELITE_SUMMONED", function(hero) I.Track(hero, "elite", 1) end)
+ns.On("BOOSTER_USED", function(hero) I.Track(hero, "booster", 1) end)
 ns.On("CONTENT_FINISHED", function(hero, key, res)
     if type(key) == "string" and key:lower():find("world") then
         I.Track(hero, "worldboss", 1)
@@ -115,31 +127,47 @@ end)
 ---------------------------------------------------------------------------
 -- daily / weekly missions
 ---------------------------------------------------------------------------
-function I.DailyMissions(hero)
-    local s = hero.income
-    local out, done = {}, 0
-    for _, m in ipairs(D.DailyMissions) do
-        local prog = s.day[m.track] or 0
-        local ok = prog >= m.goal
-        if s.dayClaimed[m.id] then done = done + 1 end
-        out[#out + 1] = { def = m, progress = math.min(prog, m.goal), done = ok, claimed = s.dayClaimed[m.id] }
+local function missionList(defs, counts, claimed)
+    local out, n = {}, 0
+    for _, m in ipairs(defs) do
+        local prog = counts[m.track] or 0
+        if claimed[m.id] then n = n + 1 end
+        out[#out + 1] = { def = m, progress = math.min(prog, m.goal), done = prog >= m.goal, claimed = claimed[m.id] }
     end
-    return out, done
+    return out, n
 end
 
-function I.ClaimMission(hero, id)
+function I.DailyMissions(hero)
     local s = hero.income
-    for _, m in ipairs(D.DailyMissions) do
+    return missionList(D.DailyMissions, s.day, s.dayClaimed)
+end
+
+function I.WeeklyMissions(hero)
+    local s = hero.income
+    return missionList(D.WeeklyMissions, s.week.count, s.week.claimed)
+end
+
+local function claimOne(hero, defs, counts, claimed, id, source)
+    for _, m in ipairs(defs) do
         if m.id == id then
-            if s.dayClaimed[id] then return false, "이미 받았습니다." end
-            if (s.day[m.track] or 0) < m.goal then return false, "아직 완료하지 않았습니다." end
-            s.dayClaimed[id] = true
-            Hero.Grant(hero, m.rewards, "dailyMission")
-            s.week.points = s.week.points + D.WeeklyMission.perDailyMission
+            if claimed[id] then return false, "이미 받았습니다." end
+            if (counts[m.track] or 0) < m.goal then return false, "아직 완료하지 않았습니다." end
+            claimed[id] = true
+            Hero.Grant(hero, m.rewards, source)
             return true
         end
     end
     return false, "알 수 없는 미션"
+end
+
+function I.ClaimMission(hero, id)
+    local s = hero.income
+    return claimOne(hero, D.DailyMissions, s.day, s.dayClaimed, id, "dailyMission")
+end
+
+function I.ClaimWeeklyMission(hero, id)
+    local s = hero.income
+    return claimOne(hero, D.WeeklyMissions, s.week.count, s.week.claimed, id, "weeklyMission")
 end
 
 function I.ClaimDailyClear(hero)
@@ -154,15 +182,31 @@ function I.ClaimDailyClear(hero)
     return true
 end
 
-function I.ClaimWeekly(hero, idx)
+function I.ClaimWeeklyClear(hero)
     local s = hero.income
-    local st = D.WeeklyMission.stages[idx]
-    if not st then return false end
-    if s.week.claimed[idx] then return false, "이미 받았습니다." end
-    if s.week.points < st.need then return false, "주간 게이지가 부족합니다." end
-    s.week.claimed[idx] = true
-    Hero.Grant(hero, st.rewards, "weeklyMission")
+    local _, done = I.WeeklyMissions(hero)
+    if s.week.claimed.__clear then return false, "이미 받았습니다." end
+    local c = D.WeeklyMissionClear
+    if done < c.need then return false, string.format("주간 미션 %d/%d", done, c.need) end
+    s.week.claimed.__clear = true
+    Hero.Grant(hero, c.rewards, "weeklyClear")
+    if c.relocated then Hero.Grant(hero, c.relocated, "weeklyClearGuild") end
     return true
+end
+
+-- 일괄 수령: every finished mission, then the clear reward when it is reached
+function I.ClaimAllMissions(hero, weekly)
+    local list = weekly and I.WeeklyMissions(hero) or I.DailyMissions(hero)
+    local n = 0
+    for _, m in ipairs(list) do
+        if m.done and not m.claimed then
+            local ok = (weekly and I.ClaimWeeklyMission or I.ClaimMission)(hero, m.def.id)
+            if ok then n = n + 1 end
+        end
+    end
+    if (weekly and I.ClaimWeeklyClear or I.ClaimDailyClear)(hero) then n = n + 1 end
+    if n == 0 then return false, "받을 보상이 없습니다." end
+    return true, n
 end
 
 ---------------------------------------------------------------------------
@@ -245,14 +289,17 @@ function I.ClaimFree(hero, id)
                     return false, err
                 end
                 s.freeClaimed[id] = true
+                I.Track(hero, "ad", 1)
                 return true, res
             end
             if f.booster then
                 hero.booster = { untilTime = U.Now() + f.booster.seconds, exp = f.booster.exp, gold = f.booster.gold }
                 Hero.Changed(hero, "booster")
+                ns.Fire("BOOSTER_USED", hero, "free")
             end
             if f.rewards then Hero.Grant(hero, f.rewards, "freeDaily") end
             s.freeClaimed[id] = true
+            I.Track(hero, "ad", 1)
             return true
         end
     end
@@ -266,6 +313,7 @@ function I.UseBooster(hero, key)
     if not Hero.Spend(hero, key, 1, "booster") then return false, D.CurrencyName(key) .. "이(가) 없습니다." end
     hero.expBoosterBuff = { untilTime = U.Now() + b.seconds, exp = b.exp }
     Hero.Changed(hero, "booster")
+    ns.Fire("BOOSTER_USED", hero, key)
     return true
 end
 

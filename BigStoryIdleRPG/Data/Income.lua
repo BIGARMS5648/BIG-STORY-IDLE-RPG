@@ -26,41 +26,54 @@ D.Attendance = {
     },
 }
 
--- 일일 미션 clear reward (8 missions): known exactly
+-- 일일 미션 / 주간 미션 (in-game 미션 window, KR screenshots 2026-11-24).
+-- The header ("일일 미션 클리어 0/8", "주간 미션 클리어 0/8") counts missions whose reward was claimed
+-- (a finished but unclaimed mission leaves the header at 0/8 on the screen).
+-- Check: daily red diamonds 300 x 8 = 2,400 + 5,000 = 7,400 and weekly 500 x 7 + 12,000 = 15,500,
+-- the community totals (MEKI_RD, IV731).
+-- Tracks: kill, elite (엘리트 몬스터 소환), summon_weapon, dungeon_<key> (clears and sweeps),
+-- ad (광고 시청 = any free daily claim, ads are removed), booster (부스터 사용), worldboss.
 D.DailyMissionClear = { need = 8, rewards = { weaponTicket = 100, redDia = 5000 } }
--- PROVISIONAL: the individual daily missions are not published. Placeholder list whose
--- rewards sum to the community total (7,400 - 5,000 = 2,400 red diamonds a day).
--- Will be replaced by the researched list.
 D.DailyMissions = {
-    { id = "kill", text = "몬스터 %d마리 처치", track = "kill", goal = 1000, rewards = { redDia = 300 } },
-    { id = "weaponSummon", text = "무기 소환 %d회", track = "summon_weapon", goal = 10, rewards = { redDia = 300 } },
-    { id = "companionSummon", text = "동료 소환 %d회", track = "summon_companion", goal = 10, rewards = { redDia = 300 } },
-    { id = "dungeon", text = "성장 던전 %d회 클리어", track = "dungeon", goal = 3, rewards = { redDia = 300 } },
-    { id = "elite", text = "엘리트 몬스터 소환 %d회", track = "elite", goal = 10, rewards = { redDia = 300 } },
-    { id = "arena", text = "결투장 %d회 참여", track = "arena", goal = 3, rewards = { redDia = 300 } },
-    { id = "worldBoss", text = "월드 보스 %d회 도전", track = "worldboss", goal = 1, rewards = { redDia = 300 } },
-    { id = "quickHunt", text = "빠른 사냥 %d회", track = "quickhunt", goal = 1, rewards = { redDia = 300 } },
+    { id = "kill", text = "몬스터 처치하기", track = "kill", goal = 2000, rewards = { redDia = 300 } },
+    { id = "elite", text = "엘리트 몬스터 소환하기", track = "elite", goal = 15, rewards = { eliteSummonPoint = 300 } },
+    { id = "weaponSummon", text = "무기 소환하기", track = "summon_weapon", goal = 30,
+        rewards = { weaponTicket = 20, timeSkip1m = 20 } },
+    { id = "weaponDungeon", text = "무기 던전 클리어하기", track = "dungeon_weapon", goal = 3, rewards = { redDia = 300 } },
+    { id = "expDungeon", text = "경험치 던전 클리어하기", track = "dungeon_exp", goal = 3, rewards = { redDia = 300 } },
+    { id = "gearDungeon", text = "장비 던전 클리어하기", track = "dungeon_gear", goal = 3, rewards = { redDia = 300 } },
+    { id = "enhanceDungeon", text = "강화 던전 클리어하기", track = "dungeon_enhance", goal = 3, rewards = { redDia = 300 } },
+    { id = "training", text = "용사의 수련장 클리어하기", track = "dungeon_training", goal = 3, rewards = { redDia = 300 } },
+    { id = "ad", text = "광고 시청하기 (무료 보상 받기)", track = "ad", goal = 1, rewards = { redDia = 300, timeSkip1m = 20 } },
+    { id = "booster", text = "부스터 사용하기", track = "booster", goal = 1, rewards = { redDia = 300 } },
 }
--- 주간 미션: weekly gauge filled by daily missions; total 15,500 red diamonds a week and a
--- 500 weapon-ticket stage are known. PROVISIONAL split into 5 stages.
-D.WeeklyMission = {
-    perDailyMission = 1,
-    stages = {
-        { need = 10, rewards = { redDia = 2500 } },
-        { need = 20, rewards = { redDia = 3000 } },
-        { need = 30, rewards = { redDia = 3000, weaponTicket = 500 } },
-        { need = 40, rewards = { redDia = 3500 } },
-        -- + the former guild warehouse / guild shop weekly items (warehouse Lv12 list, research-income §6.3)
-        { need = 50, rewards = { redDia = 3500, weaponStone = 60000, eliteSummonPoint = 1000, spellTrace = 2000,
-            honorMedal = 4000, expBooster50 = 10, starforceScroll = 5, cubeMiracle = 3, memorialScroll = 6,
-            subOptionStone = 200, timeSkip1m = 500 } },
-    },
+D.WeeklyMissionClear = {
+    need = 8, rewards = { weaponTicket = 300, redDia = 12000 },
+    -- former guild warehouse / guild shop weekly items (warehouse Lv12 list, research-income section 6.3),
+    -- moved here when guild content was removed
+    relocated = { weaponStone = 60000, eliteSummonPoint = 1000, spellTrace = 2000, honorMedal = 4000,
+        expBooster50 = 10, starforceScroll = 5, cubeMiracle = 3, memorialScroll = 6, subOptionStone = 200,
+        timeSkip1m = 500 },
+}
+D.WeeklyMissions = {
+    { id = "kill", text = "몬스터 처치하기", track = "kill", goal = 15000, rewards = { redDia = 500 } },
+    { id = "elite", text = "엘리트 몬스터 소환하기", track = "elite", goal = 200, rewards = { eliteSummonPoint = 500 } },
+    { id = "weaponSummon", text = "무기 소환하기", track = "summon_weapon", goal = 1000,
+        rewards = { weaponTicket = 100, timeSkip1m = 50 } },
+    -- goal hidden under the cursor on the screen; 15 like the other dungeons except 강화 던전
+    { id = "weaponDungeon", text = "무기 던전 클리어하기", track = "dungeon_weapon", goal = 15, rewards = { redDia = 500 } },
+    { id = "expDungeon", text = "경험치 던전 클리어하기", track = "dungeon_exp", goal = 15,
+        rewards = { redDia = 500, expBooster50 = 3 } },
+    { id = "training", text = "용사의 수련장 클리어하기", track = "dungeon_training", goal = 15, rewards = { redDia = 500 } },
+    { id = "gearDungeon", text = "장비 던전 클리어하기", track = "dungeon_gear", goal = 15, rewards = { redDia = 500 } },
+    { id = "enhanceDungeon", text = "강화 던전 클리어하기", track = "dungeon_enhance", goal = 10, rewards = { redDia = 500 } },
+    { id = "worldBoss", text = "월드보스 플레이하기", track = "worldboss", goal = 1, rewards = { redDia = 500 } },
 }
 
--- usable EXP boosters. PROVISIONAL: durations are not published (30 minutes each).
+-- usable EXP boosters (경험치 부스터 100% / 50%).
 D.Boosters = {
-    expBooster = { exp = 1000, seconds = 1800 },
-    expBooster50 = { exp = 500, seconds = 1800 },
+    expBooster = { exp = 1000, seconds = 1800 },   -- PROVISIONAL duration
+    expBooster50 = { exp = 500, seconds = 600 },   -- item info: "10분간 경험치 보너스 50% 효과를 얻습니다."
 }
 
 -- ad rewards -> one free claim a day each

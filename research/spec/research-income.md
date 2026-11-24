@@ -345,7 +345,22 @@ What is known:
   - Rewards: 무기 소환권 / 레드 다이아.
   - Cite: IV114, IV774.
 - Total 레드 다이아 from daily missions: 7,400 a day (MEKI_RD; IV731 "7,400개 × 10일"). So the non-header missions pay 2,400 in total **(산식)**.
-- **Missing:** the exact list of permanent daily missions (8+ items), each condition count, and each reward. No text source has them; they appear only in in-game screenshots.
+- **Confirmed (in-game 미션 window, KR screenshots from the user, 2026-11-24).** 10 missions; the header counts *claimed* missions:
+
+| Daily mission | Goal | Reward |
+|---|---|---|
+| 몬스터 처치하기 | 2,000 | 레드 다이아 300 |
+| 엘리트 몬스터 소환하기 | 15 | 엘리트 몬스터 소환 포인트 300 |
+| 무기 소환하기 | 30 | 무기 소환권 20 + 시간 단축 티켓(1분) 20 |
+| 무기 던전 클리어하기 | 3 | 레드 다이아 300 |
+| 경험치 던전 클리어하기 | 3 | 레드 다이아 300 |
+| 장비 던전 클리어하기 | 3 | 레드 다이아 300 |
+| 강화 던전 클리어하기 | 3 | 레드 다이아 300 |
+| 용사의 수련장 클리어하기 | 3 | 레드 다이아 300 |
+| 광고 시청하기 | 1 | 레드 다이아 300 + 시간 단축 티켓(1분) 20 |
+| 부스터 사용하기 | 1 | 레드 다이아 300 |
+
+  Red diamonds: 8 × 300 = 2,400, which matches the derived total above.
 - Templates from KR event daily missions (exact):
   - 핑크빈 일일 미션: 몬스터 2,000 처치 · 엘리트 몬스터 10회 소환 · 무기 던전 1회 클리어. Cite: IV296.
   - 도깨비 일일 미션: 몬스터 처치 · 엘리트 소환 · 아레나 플레이. Cite: NX_PN_0922.
@@ -367,7 +382,21 @@ Cite: NX_DMB_1119, NX_DMB_0722, NX_DMB_HALF, NX_DMB_SUGAR.
 - Stage rewards add up to **레드 다이아 15,500 a week**. Cite: MEKI_RD, IV731.
 - There is a **무기 소환권 500** stage reward. Cite: DC435362.
 - Progress fills a weekly gauge as daily missions are done; each stage is claimed. Resets Monday 0시. Cite: IV114, NX_FAQ_RESET.
-- **Missing:** the number of stages, their thresholds, and any other rewards per stage.
+- **Confirmed (in-game screenshots, 2026-11-24):** not a gauge. It has 9 missions, and the header "주간 미션 클리어 (0/8)" pays **무기 소환권 300 + 레드 다이아 12,000**:
+
+| Weekly mission | Goal | Reward |
+|---|---|---|
+| 몬스터 처치하기 | 15,000 | 레드 다이아 500 |
+| 엘리트 몬스터 소환하기 | 200 | 엘리트 몬스터 소환 포인트 500 |
+| 무기 소환하기 | 1,000 | 무기 소환권 100 + 시간 단축 티켓(1분) 50 |
+| 무기 던전 클리어하기 | 15 (hidden by the cursor; assumed) | 레드 다이아 500 |
+| 경험치 던전 클리어하기 | 15 | 레드 다이아 500 + 경험치 부스터(50%) 3 |
+| 용사의 수련장 클리어하기 | 15 | 레드 다이아 500 |
+| 장비 던전 클리어하기 | 15 | 레드 다이아 500 |
+| 강화 던전 클리어하기 | 10 | 레드 다이아 500 |
+| 월드보스 플레이하기 | 1 | 레드 다이아 500 |
+
+  Red diamonds: 7 × 500 + 12,000 = 15,500, which matches the community total. 경험치 부스터(50%) item info: "10분간 경험치 보너스 50% 효과를 얻습니다."
 
 ### 3.3 데일리 배틀 패스 (exact, KR)
 

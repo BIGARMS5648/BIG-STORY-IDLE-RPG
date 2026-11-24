@@ -431,6 +431,7 @@ function G.Sweep(hero, key, count)
     end
     st.sweeps = (st.sweeps or 0) + count
     local lines = C.Grant(hero, total, "growthSweep")
+    ns.Fire("GROWTH_DUNGEON_SWEPT", hero, key, count)
     local res = C.Result(true, "sweep", string.format("%s %d단계 소탕 %d회", GD[key].nameKo, st.max, count), lines,
         { rewards = total })
     C.Record(hero, "growth_" .. key, res)
