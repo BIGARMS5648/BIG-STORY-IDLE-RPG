@@ -29,6 +29,8 @@ Systems\Mastery.lua
 Systems\Campaign.lua
 Systems\Game.lua
 
+Net\Comm.lua
+
 UI\Widgets.lua
 UI\Main.lua
 UI\BattleView.lua
