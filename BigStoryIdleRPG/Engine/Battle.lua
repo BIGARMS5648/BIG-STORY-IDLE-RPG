@@ -645,6 +645,7 @@ function Battle:Kill(c, killer)
     self:Hook("onDeath", c, killer)
     if killer and killer.alive then
         self:FireTriggers(killer, "OnEnemyDie", { target = c, self = killer }, 1)
+        self:FireTriggers(killer, "OnKill", { target = c, self = killer }, 1)
     end
     -- projectiles that expire on owner death
     for i = #self.projectiles, 1, -1 do
@@ -1511,6 +1512,15 @@ function Battle:Potions(c)
     if c:MpRatioM() < P.mpThreshold and self.time >= c.mpPotionReady then
         c.mp = math.min(c:Stat("MaxMp"), c.mp + c:Stat("MaxMp") * P.mpRatio / 1000 * pf(c:Stat("MpPotionPower")))
         c.mpPotionReady = self.time + P.cooldownMs * (1 - c:Stat("MpPotionCoolTimeReduceRatio") / 1000)
+    end
+end
+
+-- a new wave of enemies appeared (artifacts / passives with OnWaveStart)
+function Battle:WaveStart()
+    for _, c in ipairs(self.creatures) do
+        if c.alive and c.side == 1 then
+            self:FireTriggers(c, "OnWaveStart", { self = c, target = self:Nearest(c) or c }, 1)
+        end
     end
 end
 

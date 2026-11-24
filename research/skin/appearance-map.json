@@ -1,0 +1,4519 @@
+{
+ "meta": {
+  "client": "WoW: Forever (interface 16001), vanilla 1.x item IDs",
+  "usage": "DressUpModel: SetUnit('player'); Undress(); then TryOn(id) per visible slot. Cape = Back slot. Robes (Clothes) cover Pants. Empty offHand = none (two-hand / ranged).",
+  "verification": "Every ID resolved by exact English name and checked against (a) QuestieDB data/Forever/foreverItemDB.lua (WoW: Forever item set, seeded from Classic Era 1.15.x) and (b) nexus-devs/wow-classic-items (Era) for slot + armor/weapon subtype + item set. Korean names from QuestieDB l10n/Forever/lookupItems/koKR.lua.",
+  "confidence": {
+   "high": "ID exists in the Forever item DB, English name matches, slot and armor/weapon type match",
+   "medium": "exists but a slot/type/name check differed",
+   "low": "not found - placeholder"
+  },
+  "armorGradeTheme": {
+   "Grade1": "노말 - lv40-55 leveling look (crafted greens / early dungeon blues)",
+   "Grade2": "레어 - Rank 7-10 PvP rare set (Knight-Lieutenant/Lt. Commander; Shaman uses Horde Blood Guard/Champion) + Arathi Basin belt",
+   "Grade3": "에픽 - Tier 0 (Dungeon Set 1)",
+   "Grade4": "유니크 - Tier 0.5 (Dungeon Set 2)",
+   "Grade5": "레전드리 - Tier 1 (Molten Core)",
+   "Grade5_1": "레전드리+ - Tier 2 (Blackwing Lair)",
+   "Grade6": "미스틱 - Tier 2.5 (AQ40; Glove/Belt filled from AQ40 boss loot, set has no hands/waist)",
+   "Grade6_1": "미스틱+ - Tier 3 (Naxxramas)"
+  },
+  "armorSets": {
+   "WARRIOR": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Lieutenant Commander's Battlegear",
+    "Grade3": "Battlegear of Valor",
+    "Grade4": "Battlegear of Heroism",
+    "Grade5": "Battlegear of Might",
+    "Grade5_1": "Battlegear of Wrath",
+    "Grade6": "Conqueror's Battlegear",
+    "Grade6_1": "Dreadnaught's Battlegear"
+   },
+   "PALADIN": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Lieutenant Commander's Aegis",
+    "Grade3": "Lightforge Armor",
+    "Grade4": "Soulforge Armor",
+    "Grade5": "Lawbringer Armor",
+    "Grade5_1": "Judgement Armor",
+    "Grade6": "Avenger's Battlegear",
+    "Grade6_1": "Redemption Armor"
+   },
+   "HUNTER": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Lieutenant Commander's Pursuit",
+    "Grade3": "Beaststalker Armor",
+    "Grade4": "Beastmaster Armor",
+    "Grade5": "Giantstalker Armor",
+    "Grade5_1": "Dragonstalker Armor",
+    "Grade6": "Striker's Garb",
+    "Grade6_1": "Cryptstalker Armor"
+   },
+   "SHAMAN": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Champion's Earthshaker",
+    "Grade3": "The Elements",
+    "Grade4": "The Five Thunders",
+    "Grade5": "The Earthfury",
+    "Grade5_1": "The Ten Storms",
+    "Grade6": "Stormcaller's Garb",
+    "Grade6_1": "The Earthshatterer"
+   },
+   "ROGUE": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Lieutenant Commander's Vestments",
+    "Grade3": "Shadowcraft Armor",
+    "Grade4": "Darkmantle Armor",
+    "Grade5": "Nightslayer Armor",
+    "Grade5_1": "Bloodfang Armor",
+    "Grade6": "Deathdealer's Embrace",
+    "Grade6_1": "Bonescythe Armor"
+   },
+   "DRUID": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Lieutenant Commander's Sanctuary",
+    "Grade3": "Wildheart Raiment",
+    "Grade4": "Feralheart Raiment",
+    "Grade5": "Cenarion Raiment",
+    "Grade5_1": "Stormrage Raiment",
+    "Grade6": "Genesis Raiment",
+    "Grade6_1": "Dreamwalker Raiment"
+   },
+   "PRIEST": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Lieutenant Commander's Raiment",
+    "Grade3": "Vestments of the Devout",
+    "Grade4": "Vestments of the Virtuous",
+    "Grade5": "Vestments of Prophecy",
+    "Grade5_1": "Vestments of Transcendence",
+    "Grade6": "Garments of the Oracle",
+    "Grade6_1": "Vestments of Faith"
+   },
+   "MAGE": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Lieutenant Commander's Regalia",
+    "Grade3": "Magister's Regalia",
+    "Grade4": "Sorcerer's Regalia",
+    "Grade5": "Arcanist Regalia",
+    "Grade5_1": "Netherwind Regalia",
+    "Grade6": "Enigma Vestments",
+    "Grade6_1": "Frostfire Regalia"
+   },
+   "WARLOCK": {
+    "Grade1": "leveling green/blue mix",
+    "Grade2": "Lieutenant Commander's Threads",
+    "Grade3": "Dreadmist Raiment",
+    "Grade4": "Deathmist Raiment",
+    "Grade5": "Felheart Raiment",
+    "Grade5_1": "Nemesis Raiment",
+    "Grade6": "Doomcaller's Attire",
+    "Grade6_1": "Plagueheart Raiment"
+   }
+  },
+  "counts": {
+   "armorEntries": 504,
+   "capeEntries": 8,
+   "weaponEntries": 176,
+   "total": 688,
+   "byConfidence": {
+    "high": 688
+   }
+  }
+ },
+ "armor": {
+  "WARRIOR": {
+   "Cap": {
+    "Grade1": {
+     "id": 12427,
+     "en": "Imperial Plate Helm",
+     "ko": "황제의 판금 투구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16429,
+     "en": "Lieutenant Commander's Plate Helm",
+     "ko": "부사령관의 판금 투구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16731,
+     "en": "Helm of Valor",
+     "ko": "용맹의 투구",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 21999,
+     "en": "Helm of Heroism",
+     "ko": "무용의 투구",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16866,
+     "en": "Helm of Might",
+     "ko": "투지의 투구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16963,
+     "en": "Helm of Wrath",
+     "ko": "격노의 투구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21329,
+     "en": "Conqueror's Crown",
+     "ko": "정복자의 왕관",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22418,
+     "en": "Dreadnaught Helmet",
+     "ko": "무쌍의 투구",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 12428,
+     "en": "Imperial Plate Shoulders",
+     "ko": "황제의 판금 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16432,
+     "en": "Lieutenant Commander's Plate Pauldrons",
+     "ko": "부사령관의 판금 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16733,
+     "en": "Spaulders of Valor",
+     "ko": "용맹의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22001,
+     "en": "Spaulders of Heroism",
+     "ko": "무용의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16868,
+     "en": "Pauldrons of Might",
+     "ko": "투지의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16961,
+     "en": "Pauldrons of Wrath",
+     "ko": "격노의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21330,
+     "en": "Conqueror's Spaulders",
+     "ko": "정복자의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22419,
+     "en": "Dreadnaught Pauldrons",
+     "ko": "무쌍의 어깨갑옷",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 12422,
+     "en": "Imperial Plate Chest",
+     "ko": "황제의 판금 흉갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16430,
+     "en": "Knight-Captain's Plate Chestguard",
+     "ko": "기사대장의 판금 흉갑",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16730,
+     "en": "Breastplate of Valor",
+     "ko": "용맹의 흉갑",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 21997,
+     "en": "Breastplate of Heroism",
+     "ko": "무용의 흉갑",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16865,
+     "en": "Breastplate of Might",
+     "ko": "투지의 흉갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16966,
+     "en": "Breastplate of Wrath",
+     "ko": "격노의 흉갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21331,
+     "en": "Conqueror's Breastplate",
+     "ko": "정복자의 흉갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22416,
+     "en": "Dreadnaught Breastplate",
+     "ko": "무쌍의 흉갑",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 12429,
+     "en": "Imperial Plate Leggings",
+     "ko": "황제의 판금 다리보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16431,
+     "en": "Knight-Captain's Plate Leggings",
+     "ko": "기사대장의 판금 다리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16732,
+     "en": "Legplates of Valor",
+     "ko": "용맹의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22000,
+     "en": "Legplates of Heroism",
+     "ko": "무용의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16867,
+     "en": "Legplates of Might",
+     "ko": "투지의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16962,
+     "en": "Legplates of Wrath",
+     "ko": "격노의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21332,
+     "en": "Conqueror's Legguards",
+     "ko": "정복자의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22417,
+     "en": "Dreadnaught Legplates",
+     "ko": "무쌍의 다리갑옷",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 7927,
+     "en": "Ornate Mithril Gloves",
+     "ko": "화려한 미스릴 장갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16406,
+     "en": "Knight-Lieutenant's Plate Gauntlets",
+     "ko": "상급기사의 판금 건틀릿",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16737,
+     "en": "Gauntlets of Valor",
+     "ko": "용맹의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 21998,
+     "en": "Gauntlets of Heroism",
+     "ko": "무용의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16863,
+     "en": "Gauntlets of Might",
+     "ko": "투지의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16964,
+     "en": "Gauntlets of Wrath",
+     "ko": "격노의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21581,
+     "en": "Gauntlets of Annihilation",
+     "ko": "전멸의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22421,
+     "en": "Dreadnaught Gauntlets",
+     "ko": "무쌍의 건틀릿",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 12424,
+     "en": "Imperial Plate Belt",
+     "ko": "황제의 판금 허리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20041,
+     "en": "Highlander's Plate Girdle",
+     "ko": "산악연대 판금 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16736,
+     "en": "Belt of Valor",
+     "ko": "용맹의 허리띠",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 21994,
+     "en": "Belt of Heroism",
+     "ko": "무용의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16864,
+     "en": "Belt of Might",
+     "ko": "투지의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16960,
+     "en": "Waistband of Wrath",
+     "ko": "격노의 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21606,
+     "en": "Belt of the Fallen Emperor",
+     "ko": "죽은 제왕의 허리띠",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22422,
+     "en": "Dreadnaught Waistguard",
+     "ko": "무쌍의 허리보호대",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 12426,
+     "en": "Imperial Plate Boots",
+     "ko": "황제의 판금 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16405,
+     "en": "Knight-Lieutenant's Plate Boots",
+     "ko": "상급기사의 판금 장화",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16734,
+     "en": "Boots of Valor",
+     "ko": "용맹의 장화",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 21995,
+     "en": "Boots of Heroism",
+     "ko": "무용의 장화",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16862,
+     "en": "Sabatons of Might",
+     "ko": "투지의 발덮개",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16965,
+     "en": "Sabatons of Wrath",
+     "ko": "격노의 발덮개",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21333,
+     "en": "Conqueror's Greaves",
+     "ko": "정복자의 경갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22420,
+     "en": "Dreadnaught Sabatons",
+     "ko": "무쌍의 발덮개",
+     "confidence": "high"
+    }
+   }
+  },
+  "PALADIN": {
+   "Cap": {
+    "Grade1": {
+     "id": 7937,
+     "en": "Ornate Mithril Helm",
+     "ko": "화려한 미스릴 투구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16434,
+     "en": "Lieutenant Commander's Lamellar Headguard",
+     "ko": "부사령관의 강철 머리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16727,
+     "en": "Lightforge Helm",
+     "ko": "성전사 투구",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22091,
+     "en": "Soulforge Helm",
+     "ko": "성령의 투구",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16854,
+     "en": "Lawbringer Helm",
+     "ko": "집행의 투구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16955,
+     "en": "Judgement Crown",
+     "ko": "심판의 관",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21387,
+     "en": "Avenger's Crown",
+     "ko": "응징의 왕관",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22428,
+     "en": "Redemption Headpiece",
+     "ko": "구원의 머리보호구",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 7928,
+     "en": "Ornate Mithril Shoulder",
+     "ko": "화려한 미스릴 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16436,
+     "en": "Lieutenant Commander's Lamellar Shoulders",
+     "ko": "부사령관의 강철 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16729,
+     "en": "Lightforge Spaulders",
+     "ko": "성전사 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22093,
+     "en": "Soulforge Spaulders",
+     "ko": "성령의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16856,
+     "en": "Lawbringer Spaulders",
+     "ko": "집행의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16953,
+     "en": "Judgement Spaulders",
+     "ko": "심판의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21391,
+     "en": "Avenger's Pauldrons",
+     "ko": "응징의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22429,
+     "en": "Redemption Spaulders",
+     "ko": "구원의 어깨갑옷",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 7935,
+     "en": "Ornate Mithril Breastplate",
+     "ko": "화려한 미스릴 흉갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16433,
+     "en": "Knight-Captain's Lamellar Breastplate",
+     "ko": "기사대장의 강철 흉갑",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16726,
+     "en": "Lightforge Breastplate",
+     "ko": "성전사 흉갑",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22089,
+     "en": "Soulforge Breastplate",
+     "ko": "성령의 흉갑",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16853,
+     "en": "Lawbringer Chestguard",
+     "ko": "집행의 흉갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16958,
+     "en": "Judgement Breastplate",
+     "ko": "심판의 흉갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21389,
+     "en": "Avenger's Breastplate",
+     "ko": "응징의 흉갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22425,
+     "en": "Redemption Tunic",
+     "ko": "구원의 튜닉",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 7926,
+     "en": "Ornate Mithril Pants",
+     "ko": "화려한 미스릴 바지",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16435,
+     "en": "Knight-Captain's Lamellar Leggings",
+     "ko": "기사대장의 강철 다리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16728,
+     "en": "Lightforge Legplates",
+     "ko": "성전사 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22092,
+     "en": "Soulforge Legplates",
+     "ko": "성령의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16855,
+     "en": "Lawbringer Legplates",
+     "ko": "집행의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16954,
+     "en": "Judgement Legplates",
+     "ko": "심판의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21390,
+     "en": "Avenger's Legguards",
+     "ko": "응징의 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22427,
+     "en": "Redemption Legguards",
+     "ko": "구원의 다리보호대",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 7927,
+     "en": "Ornate Mithril Gloves",
+     "ko": "화려한 미스릴 장갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16410,
+     "en": "Knight-Lieutenant's Lamellar Gauntlets",
+     "ko": "상급기사의 강철 건틀릿",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16724,
+     "en": "Lightforge Gauntlets",
+     "ko": "성전사 건틀릿",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22090,
+     "en": "Soulforge Gauntlets",
+     "ko": "성령의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16860,
+     "en": "Lawbringer Gauntlets",
+     "ko": "집행의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16956,
+     "en": "Judgement Gauntlets",
+     "ko": "심판의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21623,
+     "en": "Gauntlets of the Righteous Champion",
+     "ko": "정의로운 용사의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22426,
+     "en": "Redemption Handguards",
+     "ko": "구원의 장갑",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 12406,
+     "en": "Thorium Belt",
+     "ko": "토륨 허리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20042,
+     "en": "Highlander's Lamellar Girdle",
+     "ko": "산악연대 강철 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16723,
+     "en": "Lightforge Belt",
+     "ko": "성전사 허리띠",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22086,
+     "en": "Soulforge Belt",
+     "ko": "성령의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16858,
+     "en": "Lawbringer Belt",
+     "ko": "집행의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16952,
+     "en": "Judgement Belt",
+     "ko": "심판의 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21598,
+     "en": "Royal Qiraji Belt",
+     "ko": "왕실 퀴라지 허리띠",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22431,
+     "en": "Redemption Girdle",
+     "ko": "구원의 벨트",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 7936,
+     "en": "Ornate Mithril Boots",
+     "ko": "화려한 미스릴 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16409,
+     "en": "Knight-Lieutenant's Lamellar Sabatons",
+     "ko": "상급기사의 강철 발덮개",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16725,
+     "en": "Lightforge Boots",
+     "ko": "성전사 장화",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22087,
+     "en": "Soulforge Boots",
+     "ko": "성령의 장화",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16859,
+     "en": "Lawbringer Boots",
+     "ko": "집행의 장화",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16957,
+     "en": "Judgement Sabatons",
+     "ko": "심판의 발덮개",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21388,
+     "en": "Avenger's Greaves",
+     "ko": "응징의 경갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22430,
+     "en": "Redemption Boots",
+     "ko": "구원의 장화",
+     "confidence": "high"
+    }
+   }
+  },
+  "HUNTER": {
+   "Cap": {
+    "Grade1": {
+     "id": 8208,
+     "en": "Tough Scorpid Helm",
+     "ko": "단단한 전갈 투구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16428,
+     "en": "Lieutenant Commander's Chain Helmet",
+     "ko": "부사령관의 사슬 투구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16677,
+     "en": "Beaststalker's Cap",
+     "ko": "야수추적자 모자",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22013,
+     "en": "Beastmaster's Cap",
+     "ko": "야수왕의 모자",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16846,
+     "en": "Giantstalker's Helmet",
+     "ko": "거인추적자 투구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16939,
+     "en": "Dragonstalker's Helm",
+     "ko": "용추적자 투구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21366,
+     "en": "Striker's Diadem",
+     "ko": "관통의 머리관",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22438,
+     "en": "Cryptstalker Headpiece",
+     "ko": "지하추적자 투구",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 8207,
+     "en": "Tough Scorpid Shoulders",
+     "ko": "단단한 전갈 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16427,
+     "en": "Lieutenant Commander's Chain Pauldrons",
+     "ko": "부사령관의 사슬 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16679,
+     "en": "Beaststalker's Mantle",
+     "ko": "야수추적자 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22016,
+     "en": "Beastmaster's Mantle",
+     "ko": "야수왕의 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16848,
+     "en": "Giantstalker's Epaulets",
+     "ko": "거인추적자 견장",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16937,
+     "en": "Dragonstalker's Spaulders",
+     "ko": "용추적자 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21367,
+     "en": "Striker's Pauldrons",
+     "ko": "관통의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22439,
+     "en": "Cryptstalker Spaulders",
+     "ko": "지하추적자 어깨보호대",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 8203,
+     "en": "Tough Scorpid Breastplate",
+     "ko": "단단한 전갈 흉갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16425,
+     "en": "Knight-Captain's Chain Hauberk",
+     "ko": "기사대장의 사슬 갑옷",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16674,
+     "en": "Beaststalker's Tunic",
+     "ko": "야수추적자 튜닉",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22060,
+     "en": "Beastmaster's Tunic",
+     "ko": "야수왕의 튜닉",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16845,
+     "en": "Giantstalker's Breastplate",
+     "ko": "거인추적자 흉갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16942,
+     "en": "Dragonstalker's Breastplate",
+     "ko": "용추적자 흉갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21370,
+     "en": "Striker's Hauberk",
+     "ko": "관통의 갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22436,
+     "en": "Cryptstalker Tunic",
+     "ko": "지하추적자 튜닉",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 8206,
+     "en": "Tough Scorpid Leggings",
+     "ko": "단단한 전갈 다리보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16426,
+     "en": "Knight-Captain's Chain Leggings",
+     "ko": "기사대장의 사슬 다리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16678,
+     "en": "Beaststalker's Pants",
+     "ko": "야수추적자 바지",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22017,
+     "en": "Beastmaster's Pants",
+     "ko": "야수왕의 바지",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16847,
+     "en": "Giantstalker's Leggings",
+     "ko": "거인추적자 다리보호구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16938,
+     "en": "Dragonstalker's Legguards",
+     "ko": "용추적자 다리보호대",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21368,
+     "en": "Striker's Leggings",
+     "ko": "관통의 다리보호구",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22437,
+     "en": "Cryptstalker Legguards",
+     "ko": "지하추적자 다리보호대",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 8204,
+     "en": "Tough Scorpid Gloves",
+     "ko": "단단한 전갈 장갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16403,
+     "en": "Knight-Lieutenant's Chain Gauntlets",
+     "ko": "상급기사의 사슬 건틀릿",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16676,
+     "en": "Beaststalker's Gloves",
+     "ko": "야수추적자 장갑",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22015,
+     "en": "Beastmaster's Gloves",
+     "ko": "야수왕의 장갑",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16852,
+     "en": "Giantstalker's Gloves",
+     "ko": "거인추적자 장갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16940,
+     "en": "Dragonstalker's Gauntlets",
+     "ko": "용추적자 건틀릿",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21599,
+     "en": "Vek'lor's Gloves of Devastation",
+     "ko": "베클로어의 황폐의 장갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22441,
+     "en": "Cryptstalker Handguards",
+     "ko": "지하추적자 장갑",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 10768,
+     "en": "Boar Champion's Belt",
+     "ko": "가시멧돼지 용사의 허리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20043,
+     "en": "Highlander's Chain Girdle",
+     "ko": "산악연대 사슬 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16680,
+     "en": "Beaststalker's Belt",
+     "ko": "야수추적자 허리띠",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22010,
+     "en": "Beastmaster's Belt",
+     "ko": "야수왕의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16851,
+     "en": "Giantstalker's Belt",
+     "ko": "거인추적자 허리띠",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16936,
+     "en": "Dragonstalker's Belt",
+     "ko": "용추적자 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21607,
+     "en": "Grasp of the Fallen Emperor",
+     "ko": "죽은 제왕의 올가미",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22442,
+     "en": "Cryptstalker Girdle",
+     "ko": "지하추적자 벨트",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 8209,
+     "en": "Tough Scorpid Boots",
+     "ko": "단단한 전갈 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16401,
+     "en": "Knight-Lieutenant's Chain Boots",
+     "ko": "상급기사의 사슬 장화",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16675,
+     "en": "Beaststalker's Boots",
+     "ko": "야수추적자 장화",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22061,
+     "en": "Beastmaster's Boots",
+     "ko": "야수왕의 장화",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16849,
+     "en": "Giantstalker's Boots",
+     "ko": "거인추적자 장화",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16941,
+     "en": "Dragonstalker's Greaves",
+     "ko": "용추적자 경갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21365,
+     "en": "Striker's Footguards",
+     "ko": "관통의 경갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22440,
+     "en": "Cryptstalker Boots",
+     "ko": "지하추적자 장화",
+     "confidence": "high"
+    }
+   }
+  },
+  "SHAMAN": {
+   "Cap": {
+    "Grade1": {
+     "id": 8191,
+     "en": "Turtle Scale Helm",
+     "ko": "거북 껍질 투구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16521,
+     "en": "Champion's Mail Helm",
+     "ko": "부사령관의 쇠사슬 투구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16667,
+     "en": "Coif of Elements",
+     "ko": "정령의 코이프",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22097,
+     "en": "Coif of The Five Thunders",
+     "ko": "우레의 코이프",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16842,
+     "en": "Earthfury Helmet",
+     "ko": "지각변동의 투구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16947,
+     "en": "Helmet of Ten Storms",
+     "ko": "폭풍우 투구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21372,
+     "en": "Stormcaller's Diadem",
+     "ko": "폭풍소환사의 머리관",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22466,
+     "en": "Earthshatter Headpiece",
+     "ko": "지축이동의 투구",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 7718,
+     "en": "Herod's Shoulder",
+     "ko": "헤로드의 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16524,
+     "en": "Champion's Mail Shoulders",
+     "ko": "부사령관의 쇠사슬 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16669,
+     "en": "Pauldrons of Elements",
+     "ko": "정령의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22101,
+     "en": "Pauldrons of The Five Thunders",
+     "ko": "우레의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16844,
+     "en": "Earthfury Epaulets",
+     "ko": "지각변동의 견장",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16945,
+     "en": "Epaulets of Ten Storms",
+     "ko": "폭풍우 견장",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21376,
+     "en": "Stormcaller's Pauldrons",
+     "ko": "폭풍소환사의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22467,
+     "en": "Earthshatter Spaulders",
+     "ko": "지축이동의 어깨갑옷",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 10328,
+     "en": "Scarlet Chestpiece",
+     "ko": "붉은십자군 흉갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16522,
+     "en": "Legionnaire's Mail Chestpiece",
+     "ko": "용사의 쇠사슬 흉갑",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16666,
+     "en": "Vest of Elements",
+     "ko": "정령의 조끼",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22102,
+     "en": "Vest of The Five Thunders",
+     "ko": "우레의 조끼",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16841,
+     "en": "Earthfury Vestments",
+     "ko": "지각변동의 예복",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16950,
+     "en": "Breastplate of Ten Storms",
+     "ko": "폭풍우 흉갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21374,
+     "en": "Stormcaller's Hauberk",
+     "ko": "폭풍소환사의 갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22464,
+     "en": "Earthshatter Tunic",
+     "ko": "지축이동의 튜닉",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 10330,
+     "en": "Scarlet Leggings",
+     "ko": "붉은십자군 다리보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16523,
+     "en": "Legionnaire's Mail Leggings",
+     "ko": "용사의 쇠사슬 다리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16668,
+     "en": "Kilt of Elements",
+     "ko": "정령의 킬트",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22100,
+     "en": "Kilt of The Five Thunders",
+     "ko": "우레의 킬트",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16843,
+     "en": "Earthfury Legguards",
+     "ko": "지각변동의 다리보호대",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16946,
+     "en": "Legplates of Ten Storms",
+     "ko": "폭풍우 다리갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21375,
+     "en": "Stormcaller's Leggings",
+     "ko": "폭풍소환사의 다리보호구",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22465,
+     "en": "Earthshatter Legguards",
+     "ko": "지축이동의 다리갑옷",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 10331,
+     "en": "Scarlet Gauntlets",
+     "ko": "붉은십자군 건틀릿",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16519,
+     "en": "Blood Guard's Mail Grips",
+     "ko": "혈투사의 쇠사슬 장갑",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16672,
+     "en": "Gauntlets of Elements",
+     "ko": "정령의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22099,
+     "en": "Gauntlets of The Five Thunders",
+     "ko": "우레의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16839,
+     "en": "Earthfury Gauntlets",
+     "ko": "지각변동의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16948,
+     "en": "Gauntlets of Ten Storms",
+     "ko": "폭풍우 건틀릿",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21624,
+     "en": "Gauntlets of Kalimdor",
+     "ko": "칼림도어의 건틀릿",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22469,
+     "en": "Earthshatter Handguards",
+     "ko": "지축이동의 장갑",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 10329,
+     "en": "Scarlet Belt",
+     "ko": "붉은십자군 허리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20195,
+     "en": "Defiler's Mail Girdle",
+     "ko": "파멸단 쇠사슬 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16673,
+     "en": "Cord of Elements",
+     "ko": "정령의 장식끈",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22098,
+     "en": "Cord of The Five Thunders",
+     "ko": "우레의 장식끈",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16838,
+     "en": "Earthfury Belt",
+     "ko": "지각변동의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16944,
+     "en": "Belt of Ten Storms",
+     "ko": "폭풍우 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21607,
+     "en": "Grasp of the Fallen Emperor",
+     "ko": "죽은 제왕의 올가미",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22470,
+     "en": "Earthshatter Girdle",
+     "ko": "지축이동의 벨트",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 10332,
+     "en": "Scarlet Boots",
+     "ko": "붉은십자군 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16518,
+     "en": "Blood Guard's Mail Walkers",
+     "ko": "혈투사의 쇠사슬 장화",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16670,
+     "en": "Boots of Elements",
+     "ko": "정령의 장화",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22096,
+     "en": "Boots of The Five Thunders",
+     "ko": "우레의 장화",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16837,
+     "en": "Earthfury Boots",
+     "ko": "지각변동의 장화",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16949,
+     "en": "Greaves of Ten Storms",
+     "ko": "폭풍우 경갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21373,
+     "en": "Stormcaller's Footguards",
+     "ko": "폭풍소환사의 경갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22468,
+     "en": "Earthshatter Boots",
+     "ko": "지축이동의 장화",
+     "confidence": "high"
+    }
+   }
+  },
+  "ROGUE": {
+   "Cap": {
+    "Grade1": {
+     "id": 8176,
+     "en": "Nightscape Headband",
+     "ko": "밤하늘 머리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16418,
+     "en": "Lieutenant Commander's Leather Veil",
+     "ko": "부사령관의 가죽 투구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16707,
+     "en": "Shadowcraft Cap",
+     "ko": "어둠추적자 모자",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22005,
+     "en": "Darkmantle Cap",
+     "ko": "검은장막의 모자",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16821,
+     "en": "Nightslayer Cover",
+     "ko": "밤그림자 투구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16908,
+     "en": "Bloodfang Hood",
+     "ko": "붉은송곳니 두건",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21360,
+     "en": "Deathdealer's Helm",
+     "ko": "죽음의 선고자 투구",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22478,
+     "en": "Bonescythe Helmet",
+     "ko": "해골사신의 투구",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 8192,
+     "en": "Nightscape Shoulders",
+     "ko": "밤하늘 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16420,
+     "en": "Lieutenant Commander's Leather Spaulders",
+     "ko": "부사령관의 가죽 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16708,
+     "en": "Shadowcraft Spaulders",
+     "ko": "어둠추적자 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22008,
+     "en": "Darkmantle Spaulders",
+     "ko": "검은장막의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16823,
+     "en": "Nightslayer Shoulder Pads",
+     "ko": "밤그림자 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16832,
+     "en": "Bloodfang Spaulders",
+     "ko": "붉은송곳니 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21361,
+     "en": "Deathdealer's Spaulders",
+     "ko": "죽음의 선고자 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22479,
+     "en": "Bonescythe Pauldrons",
+     "ko": "해골사신의 어깨갑옷",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 10399,
+     "en": "Blackened Defias Armor",
+     "ko": "검은 데피아즈단 갑옷",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16417,
+     "en": "Knight-Captain's Leather Armor",
+     "ko": "기사대장의 가죽 갑옷",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16721,
+     "en": "Shadowcraft Tunic",
+     "ko": "어둠추적자 튜닉",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22009,
+     "en": "Darkmantle Tunic",
+     "ko": "검은장막의 튜닉",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16820,
+     "en": "Nightslayer Chestpiece",
+     "ko": "밤그림자 가슴방어구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16905,
+     "en": "Bloodfang Chestpiece",
+     "ko": "붉은송곳니 가슴방어구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21364,
+     "en": "Deathdealer's Vest",
+     "ko": "죽음의 선고자 조끼",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22476,
+     "en": "Bonescythe Breastplate",
+     "ko": "해골사신의 흉갑",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 10400,
+     "en": "Blackened Defias Leggings",
+     "ko": "검은 데피아즈단 다리보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16419,
+     "en": "Knight-Captain's Leather Legguards",
+     "ko": "기사대장의 가죽 다리보호대",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16709,
+     "en": "Shadowcraft Pants",
+     "ko": "어둠추적자 바지",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22007,
+     "en": "Darkmantle Pants",
+     "ko": "검은장막의 바지",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16822,
+     "en": "Nightslayer Pants",
+     "ko": "밤그림자 바지",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16909,
+     "en": "Bloodfang Pants",
+     "ko": "붉은송곳니 바지",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21362,
+     "en": "Deathdealer's Leggings",
+     "ko": "죽음의 선고자 다리보호구",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22477,
+     "en": "Bonescythe Legplates",
+     "ko": "해골사신의 다리갑옷",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 10401,
+     "en": "Blackened Defias Gloves",
+     "ko": "검은 데피아즈단 장갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16396,
+     "en": "Knight-Lieutenant's Leather Gauntlets",
+     "ko": "상급기사의 가죽 건틀릿",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16712,
+     "en": "Shadowcraft Gloves",
+     "ko": "어둠추적자 장갑",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22006,
+     "en": "Darkmantle Gloves",
+     "ko": "검은장막의 장갑",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16826,
+     "en": "Nightslayer Gloves",
+     "ko": "밤그림자 장갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16907,
+     "en": "Bloodfang Gloves",
+     "ko": "붉은송곳니 장갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21672,
+     "en": "Gloves of Enforcement",
+     "ko": "집행자의 장갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22481,
+     "en": "Bonescythe Gauntlets",
+     "ko": "해골사신의 건틀릿",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 10403,
+     "en": "Blackened Defias Belt",
+     "ko": "검은 데피아즈단 허리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20045,
+     "en": "Highlander's Leather Girdle",
+     "ko": "산악연대 가죽 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16713,
+     "en": "Shadowcraft Belt",
+     "ko": "어둠추적자 허리띠",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22002,
+     "en": "Darkmantle Belt",
+     "ko": "검은장막의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16827,
+     "en": "Nightslayer Belt",
+     "ko": "밤그림자 허리띠",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16910,
+     "en": "Bloodfang Belt",
+     "ko": "붉은송곳니 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21586,
+     "en": "Belt of Never-ending Agony",
+     "ko": "무한한 고통의 허리띠",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22482,
+     "en": "Bonescythe Waistguard",
+     "ko": "해골사신의 허리보호대",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 10402,
+     "en": "Blackened Defias Boots",
+     "ko": "검은 데피아즈단 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16392,
+     "en": "Knight-Lieutenant's Leather Boots",
+     "ko": "상급기사의 가죽 장화",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16711,
+     "en": "Shadowcraft Boots",
+     "ko": "어둠추적자 장화",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22003,
+     "en": "Darkmantle Boots",
+     "ko": "검은장막의 장화",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16824,
+     "en": "Nightslayer Boots",
+     "ko": "밤그림자 장화",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16906,
+     "en": "Bloodfang Boots",
+     "ko": "붉은송곳니 장화",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21359,
+     "en": "Deathdealer's Boots",
+     "ko": "죽음의 선고자 장화",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22480,
+     "en": "Bonescythe Sabatons",
+     "ko": "해골사신의 발덮개",
+     "confidence": "high"
+    }
+   }
+  },
+  "DRUID": {
+   "Cap": {
+    "Grade1": {
+     "id": 8345,
+     "en": "Wolfshead Helm",
+     "ko": "늑대머리 투구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16424,
+     "en": "Lieutenant Commander's Dragonhide Shroud",
+     "ko": "부사령관의 용가죽 투구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16720,
+     "en": "Wildheart Cowl",
+     "ko": "자연의정수 두건",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22109,
+     "en": "Feralheart Cowl",
+     "ko": "야생의정수 두건",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16834,
+     "en": "Cenarion Helm",
+     "ko": "세나리온 투구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16900,
+     "en": "Stormrage Cover",
+     "ko": "성난폭풍 투구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21353,
+     "en": "Genesis Helm",
+     "ko": "태초의 투구",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22490,
+     "en": "Dreamwalker Headpiece",
+     "ko": "꿈의감시자 투구",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 8210,
+     "en": "Wild Leather Shoulders",
+     "ko": "야생 가죽 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16423,
+     "en": "Lieutenant Commander's Dragonhide Epaulets",
+     "ko": "부사령관의 용가죽 견장",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16718,
+     "en": "Wildheart Spaulders",
+     "ko": "자연의정수 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22112,
+     "en": "Feralheart Spaulders",
+     "ko": "야생의정수 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16836,
+     "en": "Cenarion Spaulders",
+     "ko": "세나리온 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16902,
+     "en": "Stormrage Pauldrons",
+     "ko": "성난폭풍 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21354,
+     "en": "Genesis Shoulderpads",
+     "ko": "태초의 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22491,
+     "en": "Dreamwalker Spaulders",
+     "ko": "꿈의감시자 어깨갑옷",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 6473,
+     "en": "Armor of the Fang",
+     "ko": "송곳니 갑옷",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16421,
+     "en": "Knight-Captain's Dragonhide Tunic",
+     "ko": "기사대장의 용가죽 튜닉",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16706,
+     "en": "Wildheart Vest",
+     "ko": "자연의정수 조끼",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22113,
+     "en": "Feralheart Vest",
+     "ko": "야생의정수 조끼",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16833,
+     "en": "Cenarion Vestments",
+     "ko": "세나리온 예복",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16897,
+     "en": "Stormrage Chestguard",
+     "ko": "성난폭풍 흉갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21357,
+     "en": "Genesis Vest",
+     "ko": "태초의 조끼",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22488,
+     "en": "Dreamwalker Tunic",
+     "ko": "꿈의감시자 튜닉",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 10410,
+     "en": "Leggings of the Fang",
+     "ko": "송곳니의 다리보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16422,
+     "en": "Knight-Captain's Dragonhide Leggings",
+     "ko": "기사대장의 용가죽 다리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16719,
+     "en": "Wildheart Kilt",
+     "ko": "자연의정수 킬트",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22111,
+     "en": "Feralheart Kilt",
+     "ko": "야생의정수 킬트",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16835,
+     "en": "Cenarion Leggings",
+     "ko": "세나리온 다리보호구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16901,
+     "en": "Stormrage Legguards",
+     "ko": "성난폭풍 다리보호대",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21356,
+     "en": "Genesis Trousers",
+     "ko": "태초의 바지",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22489,
+     "en": "Dreamwalker Legguards",
+     "ko": "꿈의감시자 다리갑옷",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 10413,
+     "en": "Gloves of the Fang",
+     "ko": "송곳니의 장갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16397,
+     "en": "Knight-Lieutenant's Dragonhide Gloves",
+     "ko": "상급기사의 용가죽 장갑",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16717,
+     "en": "Wildheart Gloves",
+     "ko": "자연의정수 장갑",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22110,
+     "en": "Feralheart Gloves",
+     "ko": "야생의정수 장갑",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16831,
+     "en": "Cenarion Gloves",
+     "ko": "세나리온 장갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16899,
+     "en": "Stormrage Handguards",
+     "ko": "성난폭풍 장갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21605,
+     "en": "Gloves of the Hidden Temple",
+     "ko": "숨겨진 사원의 장갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22493,
+     "en": "Dreamwalker Handguards",
+     "ko": "꿈의감시자 장갑",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 10412,
+     "en": "Belt of the Fang",
+     "ko": "송곳니의 허리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20046,
+     "en": "Highlander's Lizardhide Girdle",
+     "ko": "산악연대 도마뱀가죽 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16716,
+     "en": "Wildheart Belt",
+     "ko": "자연의정수 허리띠",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22106,
+     "en": "Feralheart Belt",
+     "ko": "야생의정수 허리띠",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16828,
+     "en": "Cenarion Belt",
+     "ko": "세나리온 허리띠",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16903,
+     "en": "Stormrage Belt",
+     "ko": "성난폭풍 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21609,
+     "en": "Regenerating Belt of Vek'nilash",
+     "ko": "회복의 베크닐라쉬 허리띠",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22494,
+     "en": "Dreamwalker Girdle",
+     "ko": "꿈의감시자 벨트",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 10411,
+     "en": "Footpads of the Fang",
+     "ko": "송곳니의 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16393,
+     "en": "Knight-Lieutenant's Dragonhide Footwraps",
+     "ko": "상급기사의 용가죽 장화",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16715,
+     "en": "Wildheart Boots",
+     "ko": "자연의정수 장화",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22107,
+     "en": "Feralheart Boots",
+     "ko": "야생의정수 장화",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16829,
+     "en": "Cenarion Boots",
+     "ko": "세나리온 장화",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16898,
+     "en": "Stormrage Boots",
+     "ko": "성난폭풍 장화",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21355,
+     "en": "Genesis Boots",
+     "ko": "태초의 장화",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22492,
+     "en": "Dreamwalker Boots",
+     "ko": "꿈의감시자 장화",
+     "confidence": "high"
+    }
+   }
+  },
+  "PRIEST": {
+   "Cap": {
+    "Grade1": {
+     "id": 13866,
+     "en": "Runecloth Headband",
+     "ko": "룬매듭 머리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17598,
+     "en": "Lieutenant Commander's Diadem",
+     "ko": "부사령관의 머리관",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16693,
+     "en": "Devout Crown",
+     "ko": "기원의 관",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22080,
+     "en": "Virtuous Crown",
+     "ko": "고결의 관",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16813,
+     "en": "Circlet of Prophecy",
+     "ko": "계시의 머리장식",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16921,
+     "en": "Halo of Transcendence",
+     "ko": "초월의 머리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21348,
+     "en": "Tiara of the Oracle",
+     "ko": "신탁의 티아라",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22514,
+     "en": "Circlet of Faith",
+     "ko": "신념의 관",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 13867,
+     "en": "Runecloth Shoulders",
+     "ko": "룬매듭 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17601,
+     "en": "Lieutenant Commander's Satin Amice",
+     "ko": "부사령관의 명주 아미스",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16695,
+     "en": "Devout Mantle",
+     "ko": "기원의 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22082,
+     "en": "Virtuous Mantle",
+     "ko": "고결의 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16816,
+     "en": "Mantle of Prophecy",
+     "ko": "계시의 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16924,
+     "en": "Pauldrons of Transcendence",
+     "ko": "초월의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21350,
+     "en": "Mantle of the Oracle",
+     "ko": "신탁의 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22515,
+     "en": "Shoulderpads of Faith",
+     "ko": "신념의 어깨보호대",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 13858,
+     "en": "Runecloth Robe",
+     "ko": "룬매듭 로브",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17600,
+     "en": "Knight-Captain's Satin Robes",
+     "ko": "기사대장의 명주 로브",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16690,
+     "en": "Devout Robe",
+     "ko": "기원의 로브",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22083,
+     "en": "Virtuous Robe",
+     "ko": "고결의 로브",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16815,
+     "en": "Robes of Prophecy",
+     "ko": "계시의 로브",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16923,
+     "en": "Robes of Transcendence",
+     "ko": "초월의 로브",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21351,
+     "en": "Vestments of the Oracle",
+     "ko": "신탁의 예복",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22512,
+     "en": "Robe of Faith",
+     "ko": "신념의 로브",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 13865,
+     "en": "Runecloth Pants",
+     "ko": "룬매듭 바지",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17599,
+     "en": "Knight-Captain's Satin Leggings",
+     "ko": "기사대장의 명주 다리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16694,
+     "en": "Devout Skirt",
+     "ko": "기원의 스커트",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22085,
+     "en": "Virtuous Skirt",
+     "ko": "고결의 스커트",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16814,
+     "en": "Pants of Prophecy",
+     "ko": "계시의 바지",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16922,
+     "en": "Leggings of Transcendence",
+     "ko": "초월의 다리보호구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21352,
+     "en": "Trousers of the Oracle",
+     "ko": "신탁의 바지",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22513,
+     "en": "Leggings of Faith",
+     "ko": "신념의 다리보호구",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 13863,
+     "en": "Runecloth Gloves",
+     "ko": "룬매듭 장갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17596,
+     "en": "Knight-Lieutenant's Satin Gloves",
+     "ko": "상급기사의 명주 장갑",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16692,
+     "en": "Devout Gloves",
+     "ko": "기원의 장갑",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22081,
+     "en": "Virtuous Gloves",
+     "ko": "고결의 장갑",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16812,
+     "en": "Gloves of Prophecy",
+     "ko": "계시의 장갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16920,
+     "en": "Handguards of Transcendence",
+     "ko": "초월의 장갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21619,
+     "en": "Gloves of the Messiah",
+     "ko": "구세주의 장갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22517,
+     "en": "Gloves of Faith",
+     "ko": "신념의 장갑",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 13856,
+     "en": "Runecloth Belt",
+     "ko": "룬매듭 허리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20047,
+     "en": "Highlander's Cloth Girdle",
+     "ko": "산악연대 헝겊 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16696,
+     "en": "Devout Belt",
+     "ko": "기원의 허리띠",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22078,
+     "en": "Virtuous Belt",
+     "ko": "고결의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16817,
+     "en": "Girdle of Prophecy",
+     "ko": "계시의 벨트",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16925,
+     "en": "Belt of Transcendence",
+     "ko": "초월의 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21582,
+     "en": "Grasp of the Old God",
+     "ko": "고대신의 올가미",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22518,
+     "en": "Belt of Faith",
+     "ko": "신념의 허리띠",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 13864,
+     "en": "Runecloth Boots",
+     "ko": "룬매듭 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17594,
+     "en": "Knight-Lieutenant's Satin Boots",
+     "ko": "상급기사의 명주 장화",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16691,
+     "en": "Devout Sandals",
+     "ko": "기원의 덧신",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22084,
+     "en": "Virtuous Sandals",
+     "ko": "고결의 덧신",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16811,
+     "en": "Boots of Prophecy",
+     "ko": "계시의 장화",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16919,
+     "en": "Boots of Transcendence",
+     "ko": "초월의 장화",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21349,
+     "en": "Footwraps of the Oracle",
+     "ko": "신탁의 덧신",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22516,
+     "en": "Sandals of Faith",
+     "ko": "신념의 덧신",
+     "confidence": "high"
+    }
+   }
+  },
+  "MAGE": {
+   "Cap": {
+    "Grade1": {
+     "id": 10024,
+     "en": "Black Mageweave Headband",
+     "ko": "검은 마법매듭 머리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16416,
+     "en": "Lieutenant Commander's Crown",
+     "ko": "부사령관의 관",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16686,
+     "en": "Magister's Crown",
+     "ko": "원소술사 관",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22065,
+     "en": "Sorcerer's Crown",
+     "ko": "마술사의 관",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16795,
+     "en": "Arcanist Crown",
+     "ko": "신비술사 관",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16914,
+     "en": "Netherwind Crown",
+     "ko": "소용돌이 관",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21347,
+     "en": "Enigma Circlet",
+     "ko": "불가사의의 머리장식",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22498,
+     "en": "Frostfire Circlet",
+     "ko": "얼음불꽃 관",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 10027,
+     "en": "Black Mageweave Shoulders",
+     "ko": "검은 마법매듭 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16415,
+     "en": "Lieutenant Commander's Silk Spaulders",
+     "ko": "부사령관의 비단 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16689,
+     "en": "Magister's Mantle",
+     "ko": "원소술사 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22068,
+     "en": "Sorcerer's Mantle",
+     "ko": "마술사의 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16797,
+     "en": "Arcanist Mantle",
+     "ko": "신비술사 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16917,
+     "en": "Netherwind Mantle",
+     "ko": "소용돌이 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21345,
+     "en": "Enigma Shoulderpads",
+     "ko": "불가사의의 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22499,
+     "en": "Frostfire Shoulderpads",
+     "ko": "얼음불꽃 어깨보호대",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 10001,
+     "en": "Black Mageweave Robe",
+     "ko": "검은 마법매듭 로브",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16413,
+     "en": "Knight-Captain's Silk Raiment",
+     "ko": "기사대장의 비단 의복",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16688,
+     "en": "Magister's Robes",
+     "ko": "원소술사 로브",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22069,
+     "en": "Sorcerer's Robes",
+     "ko": "마술사의 로브",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16798,
+     "en": "Arcanist Robes",
+     "ko": "신비술사 로브",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16916,
+     "en": "Netherwind Robes",
+     "ko": "소용돌이 로브",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21343,
+     "en": "Enigma Robes",
+     "ko": "불가사의의 로브",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22496,
+     "en": "Frostfire Robe",
+     "ko": "얼음불꽃 로브",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 9999,
+     "en": "Black Mageweave Leggings",
+     "ko": "검은 마법매듭 다리보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16414,
+     "en": "Knight-Captain's Silk Leggings",
+     "ko": "기사대장의 비단 다리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16687,
+     "en": "Magister's Leggings",
+     "ko": "원소술사 다리보호구",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22067,
+     "en": "Sorcerer's Leggings",
+     "ko": "마술사의 다리보호구",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16796,
+     "en": "Arcanist Leggings",
+     "ko": "신비술사 다리보호구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16915,
+     "en": "Netherwind Pants",
+     "ko": "소용돌이 바지",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21346,
+     "en": "Enigma Leggings",
+     "ko": "불가사의의 다리보호구",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22497,
+     "en": "Frostfire Leggings",
+     "ko": "얼음불꽃 다리보호구",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 10003,
+     "en": "Black Mageweave Gloves",
+     "ko": "검은 마법매듭 장갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16391,
+     "en": "Knight-Lieutenant's Silk Gloves",
+     "ko": "상급기사의 비단 장갑",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16684,
+     "en": "Magister's Gloves",
+     "ko": "원소술사 장갑",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22066,
+     "en": "Sorcerer's Gloves",
+     "ko": "마술사의 장갑",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16801,
+     "en": "Arcanist Gloves",
+     "ko": "신비술사 장갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16913,
+     "en": "Netherwind Gloves",
+     "ko": "소용돌이 장갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21585,
+     "en": "Dark Storm Gauntlets",
+     "ko": "암흑폭풍 건틀릿",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22501,
+     "en": "Frostfire Gloves",
+     "ko": "얼음불꽃 장갑",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 4329,
+     "en": "Star Belt",
+     "ko": "별장식 허리띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20047,
+     "en": "Highlander's Cloth Girdle",
+     "ko": "산악연대 헝겊 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16685,
+     "en": "Magister's Belt",
+     "ko": "원소술사 허리띠",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22062,
+     "en": "Sorcerer's Belt",
+     "ko": "마술사의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16802,
+     "en": "Arcanist Belt",
+     "ko": "신비술사 허리띠",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16818,
+     "en": "Netherwind Belt",
+     "ko": "소용돌이 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21582,
+     "en": "Grasp of the Old God",
+     "ko": "고대신의 올가미",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22502,
+     "en": "Frostfire Belt",
+     "ko": "얼음불꽃 허리띠",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 10026,
+     "en": "Black Mageweave Boots",
+     "ko": "검은 마법매듭 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 16369,
+     "en": "Knight-Lieutenant's Silk Boots",
+     "ko": "상급기사의 비단 장화",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16682,
+     "en": "Magister's Boots",
+     "ko": "원소술사 장화",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22064,
+     "en": "Sorcerer's Boots",
+     "ko": "마술사의 장화",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16800,
+     "en": "Arcanist Boots",
+     "ko": "신비술사 장화",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16912,
+     "en": "Netherwind Boots",
+     "ko": "소용돌이 장화",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21344,
+     "en": "Enigma Boots",
+     "ko": "불가사의의 장화",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22500,
+     "en": "Frostfire Sandals",
+     "ko": "얼음불꽃 덧신",
+     "confidence": "high"
+    }
+   }
+  },
+  "WARLOCK": {
+   "Cap": {
+    "Grade1": {
+     "id": 10025,
+     "en": "Shadoweave Mask",
+     "ko": "그림자매듭 복면",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17566,
+     "en": "Lieutenant Commander's Headguard",
+     "ko": "부사령관의 머리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16698,
+     "en": "Dreadmist Mask",
+     "ko": "공포의안개 복면",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22074,
+     "en": "Deathmist Mask",
+     "ko": "죽음의안개 복면",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16808,
+     "en": "Felheart Horns",
+     "ko": "타락한심장의 뿔투구",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16929,
+     "en": "Nemesis Skullcap",
+     "ko": "천벌의 투구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21337,
+     "en": "Doomcaller's Circlet",
+     "ko": "파멸의 소환사 머리장식",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22506,
+     "en": "Plagueheart Circlet",
+     "ko": "역병의심장 관",
+     "confidence": "high"
+    }
+   },
+   "Shoulder": {
+    "Grade1": {
+     "id": 10028,
+     "en": "Shadoweave Shoulders",
+     "ko": "그림자매듭 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17569,
+     "en": "Lieutenant Commander's Dreadweave Mantle",
+     "ko": "부사령관의 공포매듭 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16701,
+     "en": "Dreadmist Mantle",
+     "ko": "공포의안개 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22073,
+     "en": "Deathmist Mantle",
+     "ko": "죽음의안개 어깨보호구",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16807,
+     "en": "Felheart Shoulder Pads",
+     "ko": "타락한심장의 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16932,
+     "en": "Nemesis Spaulders",
+     "ko": "천벌의 어깨갑옷",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21335,
+     "en": "Doomcaller's Mantle",
+     "ko": "파멸의 소환사 어깨보호대",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22507,
+     "en": "Plagueheart Shoulderpads",
+     "ko": "역병의심장 어깨보호대",
+     "confidence": "high"
+    }
+   },
+   "Clothes": {
+    "Grade1": {
+     "id": 10004,
+     "en": "Shadoweave Robe",
+     "ko": "그림자매듭 로브",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17568,
+     "en": "Knight-Captain's Dreadweave Robe",
+     "ko": "기사대장의 공포매듭 로브",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16700,
+     "en": "Dreadmist Robe",
+     "ko": "공포의안개 로브",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22075,
+     "en": "Deathmist Robe",
+     "ko": "죽음의안개 로브",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16809,
+     "en": "Felheart Robes",
+     "ko": "타락한심장의 로브",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16931,
+     "en": "Nemesis Robes",
+     "ko": "천벌의 로브",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21334,
+     "en": "Doomcaller's Robes",
+     "ko": "파멸의 소환사 로브",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22504,
+     "en": "Plagueheart Robe",
+     "ko": "역병의심장 로브",
+     "confidence": "high"
+    }
+   },
+   "Pants": {
+    "Grade1": {
+     "id": 10002,
+     "en": "Shadoweave Pants",
+     "ko": "그림자매듭 바지",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17567,
+     "en": "Knight-Captain's Dreadweave Leggings",
+     "ko": "기사대장의 공포매듭 다리보호구",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16699,
+     "en": "Dreadmist Leggings",
+     "ko": "공포의안개 다리보호구",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22072,
+     "en": "Deathmist Leggings",
+     "ko": "죽음의안개 다리보호구",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16810,
+     "en": "Felheart Pants",
+     "ko": "타락한심장의 바지",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16930,
+     "en": "Nemesis Leggings",
+     "ko": "천벌의 다리보호구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21336,
+     "en": "Doomcaller's Trousers",
+     "ko": "파멸의 소환사 바지",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22505,
+     "en": "Plagueheart Leggings",
+     "ko": "역병의심장 다리보호구",
+     "confidence": "high"
+    }
+   },
+   "Glove": {
+    "Grade1": {
+     "id": 10023,
+     "en": "Shadoweave Gloves",
+     "ko": "그림자매듭 장갑",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17564,
+     "en": "Knight-Lieutenant's Dreadweave Gloves",
+     "ko": "상급기사의 공포매듭 장갑",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16705,
+     "en": "Dreadmist Wraps",
+     "ko": "공포의안개 장갑",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22077,
+     "en": "Deathmist Wraps",
+     "ko": "죽음의안개 장갑",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16805,
+     "en": "Felheart Gloves",
+     "ko": "타락한심장의 장갑",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16928,
+     "en": "Nemesis Gloves",
+     "ko": "천벌의 장갑",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21888,
+     "en": "Gloves of the Immortal",
+     "ko": "불사신의 장갑",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22509,
+     "en": "Plagueheart Gloves",
+     "ko": "역병의심장 장갑",
+     "confidence": "high"
+    }
+   },
+   "Belt": {
+    "Grade1": {
+     "id": 10771,
+     "en": "Deathmage Sash",
+     "ko": "죽음의 마법사 장식띠",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20047,
+     "en": "Highlander's Cloth Girdle",
+     "ko": "산악연대 헝겊 벨트",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16702,
+     "en": "Dreadmist Belt",
+     "ko": "공포의안개 허리띠",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22070,
+     "en": "Deathmist Belt",
+     "ko": "죽음의안개 허리띠",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16806,
+     "en": "Felheart Belt",
+     "ko": "타락한심장의 허리띠",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16933,
+     "en": "Nemesis Belt",
+     "ko": "천벌의 허리띠",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 22730,
+     "en": "Eyestalk Waist Cord",
+     "ko": "눈자루 허리띠",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22510,
+     "en": "Plagueheart Belt",
+     "ko": "역병의심장 허리띠",
+     "confidence": "high"
+    }
+   },
+   "Shoes": {
+    "Grade1": {
+     "id": 10031,
+     "en": "Shadoweave Boots",
+     "ko": "그림자매듭 장화",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 17562,
+     "en": "Knight-Lieutenant's Dreadweave Boots",
+     "ko": "상급기사의 공포매듭 장화",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 16704,
+     "en": "Dreadmist Sandals",
+     "ko": "공포의안개 신발",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 22076,
+     "en": "Deathmist Sandals",
+     "ko": "죽음의안개 신발",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 16803,
+     "en": "Felheart Slippers",
+     "ko": "타락한심장의 신발",
+     "confidence": "high"
+    },
+    "Grade5_1": {
+     "id": 16927,
+     "en": "Nemesis Boots",
+     "ko": "천벌의 장화",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21338,
+     "en": "Doomcaller's Footwraps",
+     "ko": "파멸의 소환사 덧신",
+     "confidence": "high"
+    },
+    "Grade6_1": {
+     "id": 22508,
+     "en": "Plagueheart Sandals",
+     "ko": "역병의심장 덧신",
+     "confidence": "high"
+    }
+   }
+  }
+ },
+ "cape": {
+  "Grade1": {
+   "id": 5193,
+   "en": "Cape of the Brotherhood",
+   "ko": "데피아즈단 단망토",
+   "confidence": "high"
+  },
+  "Grade2": {
+   "id": 13340,
+   "en": "Cape of the Black Baron",
+   "ko": "검은 남작의 단망토",
+   "confidence": "high"
+  },
+  "Grade3": {
+   "id": 15138,
+   "en": "Onyxia Scale Cloak",
+   "ko": "오닉시아 비늘 망토",
+   "confidence": "high"
+  },
+  "Grade4": {
+   "id": 17107,
+   "en": "Dragon's Blood Cape",
+   "ko": "용혈 단망토",
+   "confidence": "high"
+  },
+  "Grade5": {
+   "id": 17102,
+   "en": "Cloak of the Shrouded Mists",
+   "ko": "장막의 망토",
+   "confidence": "high"
+  },
+  "Grade5_1": {
+   "id": 19378,
+   "en": "Cloak of the Brood Lord",
+   "ko": "혈족군주의 망토",
+   "confidence": "high"
+  },
+  "Grade6": {
+   "id": 22731,
+   "en": "Cloak of the Devoured",
+   "ko": "희생자의 망토",
+   "confidence": "high"
+  },
+  "Grade6_1": {
+   "id": 23050,
+   "en": "Cloak of the Necropolis",
+   "ko": "죽음의 요새 망토",
+   "confidence": "high"
+  }
+ },
+ "weapons": {
+  "hero": {
+   "spec": "무기 전사 (Arms Warrior)",
+   "type": "Two-Hand Sword/Axe",
+   "mainHand": {
+    "Grade1": {
+     "id": 7717,
+     "en": "Ravager",
+     "ko": "폭풍의 눈",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 12784,
+     "en": "Arcanite Reaper",
+     "ko": "아케이나이트 도끼",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 18542,
+     "en": "Typhoon",
+     "ko": "태풍",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 17076,
+     "en": "Bonereaver's Edge",
+     "ko": "각골의 검",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19364,
+     "en": "Ashkandi, Greatsword of the Brotherhood",
+     "ko": "아쉬칸디 - 기사단의 대검",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21134,
+     "en": "Dark Edge of Insanity",
+     "ko": "광기의 암흑 도끼",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22813,
+     "en": "Claymore of Unholy Might",
+     "ko": "부정한 힘의 클레이모어",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22691,
+     "en": "Corrupted Ashbringer",
+     "ko": "타락한 파멸의 인도자",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "darkKnight": {
+   "spec": "분노 전사 (Fury Warrior)",
+   "type": "Dual-wield One-Hand Sword/Axe",
+   "mainHand": {
+    "Grade1": {
+     "id": 1482,
+     "en": "Shadowfang",
+     "ko": "그림자송곳니 검",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 12940,
+     "en": "Dal'Rend's Sacred Charge",
+     "ko": "달렌드의 성검",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 18832,
+     "en": "Brutality Blade",
+     "ko": "만행의 검",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 17075,
+     "en": "Vis'kag the Bloodletter",
+     "ko": "혈문도 비스카그",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19352,
+     "en": "Chromatically Tempered Sword",
+     "ko": "오색으로 달궈진 용검",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21650,
+     "en": "Ancient Qiraji Ripper",
+     "ko": "고대 퀴라지 검",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23577,
+     "en": "The Hungering Cold",
+     "ko": "갈망의 한기",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 19019,
+     "en": "Thunderfury, Blessed Blade of the Windseeker",
+     "ko": "우레폭풍 - 바람추적자의 성검",
+     "confidence": "high"
+    }
+   },
+   "offHand": {
+    "Grade1": {
+     "id": 5191,
+     "en": "Cruel Barb",
+     "ko": "섬뜩한 갈고리검",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 12939,
+     "en": "Dal'Rend's Tribal Guardian",
+     "ko": "달렌드의 부족 수호검",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 871,
+     "en": "Flurry Axe",
+     "ko": "질풍의 도끼",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 17068,
+     "en": "Deathbringer",
+     "ko": "죽음의 인도자",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19351,
+     "en": "Maladath, Runed Blade of the Black Flight",
+     "ko": "말라다스 - 검은용군단의 룬검",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 19363,
+     "en": "Crul'shorukh, Edge of Chaos",
+     "ko": "크룰쇼루크 - 혼돈의 서슬",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23014,
+     "en": "Iblis, Blade of the Fallen Seraph",
+     "ko": "이블리스 - 타락한 대천사의 검",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 23054,
+     "en": "Gressil, Dawn of Ruin",
+     "ko": "그레실 - 멸망의 전조",
+     "confidence": "high"
+    }
+   }
+  },
+  "paladin": {
+   "spec": "보호 성기사 (Protection Paladin)",
+   "type": "One-Hand Mace/Sword + Shield",
+   "mainHand": {
+    "Grade1": {
+     "id": 7721,
+     "en": "Hand of Righteousness",
+     "ko": "정의의 망치",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 11684,
+     "en": "Ironfoe",
+     "ko": "무쇠폭군",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 17112,
+     "en": "Empyrean Demolisher",
+     "ko": "하늘의 파괴자",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 18348,
+     "en": "Quel'Serrar",
+     "ko": "쿠엘세라",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19335,
+     "en": "Spineshatter",
+     "ko": "척추 파쇄기",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21837,
+     "en": "Anubisath Warhammer",
+     "ko": "아누비사스 전투망치",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22808,
+     "en": "The Castigator",
+     "ko": "징계의 철퇴",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 23056,
+     "en": "Hammer of the Twisting Nether",
+     "ko": "뒤틀린 황천 망치",
+     "confidence": "high"
+    }
+   },
+   "offHand": {
+    "Grade1": {
+     "id": 7726,
+     "en": "Aegis of the Scarlet Commander",
+     "ko": "붉은십자군 사령관의 아이기스",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 1168,
+     "en": "Skullflame Shield",
+     "ko": "해골 화염 방패",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 17066,
+     "en": "Drillborer Disk",
+     "ko": "천공쐐기 원반",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19862,
+     "en": "Aegis of the Blood God",
+     "ko": "혈신의 아이기스",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19349,
+     "en": "Elementium Reinforced Bulwark",
+     "ko": "엘레멘티움 보루방패",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21610,
+     "en": "Wormscale Blocker",
+     "ko": "벌레미늘 방호경갑",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23043,
+     "en": "The Face of Death",
+     "ko": "결사의 방패",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22819,
+     "en": "Shield of Condemnation",
+     "ko": "규탄의 방패",
+     "confidence": "high"
+    }
+   }
+  },
+  "archMageFP": {
+   "spec": "파괴 흑마법사 (Destruction Warlock)",
+   "type": "Staff",
+   "mainHand": {
+    "Grade1": {
+     "id": 5201,
+     "en": "Emberstone Staff",
+     "ko": "붉은 석탄 지팡이",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 11750,
+     "en": "Kindling Stave",
+     "ko": "발화의 지팡이",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 18842,
+     "en": "Staff of Dominance",
+     "ko": "지배의 지팡이",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19355,
+     "en": "Shadow Wing Focus Staff",
+     "ko": "그림자날개 지팡이",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 21128,
+     "en": "Staff of the Qiraji Prophets",
+     "ko": "퀴라지 예언자의 지팡이",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 22800,
+     "en": "Brimstone Staff",
+     "ko": "유황 지팡이",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 19356,
+     "en": "Staff of the Shadow Flame",
+     "ko": "암흑 불길의 지팡이",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22630,
+     "en": "Atiesh, Greatstaff of the Guardian",
+     "ko": "아티쉬 - 수호자의 지팡이",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "archMageIL": {
+   "spec": "정기 주술사 (Elemental Shaman)",
+   "type": "One-Hand Mace + Shield",
+   "mainHand": {
+    "Grade1": {
+     "id": 2816,
+     "en": "Death Speaker Scepter",
+     "ko": "죽음의예언자 홀",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 12794,
+     "en": "Masterwork Stormhammer",
+     "ko": "명인의 폭풍망치",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 17105,
+     "en": "Aurastone Hammer",
+     "ko": "기력석 망치",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19890,
+     "en": "Jin'do's Hexxer",
+     "ko": "진도의 주술봉",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19360,
+     "en": "Lok'amir il Romathis",
+     "ko": "로크아미르 일 로마시스",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21839,
+     "en": "Scepter of the False Prophet",
+     "ko": "거짓된 예언자의 홀",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23221,
+     "en": "Misplaced Servo Arm",
+     "ko": "잘못 장착된 전동축",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 19019,
+     "en": "Thunderfury, Blessed Blade of the Windseeker",
+     "ko": "우레폭풍 - 바람추적자의 성검",
+     "confidence": "high"
+    }
+   },
+   "offHand": {
+    "Grade1": {
+     "id": 6694,
+     "en": "Heart of Agamaggan",
+     "ko": "아감마간의 심장",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 18696,
+     "en": "Intricately Runed Shield",
+     "ko": "룬매듭 방패",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 17106,
+     "en": "Malistar's Defender",
+     "ko": "말리스타의 파수방패",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 20688,
+     "en": "Earthen Guard",
+     "ko": "대지의 수호방패",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19348,
+     "en": "Red Dragonscale Protector",
+     "ko": "붉은용비늘 수호방패",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21269,
+     "en": "Blessed Qiraji Bulwark",
+     "ko": "축복받은 퀴라지 보루방패",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23238,
+     "en": "Stygian Buckler",
+     "ko": "저승의 버클러",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 23075,
+     "en": "Death's Bargain",
+     "ko": "죽음의 계약",
+     "confidence": "high"
+    }
+   }
+  },
+  "bishop": {
+   "spec": "신성 사제 (Holy Priest)",
+   "type": "Staff",
+   "mainHand": {
+    "Grade1": {
+     "id": 2271,
+     "en": "Staff of the Blessed Seer",
+     "ko": "축복받은 예언자의 지팡이",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 22406,
+     "en": "Redemption",
+     "ko": "구원의 지팡이",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 812,
+     "en": "Glowing Brightwood Staff",
+     "ko": "빛나는 미명나무 지팡이",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19909,
+     "en": "Will of Arlokk",
+     "ko": "알로크의 결의",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 20581,
+     "en": "Staff of Rampant Growth",
+     "ko": "신록의 지팡이",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21275,
+     "en": "Blessed Qiraji Augur Staff",
+     "ko": "축복받은 퀴라지 예언자 지팡이",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22801,
+     "en": "Spire of Twilight",
+     "ko": "여명의 뾰족지팡이",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 18608,
+     "en": "Benediction",
+     "ko": "축복의 지팡이",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "bowMaster": {
+   "spec": "냉기 마법사 (Frost Mage)",
+   "type": "Staff",
+   "mainHand": {
+    "Grade1": {
+     "id": 9452,
+     "en": "Hydrocane",
+     "ko": "수력지팡이",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 19101,
+     "en": "Whiteout Staff",
+     "ko": "극지의 지팡이",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 17113,
+     "en": "Amberseal Keeper",
+     "ko": "붉은봉인의 수호자",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19884,
+     "en": "Jin'do's Judgement",
+     "ko": "진도의 심판",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 21452,
+     "en": "Staff of the Ruins",
+     "ko": "폐허의 지팡이",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21273,
+     "en": "Blessed Qiraji Acolyte Staff",
+     "ko": "축복받은 퀴라지 시제 지팡이",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22799,
+     "en": "Soulseeker",
+     "ko": "영혼의 추적자",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22589,
+     "en": "Atiesh, Greatstaff of the Guardian",
+     "ko": "아티쉬 - 수호자의 지팡이",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "marksman": {
+   "spec": "사격 사냥꾼 (Marksmanship Hunter)",
+   "type": "Ranged Crossbow/Bow",
+   "mainHand": {
+    "Grade1": {
+     "id": 13037,
+     "en": "Crystalpine Stinger",
+     "ko": "수정가시 쐐기활",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 12651,
+     "en": "Blackcrow",
+     "ko": "검은까마귀",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 20599,
+     "en": "Polished Ironwood Crossbow",
+     "ko": "빛나는 강철나무 석궁",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 21459,
+     "en": "Crossbow of Imminent Doom",
+     "ko": "절박한 파멸의 석궁",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19361,
+     "en": "Ashjre'thul, Crossbow of Smiting",
+     "ko": "아쉬즈레툴 - 일격의 석궁",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21616,
+     "en": "Huhuran's Stinger",
+     "ko": "후후란의 독침",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22812,
+     "en": "Nerubian Slavemaker",
+     "ko": "네루비안 노예제조기",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 18713,
+     "en": "Rhok'delar, Longbow of the Ancient Keepers",
+     "ko": "라크델라 - 고대수호자의 장궁",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "nightLord": {
+   "spec": "암살 도적 (Assassination Rogue)",
+   "type": "Dual Daggers",
+   "mainHand": {
+    "Grade1": {
+     "id": 1935,
+     "en": "Assassin's Blade",
+     "ko": "암살자의 검",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 12590,
+     "en": "Felstriker",
+     "ko": "필살의 비수",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 18805,
+     "en": "Core Hound Tooth",
+     "ko": "심장부 사냥개 이빨",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 18816,
+     "en": "Perdition's Blade",
+     "ko": "전멸의 비수",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19346,
+     "en": "Dragonfang Blade",
+     "ko": "용아 비수",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21244,
+     "en": "Blessed Qiraji Pugio",
+     "ko": "축복받은 퀴라지 푸기오",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22804,
+     "en": "Maexxna's Fang",
+     "ko": "맥스나의 송곳니",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22802,
+     "en": "Kingsfall",
+     "ko": "왕의 몰락",
+     "confidence": "high"
+    }
+   },
+   "offHand": {
+    "Grade1": {
+     "id": 6220,
+     "en": "Meteor Shard",
+     "ko": "유성 파편 단도",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 14555,
+     "en": "Alcor's Sunrazor",
+     "ko": "알코르의 태양비수",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 17071,
+     "en": "Gutgore Ripper",
+     "ko": "대학살의 비수",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19859,
+     "en": "Fang of the Faceless",
+     "ko": "얼굴 없는 자의 송곳니",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 20578,
+     "en": "Emerald Dragonfang",
+     "ko": "에메랄드 용송곳니",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21522,
+     "en": "Shadowsong's Sorrow",
+     "ko": "섀도송의 비애",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23044,
+     "en": "Harbinger of Doom",
+     "ko": "파멸의 전조",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 21126,
+     "en": "Death's Sting",
+     "ko": "죽음의 쐐기",
+     "confidence": "high"
+    }
+   }
+  },
+  "shadower": {
+   "spec": "악마 흑마법사 (Demonology Warlock)",
+   "type": "Dagger + Held Off-hand",
+   "mainHand": {
+    "Grade1": {
+     "id": 2912,
+     "en": "Claw of the Shadowmancer",
+     "ko": "흑마술사의 발톱",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 13964,
+     "en": "Witchblade",
+     "ko": "마녀의 비수",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 18878,
+     "en": "Sorcerous Dagger",
+     "ko": "마력의 단검",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 17070,
+     "en": "Fang of the Mystics",
+     "ko": "비술사의 송곳니",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19347,
+     "en": "Claw of Chromaggus",
+     "ko": "크로마구스의 발톱",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21416,
+     "en": "Kris of Unspoken Names",
+     "ko": "절대자의 크리스",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 21523,
+     "en": "Fang of Korialstrasz",
+     "ko": "코리알스트라즈의 송곳니",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22803,
+     "en": "Midnight Haze",
+     "ko": "한밤중의 아지랑이",
+     "confidence": "high"
+    }
+   },
+   "offHand": {
+    "Grade1": {
+     "id": 10770,
+     "en": "Mordresh's Lifeless Skull",
+     "ko": "모드레쉬의 해골",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 13524,
+     "en": "Skull of Burning Shadows",
+     "ko": "불타는 어둠의 해골",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 19309,
+     "en": "Tome of Shadow Force",
+     "ko": "검은 마력의 고서",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 17067,
+     "en": "Ancient Cornerstone Grimoire",
+     "ko": "고대의 흑마법서",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19366,
+     "en": "Master Dragonslayer's Orb",
+     "ko": "용사냥꾼의 수정구",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21597,
+     "en": "Royal Scepter of Vek'lor",
+     "ko": "베클로어의 왕실 홀",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22937,
+     "en": "Gem of Nerubis",
+     "ko": "네루비스의 보석",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 23049,
+     "en": "Sapphiron's Left Eye",
+     "ko": "사피론의 왼쪽 눈",
+     "confidence": "high"
+    }
+   }
+  },
+  "viper": {
+   "spec": "야성 드루이드 (Feral Druid, Cat)",
+   "type": "Two-Hand Mace/Staff",
+   "mainHand": {
+    "Grade1": {
+     "id": 9449,
+     "en": "Manual Crowd Pummeler",
+     "ko": "수동 고철 압축기",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 943,
+     "en": "Warden Staff",
+     "ko": "교도관 지팡이",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 21188,
+     "en": "Fist of Cenarius",
+     "ko": "세나리우스의 힘",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 17073,
+     "en": "Earthshaker",
+     "ko": "대지진의 망치",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19358,
+     "en": "Draconic Maul",
+     "ko": "용력의 마울",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21703,
+     "en": "Hammer of Ji'zhi",
+     "ko": "지쯔의 망치",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23039,
+     "en": "The Eye of Nerub",
+     "ko": "네룹의 눈",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22798,
+     "en": "Might of Menethil",
+     "ko": "메네실의 힘",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "captain": {
+   "spec": "야수 사냥꾼 (Beast Mastery Hunter)",
+   "type": "Ranged Gun",
+   "mainHand": {
+    "Grade1": {
+     "id": 7729,
+     "en": "Chesterfall Musket",
+     "ko": "체스터폴 머스킷총",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 2099,
+     "en": "Dwarven Hand Cannon",
+     "ko": "드워프족 손대포",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 18282,
+     "en": "Core Marksman Rifle",
+     "ko": "명사수의 라이플",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 17072,
+     "en": "Blastershot Launcher",
+     "ko": "회오리탄 나팔총",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19368,
+     "en": "Dragonbreath Hand Cannon",
+     "ko": "용숨결 손대포",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21272,
+     "en": "Blessed Qiraji Musket",
+     "ko": "축복받은 퀴라지 머스킷총",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23557,
+     "en": "Larvae of the Great Worm",
+     "ko": "대왕 벌레의 원혼",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22810,
+     "en": "Toxin Injector",
+     "ko": "맹독 분사기",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "windBreaker": {
+   "spec": "조화 드루이드 (Balance Druid)",
+   "type": "Staff",
+   "mainHand": {
+    "Grade1": {
+     "id": 6631,
+     "en": "Living Root",
+     "ko": "살아있는 뿌리",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 22458,
+     "en": "Moonshadow Stave",
+     "ko": "달그림자 지팡이",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 20258,
+     "en": "Zulian Ceremonial Staff",
+     "ko": "줄리안 제사봉",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 20581,
+     "en": "Staff of Rampant Growth",
+     "ko": "신록의 지팡이",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 21452,
+     "en": "Staff of the Ruins",
+     "ko": "폐허의 지팡이",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21273,
+     "en": "Blessed Qiraji Acolyte Staff",
+     "ko": "축복받은 퀴라지 시제 지팡이",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22801,
+     "en": "Spire of Twilight",
+     "ko": "여명의 뾰족지팡이",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22632,
+     "en": "Atiesh, Greatstaff of the Guardian",
+     "ko": "아티쉬 - 수호자의 지팡이",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "nightWalker": {
+   "spec": "암흑 사제 (Shadow Priest)",
+   "type": "Staff",
+   "mainHand": {
+    "Grade1": {
+     "id": 2549,
+     "en": "Staff of the Shade",
+     "ko": "망령의 지팡이",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 13937,
+     "en": "Headmaster's Charge",
+     "ko": "교장의 해골지팡이",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 944,
+     "en": "Elemental Mage Staff",
+     "ko": "정령 마법사 지팡이",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19884,
+     "en": "Jin'do's Judgement",
+     "ko": "진도의 심판",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19355,
+     "en": "Shadow Wing Focus Staff",
+     "ko": "그림자날개 지팡이",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21128,
+     "en": "Staff of the Qiraji Prophets",
+     "ko": "퀴라지 예언자의 지팡이",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22799,
+     "en": "Soulseeker",
+     "ko": "영혼의 추적자",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 18609,
+     "en": "Anathema",
+     "ko": "저주의 지팡이",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "soulMaster": {
+   "spec": "징벌 성기사 (Retribution Paladin)",
+   "type": "Two-Hand Mace/Sword",
+   "mainHand": {
+    "Grade1": {
+     "id": 7723,
+     "en": "Mograine's Might",
+     "ko": "모그레인의 철퇴",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 18717,
+     "en": "Hammer of the Grand Crusader",
+     "ko": "십자군 사령관의 망치",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 17193,
+     "en": "Sulfuron Hammer",
+     "ko": "설퍼론 망치",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19854,
+     "en": "Zin'rokh, Destroyer of Worlds",
+     "ko": "진로크 - 세상의 파괴자",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 19357,
+     "en": "Herald of Woe",
+     "ko": "고뇌의 사자",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21679,
+     "en": "Kalimdor's Revenge",
+     "ko": "칼림도어의 복수",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 22809,
+     "en": "Maul of the Redeemed Crusader",
+     "ko": "구원된 십자군의 마울",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 17182,
+     "en": "Sulfuras, Hand of Ragnaros",
+     "ko": "설퍼라스 - 라그나로스의 손",
+     "confidence": "high"
+    }
+   },
+   "offHand": {}
+  },
+  "flameWizard": {
+   "spec": "화염 마법사 (Fire Mage)",
+   "type": "One-Hand Sword + Held Off-hand",
+   "mainHand": {
+    "Grade1": {
+     "id": 10797,
+     "en": "Firebreather",
+     "ko": "불의 숨결",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 20698,
+     "en": "Elemental Attuned Blade",
+     "ko": "원소 조화의 검",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 17103,
+     "en": "Azuresong Mageblade",
+     "ko": "하늘노래 마법검",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19864,
+     "en": "Bloodcaller",
+     "ko": "피의 인도자",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 21413,
+     "en": "Blade of Vaulted Secrets",
+     "ko": "밝혀진 비밀의 칼날",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21521,
+     "en": "Runesword of the Red",
+     "ko": "혁명가의 룬문자 검",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 21622,
+     "en": "Sharpened Silithid Femur",
+     "ko": "뾰족한 실리시드 다리뼈",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 22807,
+     "en": "Wraith Blade",
+     "ko": "망령의 검",
+     "confidence": "high"
+    }
+   },
+   "offHand": {
+    "Grade1": {
+     "id": 2565,
+     "en": "Rod of Molten Fire",
+     "ko": "작열하는 불꽃의 마법봉",
+     "confidence": "high"
+    },
+    "Grade2": {
+     "id": 11935,
+     "en": "Magmus Stone",
+     "ko": "마그무스의 돌",
+     "confidence": "high"
+    },
+    "Grade3": {
+     "id": 19142,
+     "en": "Fire Runed Grimoire",
+     "ko": "화염 룬문자 마법서",
+     "confidence": "high"
+    },
+    "Grade4": {
+     "id": 19311,
+     "en": "Tome of Fiery Arcana",
+     "ko": "불타는 아르카나의 고서",
+     "confidence": "high"
+    },
+    "Grade5": {
+     "id": 21471,
+     "en": "Talon of Furious Concentration",
+     "ko": "맹렬한 집중의 갈퀴발톱",
+     "confidence": "high"
+    },
+    "Grade6": {
+     "id": 21666,
+     "en": "Sartura's Might",
+     "ko": "살투라의 힘",
+     "confidence": "high"
+    },
+    "Grade7": {
+     "id": 23029,
+     "en": "Noth's Frigid Heart",
+     "ko": "노스의 얼어붙은 심장",
+     "confidence": "high"
+    },
+    "Grade8": {
+     "id": 23048,
+     "en": "Sapphiron's Right Eye",
+     "ko": "사피론의 오른쪽 눈",
+     "confidence": "high"
+    }
+   }
+  }
+ }
+}

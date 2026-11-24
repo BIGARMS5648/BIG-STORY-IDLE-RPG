@@ -204,6 +204,7 @@ function Hunt:Spawn(b)
         def.aggroMm = 1200
         b:AddCreature(def)
     end
+    if n > 0 then b:WaveStart() end
 end
 
 function Hunt:Update(b, dt)
@@ -332,6 +333,7 @@ function Chal:SpawnWave(b)
             variant = ((i - 1) % ((hunt.variants) or 1)) + 1, level = self.ch * 3 }))
     end
     self.spawned = self.spawned + wave
+    b:WaveStart()
 end
 
 function Chal:OnKill(b, victim)

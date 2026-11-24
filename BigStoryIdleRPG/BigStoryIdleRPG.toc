@@ -15,8 +15,14 @@ Data\Jobs.lua
 Data\Skills.lua
 Data\World.lua
 Data\Currencies.lua
+Data\Summon.lua
+Data\Weapons.lua
+Data\Companions.lua
+Data\Equipment.lua
+Data\Upgrades.lua
 Data\BaseStats.lua
 Data\RewardTables.lua
+Data\SkinData.lua
 
 Engine\Expr.lua
 Engine\Creature.lua
@@ -24,6 +30,18 @@ Engine\Battle.lua
 Engine\SkillBook.lua
 
 Systems\Hero.lua
+Systems\Weapons.lua
+Systems\Companions.lua
+Systems\Equipment.lua
+Systems\Summon.lua
+Systems\StarForce.lua
+Systems\Potential.lua
+Systems\Scrolls.lua
+Systems\HeroPower.lua
+Systems\Ability.lua
+Systems\Artifacts.lua
+Systems\Journey.lua
+Systems\Supporters.lua
 Systems\Skin.lua
 Systems\Mastery.lua
 Systems\Campaign.lua

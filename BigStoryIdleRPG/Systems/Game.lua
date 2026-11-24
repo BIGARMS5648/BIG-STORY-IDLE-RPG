@@ -130,6 +130,9 @@ function G.Tick(elapsed)
     hero.lastOnline = U.Now()
     hero.stats.playSeconds = (hero.stats.playSeconds or 0) + elapsed
     if ns.Mastery then ns.Mastery.Update(hero) end
+    if ns.HeroPower and ns.HeroPower.Update then pcall(ns.HeroPower.Update, hero) end
+    if ns.Journey and ns.Journey.Update then pcall(ns.Journey.Update, hero) end
+    if ns.Equipment and ns.Equipment.EliteUpdate then pcall(ns.Equipment.EliteUpdate, hero) end
     resetTimer = resetTimer + elapsed
     if resetTimer > 30 then
         resetTimer = 0

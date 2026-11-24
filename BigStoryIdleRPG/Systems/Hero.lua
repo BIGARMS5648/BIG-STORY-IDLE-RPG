@@ -122,8 +122,10 @@ function H.Add(hero, key, n, reason)
 end
 
 function H.Spend(hero, key, n, reason)
+    n = n or 0
     if (hero.wallet[key] or 0) < n then return false end
-    hero.wallet[key] = hero.wallet[key] - n
+    if n == 0 then return true end
+    hero.wallet[key] = (hero.wallet[key] or 0) - n
     ns.Fire("WALLET_CHANGED", hero, key, -n, reason)
     return true
 end

@@ -66,6 +66,9 @@ D.Currencies = {
     worldBossCoin     = { maple = "월드보스 코인", name = "세계 우두머리 주화", icon = "Interface\\Icons\\INV_Misc_Coin_04", order = 70 },
     arenaCoin         = { maple = "아레나 코인", name = "결투장 주화", icon = "Interface\\Icons\\INV_Misc_Coin_05", order = 71 },
     guildCoin         = { maple = "길드 코인", name = "길드 주화", icon = "Interface\\Icons\\INV_Misc_Coin_06", order = 72 },
+    -- Systems/Content*.lua (현상수배 weekly rank / 마왕 발록 challenge boss)
+    wolfCoin          = { maple = "불꽃 늑대 코인", name = "화염 늑대 주화", icon = "Interface\\Icons\\INV_Misc_Coin_07", order = 73 },
+    balrogTicket      = { maple = "마왕 발록 입장권", name = "마왕 도전권", icon = "Interface\\Icons\\INV_Misc_Key_15", order = 59 },
 }
 
 function D.CurrencyName(key)

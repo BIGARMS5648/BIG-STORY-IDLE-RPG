@@ -1,0 +1,3033 @@
+{
+ "_meta": {
+  "source": "npcId/nameEn/nameKo/displayId cross-checked against AzerothCore creature_template + creature_template_model + creature_template_locale(koKR) (3.3.5 data, vanilla entries unchanged). displayIds above 16700 (TBC/WotLK remodels) were dropped to null so the addon falls back to SetCreature(npcId).",
+  "confidence": "high = id+name verified, display in vanilla range; medium = id verified but displayId null or row is a WotLK-rescaled copy; low = unverified",
+  "nameKo": "Korean names from the koKR client locale (3.3.5); Classic-era KR client may differ slightly for a few names.",
+  "loadingScreen": "1.x vanilla 5-man dungeons and open zones use the continent screen (LoadScreenEasternKingdom / LoadScreenKalimdor); instance-specific screens only where 1.x had one. Paths are case-insensitive in the client. loadingScreenConfidence is separate from creature-id confidence.",
+  "order": "ch1-28 open-world zones by level, ch29-40 dungeons by level, ch41-47 raids"
+ },
+ "chapters": {
+  "1": {
+   "zoneKo": "엘윈 숲",
+   "zoneEn": "Elwynn Forest",
+   "kind": "zone",
+   "levelRange": "1-10",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 6,
+     "displayId": 10913,
+     "nameKo": "코볼트 졸개",
+     "nameEn": "Kobold Vermin",
+     "confidence": "high",
+     "level": 2
+    },
+    {
+     "npcId": 38,
+     "displayId": 5035,
+     "nameKo": "데피아즈단원",
+     "nameEn": "Defias Thug",
+     "confidence": "high",
+     "level": 4
+    },
+    {
+     "npcId": 30,
+     "displayId": 382,
+     "nameKo": "숲거미",
+     "nameEn": "Forest Spider",
+     "confidence": "high",
+     "level": 6
+    },
+    {
+     "npcId": 113,
+     "displayId": 503,
+     "nameKo": "돌엄니멧돼지",
+     "nameEn": "Stonetusk Boar",
+     "confidence": "high",
+     "level": 6
+    },
+    {
+     "npcId": 735,
+     "displayId": 527,
+     "nameKo": "멀록 길잡이",
+     "nameEn": "Murloc Streamrunner",
+     "confidence": "high",
+     "level": 7
+    }
+   ],
+   "boss": {
+    "npcId": 448,
+    "displayId": 384,
+    "nameKo": "들창코",
+    "nameEn": "Hogger",
+    "confidence": "high",
+    "level": 11
+   }
+  },
+  "2": {
+   "zoneKo": "듀로타",
+   "zoneEn": "Durotar",
+   "kind": "zone",
+   "levelRange": "1-10",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 3098,
+     "displayId": 503,
+     "nameKo": "점박이멧돼지",
+     "nameEn": "Mottled Boar",
+     "confidence": "high",
+     "level": 2
+    },
+    {
+     "npcId": 3124,
+     "displayId": 2485,
+     "nameKo": "일꾼전갈",
+     "nameEn": "Scorpid Worker",
+     "confidence": "high",
+     "level": 3
+    },
+    {
+     "npcId": 3101,
+     "displayId": 1185,
+     "nameKo": "악마의 하수인",
+     "nameEn": "Vile Familiar",
+     "confidence": "high",
+     "level": 4
+    },
+    {
+     "npcId": 3111,
+     "displayId": 1218,
+     "nameKo": "서슬갈기 가시멧돼지",
+     "nameEn": "Razormane Quilboar",
+     "confidence": "high",
+     "level": 7
+    },
+    {
+     "npcId": 3123,
+     "displayId": 1959,
+     "nameKo": "채찍꼬리 붉은발톱랩터",
+     "nameEn": "Bloodtalon Scythemaw",
+     "confidence": "high",
+     "level": 10
+    }
+   ],
+   "boss": {
+    "npcId": 3205,
+    "displayId": 4078,
+    "nameKo": "잘라제인",
+    "nameEn": "Zalazane",
+    "confidence": "high",
+    "level": 10
+   }
+  },
+  "3": {
+   "zoneKo": "던 모로",
+   "zoneEn": "Dun Morogh",
+   "kind": "zone",
+   "levelRange": "1-10",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 707,
+     "displayId": 606,
+     "nameKo": "바위턱트로그",
+     "nameEn": "Rockjaw Trogg",
+     "confidence": "high",
+     "level": 2
+    },
+    {
+     "npcId": 1138,
+     "displayId": 604,
+     "nameKo": "새끼 겨울늑대",
+     "nameEn": "Snow Tracker Wolf",
+     "confidence": "high",
+     "level": 7
+    },
+    {
+     "npcId": 1135,
+     "displayId": 950,
+     "nameKo": "웬디고",
+     "nameEn": "Wendigo",
+     "confidence": "high",
+     "level": 7
+    },
+    {
+     "npcId": 1196,
+     "displayId": 8840,
+     "nameKo": "얼음발톱흰곰",
+     "nameEn": "Ice Claw Bear",
+     "confidence": "high",
+     "level": 8
+    },
+    {
+     "npcId": 1211,
+     "displayId": 6921,
+     "nameKo": "오염된 노움",
+     "nameEn": "Leper Gnome",
+     "confidence": "high",
+     "level": 10
+    }
+   ],
+   "boss": {
+    "npcId": 1388,
+    "displayId": 1050,
+    "nameKo": "바가쉬",
+    "nameEn": "Vagash",
+    "confidence": "high",
+    "level": 11
+   }
+  },
+  "4": {
+   "zoneKo": "티리스팔 숲",
+   "zoneEn": "Tirisfal Glades",
+   "kind": "zone",
+   "levelRange": "1-10",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 1501,
+     "displayId": 10973,
+     "nameKo": "넋 나간 좀비",
+     "nameEn": "Mindless Zombie",
+     "confidence": "high",
+     "level": 1
+    },
+    {
+     "npcId": 1890,
+     "displayId": 11400,
+     "nameKo": "덜그럭거리는 해골",
+     "nameEn": "Rattlecage Skeleton",
+     "confidence": "high",
+     "level": 3
+    },
+    {
+     "npcId": 1504,
+     "displayId": 513,
+     "nameKo": "새끼 검은그물거미",
+     "nameEn": "Young Night Web Spider",
+     "confidence": "high",
+     "level": 3
+    },
+    {
+     "npcId": 1512,
+     "displayId": 4732,
+     "nameKo": "그늘박쥐",
+     "nameEn": "Duskbat",
+     "confidence": "high",
+     "level": 2
+    },
+    {
+     "npcId": 1535,
+     "displayId": 2471,
+     "nameKo": "붉은십자군 전사",
+     "nameEn": "Scarlet Warrior",
+     "confidence": "high",
+     "level": 7
+    }
+   ],
+   "boss": {
+    "npcId": 1657,
+    "displayId": 11399,
+    "nameKo": "데블린 아가만드",
+    "nameEn": "Devlin Agamand",
+    "confidence": "high",
+    "level": 9
+   }
+  },
+  "5": {
+   "zoneKo": "서부 몰락지대",
+   "zoneEn": "Westfall",
+   "kind": "zone",
+   "levelRange": "10-20",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 36,
+     "displayId": 367,
+     "nameKo": "허수아비골렘",
+     "nameEn": "Harvest Golem",
+     "confidence": "high",
+     "level": 12
+    },
+    {
+     "npcId": 504,
+     "displayId": 2331,
+     "nameKo": "데피아즈단 덫사냥꾼",
+     "nameEn": "Defias Trapper",
+     "confidence": "high",
+     "level": 13
+    },
+    {
+     "npcId": 117,
+     "displayId": 175,
+     "nameKo": "갈퀴발 놀",
+     "nameEn": "Riverpaw Gnoll",
+     "confidence": "high",
+     "level": 12
+    },
+    {
+     "npcId": 126,
+     "displayId": 983,
+     "nameKo": "멀록 길잡이",
+     "nameEn": "Murloc Coastrunner",
+     "confidence": "high",
+     "level": 13
+    },
+    {
+     "npcId": 157,
+     "displayId": 3027,
+     "nameKo": "뿔엄니멧돼지",
+     "nameEn": "Goretusk",
+     "confidence": "high",
+     "level": 15
+    }
+   ],
+   "boss": {
+    "npcId": 573,
+    "displayId": 548,
+    "nameKo": "전투 절단기 4000",
+    "nameEn": "Foe Reaper 4000",
+    "confidence": "high",
+    "level": 20
+   }
+  },
+  "6": {
+   "zoneKo": "불모의 땅",
+   "zoneEn": "The Barrens",
+   "kind": "zone",
+   "levelRange": "10-25",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 3242,
+     "displayId": 6087,
+     "nameKo": "굶주린 얼룩말",
+     "nameEn": "Zhevra Runner",
+     "confidence": "high",
+     "level": 14
+    },
+    {
+     "npcId": 3415,
+     "displayId": 1056,
+     "nameKo": "사바나 암사자",
+     "nameEn": "Savannah Huntress",
+     "confidence": "high",
+     "level": 12
+    },
+    {
+     "npcId": 3268,
+     "displayId": 6096,
+     "nameKo": "서슬갈기일족 가시마술사",
+     "nameEn": "Razormane Thornweaver",
+     "confidence": "high",
+     "level": 11
+    },
+    {
+     "npcId": 3272,
+     "displayId": 9442,
+     "nameKo": "콜카르일족 사냥꾼",
+     "nameEn": "Kolkar Wrangler",
+     "confidence": "high",
+     "level": 13
+    },
+    {
+     "npcId": 3276,
+     "displayId": 3218,
+     "nameKo": "칼날바람하피",
+     "nameEn": "Witchwing Harpy",
+     "confidence": "high",
+     "level": 15
+    }
+   ],
+   "boss": {
+    "npcId": 5828,
+    "displayId": 4424,
+    "nameKo": "사자왕 후마르",
+    "nameEn": "Humar the Pridelord",
+    "confidence": "high",
+    "level": 23
+   }
+  },
+  "7": {
+   "zoneKo": "어둠해안",
+   "zoneEn": "Darkshore",
+   "kind": "zone",
+   "levelRange": "10-20",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 2164,
+     "displayId": 8840,
+     "nameKo": "광포한 엉겅퀴곰",
+     "nameEn": "Rabid Thistle Bear",
+     "confidence": "high",
+     "level": 13
+    },
+    {
+     "npcId": 2069,
+     "displayId": 321,
+     "nameKo": "달표범",
+     "nameEn": "Moonstalker",
+     "confidence": "high",
+     "level": 15
+    },
+    {
+     "npcId": 2185,
+     "displayId": 992,
+     "nameKo": "어둠의해안 트레샤돈",
+     "nameEn": "Darkshore Thresher",
+     "confidence": "high",
+     "level": 14
+    },
+    {
+     "npcId": 2203,
+     "displayId": 3940,
+     "nameKo": "잿빛안개멀록 점쟁이",
+     "nameEn": "Greymist Seer",
+     "confidence": "high",
+     "level": 14
+    },
+    {
+     "npcId": 2168,
+     "displayId": 1011,
+     "nameKo": "검은나무일족 전사",
+     "nameEn": "Blackwood Warrior",
+     "confidence": "high",
+     "level": 17
+    }
+   ],
+   "boss": {
+    "npcId": 7017,
+    "displayId": 4762,
+    "nameKo": "군주 신슬레이어",
+    "nameEn": "Lord Sinslayer",
+    "confidence": "high",
+    "level": 16
+   }
+  },
+  "8": {
+   "zoneKo": "은빛소나무 숲",
+   "zoneEn": "Silverpine Forest",
+   "kind": "zone",
+   "levelRange": "10-20",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 1766,
+     "displayId": 246,
+     "nameKo": "점박이 검은늑대",
+     "nameEn": "Mottled Worg",
+     "confidence": "high",
+     "level": 12
+    },
+    {
+     "npcId": 1769,
+     "displayId": 11180,
+     "nameKo": "달의분노일족 백발전사",
+     "nameEn": "Moonrage Whitescalp",
+     "confidence": "high",
+     "level": 11
+    },
+    {
+     "npcId": 1780,
+     "displayId": 827,
+     "nameKo": "이끼땅거미",
+     "nameEn": "Moss Stalker",
+     "confidence": "high",
+     "level": 13
+    },
+    {
+     "npcId": 1674,
+     "displayId": 10852,
+     "nameKo": "썩은가죽 놀",
+     "nameEn": "Rot Hide Gnoll",
+     "confidence": "high",
+     "level": 7
+    },
+    {
+     "npcId": 1867,
+     "displayId": 3767,
+     "nameKo": "달라란 수습마법사",
+     "nameEn": "Dalaran Apprentice",
+     "confidence": "high",
+     "level": 14
+    }
+   ],
+   "boss": {
+    "npcId": 2529,
+    "displayId": 1098,
+    "nameKo": "아루갈의 후예",
+    "nameEn": "Son of Arugal",
+    "confidence": "high",
+    "level": 20
+   }
+  },
+  "9": {
+   "zoneKo": "붉은마루 산맥",
+   "zoneEn": "Redridge Mountains",
+   "kind": "zone",
+   "levelRange": "15-25",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 423,
+     "displayId": 487,
+     "nameKo": "붉은마루일족 싸움꾼",
+     "nameEn": "Redridge Mongrel",
+     "confidence": "high",
+     "level": 16
+    },
+    {
+     "npcId": 426,
+     "displayId": 500,
+     "nameKo": "붉은마루일족 투사",
+     "nameEn": "Redridge Brute",
+     "confidence": "high",
+     "level": 18
+    },
+    {
+     "npcId": 442,
+     "displayId": 366,
+     "nameKo": "타란툴라",
+     "nameEn": "Tarantula",
+     "confidence": "high",
+     "level": 16
+    },
+    {
+     "npcId": 441,
+     "displayId": 387,
+     "nameKo": "새끼 검은용",
+     "nameEn": "Black Dragon Whelp",
+     "confidence": "high",
+     "level": 18
+    },
+    {
+     "npcId": 485,
+     "displayId": 6034,
+     "nameKo": "검은바위부족 길잡이",
+     "nameEn": "Blackrock Outrunner",
+     "confidence": "high",
+     "level": 21
+    }
+   ],
+   "boss": {
+    "npcId": 334,
+    "displayId": 6050,
+    "nameKo": "가스일조그",
+    "nameEn": "Gath'Ilzogg",
+    "confidence": "high",
+    "level": 26
+   }
+  },
+  "10": {
+   "zoneKo": "돌발톱 산맥",
+   "zoneEn": "Stonetalon Mountains",
+   "kind": "zone",
+   "levelRange": "15-27",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 3989,
+     "displayId": 7228,
+     "nameKo": "투자개발회사 나무꾼",
+     "nameEn": "Venture Co. Logger",
+     "confidence": "high",
+     "level": 19
+    },
+    {
+     "npcId": 4005,
+     "displayId": 760,
+     "nameKo": "동굴이끼 땅거미",
+     "nameEn": "Deepmoss Creeper",
+     "confidence": "high",
+     "level": 17
+    },
+    {
+     "npcId": 4012,
+     "displayId": 295,
+     "nameKo": "사자날개 와이번",
+     "nameEn": "Pridewing Wyvern",
+     "confidence": "high",
+     "level": 22
+    },
+    {
+     "npcId": 4022,
+     "displayId": 3022,
+     "nameKo": "혈폭풍하피",
+     "nameEn": "Bloodfury Harpy",
+     "confidence": "high",
+     "level": 24
+    },
+    {
+     "npcId": 4036,
+     "displayId": 4607,
+     "nameKo": "난폭한 불의 정령",
+     "nameEn": "Rogue Flame Spirit",
+     "confidence": "high",
+     "level": 24
+    }
+   ],
+   "boss": {
+    "npcId": 5930,
+    "displayId": 10875,
+    "nameKo": "마녀 리벤",
+    "nameEn": "Sister Riven",
+    "confidence": "high",
+    "level": 28
+   }
+  },
+  "11": {
+   "zoneKo": "그늘숲",
+   "zoneEn": "Duskwood",
+   "kind": "zone",
+   "levelRange": "18-30",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 205,
+     "displayId": 736,
+     "nameKo": "파멸의어둠일족 암흑길잡이",
+     "nameEn": "Nightbane Dark Runner",
+     "confidence": "high",
+     "level": 29
+    },
+    {
+     "npcId": 533,
+     "displayId": 203,
+     "nameKo": "파멸의어둠일족 흑마술사",
+     "nameEn": "Nightbane Shadow Weaver",
+     "confidence": "high",
+     "level": 28
+    },
+    {
+     "npcId": 539,
+     "displayId": 958,
+     "nameKo": "새끼 그물독거미",
+     "nameEn": "Pygmy Venom Web Spider",
+     "confidence": "high",
+     "level": 19
+    },
+    {
+     "npcId": 531,
+     "displayId": 7550,
+     "nameKo": "해골 악령",
+     "nameEn": "Skeletal Fiend",
+     "confidence": "high",
+     "level": 25
+    },
+    {
+     "npcId": 210,
+     "displayId": 570,
+     "nameKo": "뼈만 남은 시체",
+     "nameEn": "Bone Chewer",
+     "confidence": "high",
+     "level": 27
+    }
+   ],
+   "boss": {
+    "npcId": 412,
+    "displayId": 1693,
+    "nameKo": "누더기",
+    "nameEn": "Stitches",
+    "confidence": "high",
+    "level": 35
+   }
+  },
+  "12": {
+   "zoneKo": "잿빛 골짜기",
+   "zoneEn": "Ashenvale",
+   "kind": "zone",
+   "levelRange": "18-30",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 3925,
+     "displayId": 6823,
+     "nameKo": "엉겅퀴일족 복수자",
+     "nameEn": "Thistlefur Avenger",
+     "confidence": "high",
+     "level": 24
+    },
+    {
+     "npcId": 3809,
+     "displayId": 820,
+     "nameKo": "잿빛골짜기곰",
+     "nameEn": "Ashenvale Bear",
+     "confidence": "high",
+     "level": 22
+    },
+    {
+     "npcId": 3819,
+     "displayId": 1103,
+     "nameKo": "찔레가시 거미",
+     "nameEn": "Wildthorn Stalker",
+     "confidence": "high",
+     "level": 21
+    },
+    {
+     "npcId": 3931,
+     "displayId": 1549,
+     "nameKo": "그늘덤불 나무현자",
+     "nameEn": "Shadethicket Oracle",
+     "confidence": "high",
+     "level": 30
+    },
+    {
+     "npcId": 3725,
+     "displayId": 4255,
+     "nameKo": "암흑이교도 제사장",
+     "nameEn": "Dark Strand Cultist",
+     "confidence": "high",
+     "level": 19
+    }
+   ],
+   "boss": {
+    "npcId": 3773,
+    "displayId": 1912,
+    "nameKo": "아크릴루스",
+    "nameEn": "Akkrilus",
+    "confidence": "high",
+    "level": 26
+   }
+  },
+  "13": {
+   "zoneKo": "저습지",
+   "zoneEn": "Wetlands",
+   "kind": "zone",
+   "levelRange": "20-30",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 1034,
+     "displayId": 4916,
+     "nameKo": "용아귀부족 약탈자",
+     "nameEn": "Dragonmaw Raider",
+     "confidence": "high",
+     "level": 24
+    },
+    {
+     "npcId": 1020,
+     "displayId": 960,
+     "nameKo": "줄무늬랩터",
+     "nameEn": "Mottled Raptor",
+     "confidence": "high",
+     "level": 23
+    },
+    {
+     "npcId": 1418,
+     "displayId": 391,
+     "nameKo": "푸른아가미멀록 약탈꾼",
+     "nameEn": "Bluegill Raider",
+     "confidence": "high",
+     "level": 29
+    },
+    {
+     "npcId": 1400,
+     "displayId": 1036,
+     "nameKo": "습지악어",
+     "nameEn": "Wetlands Crocolisk",
+     "confidence": "high",
+     "level": 24
+    },
+    {
+     "npcId": 1040,
+     "displayId": 2023,
+     "nameKo": "수렁이끼괴물",
+     "nameEn": "Fen Creeper",
+     "confidence": "high",
+     "level": 25
+    }
+   ],
+   "boss": {
+    "npcId": 2091,
+    "displayId": 4915,
+    "nameKo": "족장 네크로쉬",
+    "nameEn": "Chieftain Nek'rosh",
+    "confidence": "high",
+    "level": 26
+   }
+  },
+  "14": {
+   "zoneKo": "힐스브래드 구릉지",
+   "zoneEn": "Hillsbrad Foothills",
+   "kind": "zone",
+   "levelRange": "20-30",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 2266,
+     "displayId": 3612,
+     "nameKo": "힐스브래드 농부",
+     "nameEn": "Hillsbrad Farmer",
+     "confidence": "high",
+     "level": 24
+    },
+    {
+     "npcId": 2351,
+     "displayId": 806,
+     "nameKo": "회색곰",
+     "nameEn": "Gray Bear",
+     "confidence": "high",
+     "level": 22
+    },
+    {
+     "npcId": 2240,
+     "displayId": 3706,
+     "nameKo": "비밀결사대 노상강도",
+     "nameEn": "Syndicate Footpad",
+     "confidence": "high",
+     "level": 33
+    },
+    {
+     "npcId": 2377,
+     "displayId": 1079,
+     "nameKo": "너덜지느러미멀록 바다사냥꾼",
+     "nameEn": "Torn Fin Tidehunter",
+     "confidence": "high",
+     "level": 32
+    },
+    {
+     "npcId": 2348,
+     "displayId": 8014,
+     "nameKo": "덩치 큰 이끼거미",
+     "nameEn": "Elder Moss Creeper",
+     "confidence": "high",
+     "level": 27
+    }
+   ],
+   "boss": {
+    "npcId": 14280,
+    "displayId": 706,
+    "nameKo": "큰곰 삼라스",
+    "nameEn": "Big Samras",
+    "confidence": "high",
+    "level": 27
+   }
+  },
+  "15": {
+   "zoneKo": "버섯구름 봉우리",
+   "zoneEn": "Thousand Needles",
+   "kind": "zone",
+   "levelRange": "25-35",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 4094,
+     "displayId": 9411,
+     "nameKo": "갈라크일족 척후병",
+     "nameEn": "Galak Scout",
+     "confidence": "high",
+     "level": 25
+    },
+    {
+     "npcId": 10760,
+     "displayId": 10227,
+     "nameKo": "그림토템부족 흙점쟁이",
+     "nameEn": "Grimtotem Geomancer",
+     "confidence": "high",
+     "level": 27
+    },
+    {
+     "npcId": 4126,
+     "displayId": 1043,
+     "nameKo": "바위표범",
+     "nameEn": "Crag Stalker",
+     "confidence": "high",
+     "level": 26
+    },
+    {
+     "npcId": 4147,
+     "displayId": 12340,
+     "nameKo": "소금바위 바실리스크",
+     "nameEn": "Saltstone Basilisk",
+     "confidence": "high",
+     "level": 31
+    },
+    {
+     "npcId": 4107,
+     "displayId": 2298,
+     "nameKo": "마루둥지 와이번",
+     "nameEn": "Highperch Wyvern",
+     "confidence": "high",
+     "level": 29
+    }
+   ],
+   "boss": {
+    "npcId": 10896,
+    "displayId": 10243,
+    "nameKo": "아르낙 그림토템",
+    "nameEn": "Arnak Grimtotem",
+    "confidence": "high",
+    "level": 29
+   }
+  },
+  "16": {
+   "zoneKo": "아라시 고원",
+   "zoneEn": "Arathi Highlands",
+   "kind": "zone",
+   "levelRange": "30-40",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 2552,
+     "displayId": 3990,
+     "nameKo": "마른나무껍질 트롤",
+     "nameEn": "Witherbark Troll",
+     "confidence": "high",
+     "level": 31,
+     "note": "troll: vanilla display kept"
+    },
+    {
+     "npcId": 2562,
+     "displayId": 1052,
+     "nameKo": "돌주먹 오우거",
+     "nameEn": "Boulderfist Ogre",
+     "confidence": "high",
+     "level": 33
+    },
+    {
+     "npcId": 2559,
+     "displayId": 11316,
+     "nameKo": "줄무늬 고원랩터",
+     "nameEn": "Highland Strider",
+     "confidence": "high",
+     "level": 31
+    },
+    {
+     "npcId": 2579,
+     "displayId": 1105,
+     "nameKo": "절벽대머리수리",
+     "nameEn": "Mesa Buzzard",
+     "confidence": "high",
+     "level": 35
+    },
+    {
+     "npcId": 2572,
+     "displayId": 2153,
+     "nameKo": "마른수염 코볼트",
+     "nameEn": "Drywhisker Kobold",
+     "confidence": "high",
+     "level": 36
+    }
+   ],
+   "boss": {
+    "npcId": 2793,
+    "displayId": 6168,
+    "nameKo": "한파의 코르그레쉬",
+    "nameEn": "Kor'gresh Coldrage",
+    "confidence": "high",
+    "level": 39
+   }
+  },
+  "17": {
+   "zoneKo": "가시덤불 골짜기",
+   "zoneEn": "Stranglethorn Vale",
+   "kind": "zone",
+   "levelRange": "30-45",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 685,
+     "displayId": 788,
+     "nameKo": "가시덤불랩터",
+     "nameEn": "Stranglethorn Raptor",
+     "confidence": "high",
+     "level": 34
+    },
+    {
+     "npcId": 587,
+     "displayId": 4570,
+     "nameKo": "붉은머리부족 전사",
+     "nameEn": "Bloodscalp Warrior",
+     "confidence": "high",
+     "level": 34
+    },
+    {
+     "npcId": 682,
+     "displayId": 320,
+     "nameKo": "가시덤불 호랑이",
+     "nameEn": "Stranglethorn Tiger",
+     "confidence": "high",
+     "level": 33
+    },
+    {
+     "npcId": 1108,
+     "displayId": 843,
+     "nameKo": "안개계곡고릴라",
+     "nameEn": "Mistvale Gorilla",
+     "confidence": "high",
+     "level": 33
+    },
+    {
+     "npcId": 1563,
+     "displayId": 796,
+     "nameKo": "붉은해적단 칼잡이",
+     "nameEn": "Bloodsail Swashbuckler",
+     "confidence": "high",
+     "level": 41
+    }
+   ],
+   "boss": {
+    "npcId": 731,
+    "displayId": 616,
+    "nameKo": "야수왕 뱅갈라시",
+    "nameEn": "King Bangalash",
+    "confidence": "high",
+    "level": 43
+   }
+  },
+  "18": {
+   "zoneKo": "잊혀진 땅",
+   "zoneEn": "Desolace",
+   "kind": "zone",
+   "levelRange": "30-40",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 4637,
+     "displayId": 9446,
+     "nameKo": "콜카르일족 파괴자",
+     "nameEn": "Kolkar Destroyer",
+     "confidence": "high",
+     "level": 33
+    },
+    {
+     "npcId": 4639,
+     "displayId": 9428,
+     "nameKo": "마그람일족 정찰꾼",
+     "nameEn": "Magram Outrunner",
+     "confidence": "high",
+     "level": 33
+    },
+    {
+     "npcId": 4661,
+     "displayId": 1068,
+     "nameKo": "겔키스 바위정령",
+     "nameEn": "Gelkis Rumbler",
+     "confidence": "high",
+     "level": 30
+    },
+    {
+     "npcId": 4696,
+     "displayId": 2729,
+     "nameKo": "스콜파시 집게전갈",
+     "nameEn": "Scorpashi Snapper",
+     "confidence": "high",
+     "level": 31
+    },
+    {
+     "npcId": 4700,
+     "displayId": 1308,
+     "nameKo": "늙은 코도",
+     "nameEn": "Aged Kodo",
+     "confidence": "high",
+     "level": 35
+    }
+   ],
+   "boss": {
+    "npcId": 5760,
+    "displayId": 4426,
+    "nameKo": "제왕 아즈레토크",
+    "nameEn": "Lord Azrethoc",
+    "confidence": "high",
+    "level": 40
+   }
+  },
+  "19": {
+   "zoneKo": "먼지진흙 습지대",
+   "zoneEn": "Dustwallow Marsh",
+   "kind": "zone",
+   "levelRange": "35-45",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 4351,
+     "displayId": 2571,
+     "nameKo": "붉은늪지랩터",
+     "nameEn": "Bloodfen Raptor",
+     "confidence": "high",
+     "level": 37
+    },
+    {
+     "npcId": 4376,
+     "displayId": 545,
+     "nameKo": "암흑안개 거미",
+     "nameEn": "Darkmist Spider",
+     "confidence": "high",
+     "level": 37
+    },
+    {
+     "npcId": 4359,
+     "displayId": 652,
+     "nameKo": "진흙아가미멀록",
+     "nameEn": "Mirefin Murloc",
+     "confidence": "high",
+     "level": 37
+    },
+    {
+     "npcId": 4341,
+     "displayId": 1080,
+     "nameKo": "늪지악어",
+     "nameEn": "Drywallow Crocolisk",
+     "confidence": "high",
+     "level": 36
+    },
+    {
+     "npcId": 4396,
+     "displayId": 4829,
+     "nameKo": "진흙바위거북",
+     "nameEn": "Mudrock Tortoise",
+     "confidence": "high",
+     "level": 37
+    }
+   ],
+   "boss": {
+    "npcId": 4500,
+    "displayId": 11571,
+    "nameKo": "대군주 모크모로크",
+    "nameEn": "Overlord Mok'Morokk",
+    "confidence": "high",
+    "level": 45
+   }
+  },
+  "20": {
+   "zoneKo": "황야의 땅",
+   "zoneEn": "Badlands",
+   "kind": "zone",
+   "levelRange": "35-45",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 92,
+     "displayId": 171,
+     "nameKo": "바위 정령",
+     "nameEn": "Rock Elemental",
+     "confidence": "high",
+     "level": 40
+    },
+    {
+     "npcId": 2830,
+     "displayId": 1105,
+     "nameKo": "대머리수리",
+     "nameEn": "Buzzard",
+     "confidence": "high",
+     "level": 39
+    },
+    {
+     "npcId": 2732,
+     "displayId": 1055,
+     "nameKo": "덩치 큰 바위산표범",
+     "nameEn": "Ridge Huntress",
+     "confidence": "high",
+     "level": 39
+    },
+    {
+     "npcId": 2715,
+     "displayId": 10714,
+     "nameKo": "먼지목도리일족 투사",
+     "nameEn": "Dustbelcher Brute",
+     "confidence": "high",
+     "level": 40
+    },
+    {
+     "npcId": 2725,
+     "displayId": 715,
+     "nameKo": "화염의 새끼비룡",
+     "nameEn": "Scalding Whelp",
+     "confidence": "high",
+     "level": 43
+    }
+   ],
+   "boss": {
+    "npcId": 8400,
+    "displayId": 13929,
+    "nameKo": "흑요암",
+    "nameEn": "Obsidion",
+    "confidence": "high",
+    "level": 46
+   }
+  },
+  "21": {
+   "zoneKo": "타나리스",
+   "zoneEn": "Tanaris",
+   "kind": "zone",
+   "levelRange": "40-50",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 5618,
+     "displayId": 5568,
+     "nameKo": "사막유랑단 약탈자",
+     "nameEn": "Wastewander Bandit",
+     "confidence": "high",
+     "level": 42
+    },
+    {
+     "npcId": 5471,
+     "displayId": 11545,
+     "nameKo": "모래망치 오우거",
+     "nameEn": "Dunemaul Ogre",
+     "confidence": "high",
+     "level": 46
+    },
+    {
+     "npcId": 5424,
+     "displayId": 10986,
+     "nameKo": "모래언덕전갈",
+     "nameEn": "Scorpid Dunestalker",
+     "confidence": "high",
+     "level": 47
+    },
+    {
+     "npcId": 5430,
+     "displayId": 10827,
+     "nameKo": "불타는 로크",
+     "nameEn": "Searing Roc",
+     "confidence": "high",
+     "level": 49
+    },
+    {
+     "npcId": 5419,
+     "displayId": 141,
+     "nameKo": "유리비늘 바실리스크",
+     "nameEn": "Glasshide Basilisk",
+     "confidence": "high",
+     "level": 43
+    }
+   ],
+   "boss": {
+    "npcId": 8204,
+    "displayId": 11106,
+    "nameKo": "파멸의 소리드",
+    "nameEn": "Soriid the Devourer",
+    "confidence": "high",
+    "level": 50
+   }
+  },
+  "22": {
+   "zoneKo": "페랄라스",
+   "zoneEn": "Feralas",
+   "kind": "zone",
+   "levelRange": "40-50",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 5229,
+     "displayId": 597,
+     "nameKo": "골두니 오우거",
+     "nameEn": "Gordunni Ogre",
+     "confidence": "high",
+     "level": 41
+    },
+    {
+     "npcId": 5249,
+     "displayId": 8598,
+     "nameKo": "덩굴발일족 싸움꾼",
+     "nameEn": "Woodpaw Mongrel",
+     "confidence": "high",
+     "level": 41
+    },
+    {
+     "npcId": 5300,
+     "displayId": 3210,
+     "nameKo": "공작날개 히포그리프",
+     "nameEn": "Frayfeather Hippogryph",
+     "confidence": "high",
+     "level": 44
+    },
+    {
+     "npcId": 5296,
+     "displayId": 3220,
+     "nameKo": "분노한 무쇠설인",
+     "nameEn": "Rage Scar Yeti",
+     "confidence": "high",
+     "level": 47
+    },
+    {
+     "npcId": 5260,
+     "displayId": 3186,
+     "nameKo": "그로독 고릴라",
+     "nameEn": "Groddoc Ape",
+     "confidence": "high",
+     "level": 43
+    }
+   ],
+   "boss": {
+    "npcId": 5349,
+    "displayId": 7569,
+    "nameKo": "아라쉬에디스",
+    "nameEn": "Arash-ethis",
+    "confidence": "high",
+    "level": 49
+   }
+  },
+  "23": {
+   "zoneKo": "동부 내륙지",
+   "zoneEn": "The Hinterlands",
+   "kind": "zone",
+   "levelRange": "40-50",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 2643,
+     "displayId": 6494,
+     "nameKo": "썩은가지부족 광전사",
+     "nameEn": "Vilebranch Berserker",
+     "confidence": "high",
+     "level": 48,
+     "note": "troll: AC also lists WotLK remodel 28244; vanilla display kept"
+    },
+    {
+     "npcId": 2926,
+     "displayId": 9562,
+     "nameKo": "긴발톱 은빛갈기늑대",
+     "nameEn": "Silvermane Stalker",
+     "confidence": "high",
+     "level": 48
+    },
+    {
+     "npcId": 2929,
+     "displayId": 12236,
+     "nameKo": "포악한 올빼미야수",
+     "nameEn": "Savage Owlbeast",
+     "confidence": "high",
+     "level": 47
+    },
+    {
+     "npcId": 2656,
+     "displayId": 11137,
+     "nameKo": "비취 수액괴물",
+     "nameEn": "Jade Ooze",
+     "confidence": "high",
+     "level": 48
+    },
+    {
+     "npcId": 2640,
+     "displayId": 6543,
+     "nameKo": "썩은가지부족 의술사",
+     "nameEn": "Vilebranch Witch Doctor",
+     "confidence": "high",
+     "level": 47,
+     "note": "troll: vanilla display kept"
+    }
+   ],
+   "boss": {
+    "npcId": 2707,
+    "displayId": 7536,
+    "nameKo": "샤드라",
+    "nameEn": "Shadra",
+    "confidence": "high",
+    "level": 55
+   }
+  },
+  "24": {
+   "zoneKo": "운고로 분화구",
+   "zoneEn": "Un'Goro Crater",
+   "kind": "zone",
+   "levelRange": "48-55",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 6505,
+     "displayId": 5242,
+     "nameKo": "라바사우루스",
+     "nameEn": "Ravasaur",
+     "confidence": "high",
+     "level": 49
+    },
+    {
+     "npcId": 9163,
+     "displayId": 8511,
+     "nameKo": "디메트로돈",
+     "nameEn": "Diemetradon",
+     "confidence": "high",
+     "level": 52
+    },
+    {
+     "npcId": 6514,
+     "displayId": 844,
+     "nameKo": "운고로 고릴라",
+     "nameEn": "Un'Goro Gorilla",
+     "confidence": "high",
+     "level": 51
+    },
+    {
+     "npcId": 9166,
+     "displayId": 8411,
+     "nameKo": "테러닥스",
+     "nameEn": "Pterrordax",
+     "confidence": "high",
+     "level": 52
+    },
+    {
+     "npcId": 6498,
+     "displayId": 5239,
+     "nameKo": "데빌사우루스",
+     "nameEn": "Devilsaur",
+     "confidence": "high",
+     "level": 55
+    }
+   ],
+   "boss": {
+    "npcId": 6584,
+    "displayId": 5305,
+    "nameKo": "폭군 모쉬",
+    "nameEn": "King Mosh",
+    "confidence": "high",
+    "level": 60
+   }
+  },
+  "25": {
+   "zoneKo": "불타는 평원",
+   "zoneEn": "Burning Steppes",
+   "kind": "zone",
+   "levelRange": "50-58",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 7033,
+     "displayId": 11549,
+     "nameKo": "불자루일족 오우거",
+     "nameEn": "Firegut Ogre",
+     "confidence": "high",
+     "level": 51
+    },
+    {
+     "npcId": 7040,
+     "displayId": 143,
+     "nameKo": "검은용혈족",
+     "nameEn": "Black Dragonspawn",
+     "confidence": "high",
+     "level": 53
+    },
+    {
+     "npcId": 7047,
+     "displayId": 397,
+     "nameKo": "검은 새끼용",
+     "nameEn": "Black Broodling",
+     "confidence": "high",
+     "level": 52
+    },
+    {
+     "npcId": 7025,
+     "displayId": 6045,
+     "nameKo": "검은바위부족 병사",
+     "nameEn": "Blackrock Soldier",
+     "confidence": "high",
+     "level": 56
+    },
+    {
+     "npcId": 9779,
+     "displayId": 10814,
+     "nameKo": "사나운 화염족 마귀",
+     "nameEn": "Flamekin Rager",
+     "confidence": "high",
+     "level": 56
+    }
+   ],
+   "boss": {
+    "npcId": 10119,
+    "displayId": 12232,
+    "nameKo": "볼찬",
+    "nameEn": "Volchan",
+    "confidence": "high",
+    "level": 60
+   }
+  },
+  "26": {
+   "zoneKo": "여명의 설원",
+   "zoneEn": "Winterspring",
+   "kind": "zone",
+   "levelRange": "55-60",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 7438,
+     "displayId": 6829,
+     "nameKo": "눈사태일족 펄볼그",
+     "nameEn": "Winterfall Ursa",
+     "confidence": "high",
+     "level": 58
+    },
+    {
+     "npcId": 7431,
+     "displayId": 9953,
+     "nameKo": "눈호랑이",
+     "nameEn": "Frostsaber",
+     "confidence": "high",
+     "level": 57
+    },
+    {
+     "npcId": 7448,
+     "displayId": 10810,
+     "nameKo": "서리바람 키메라",
+     "nameEn": "Chillwind Chimaera",
+     "confidence": "high",
+     "level": 57
+    },
+    {
+     "npcId": 7458,
+     "displayId": 10579,
+     "nameKo": "얼음엉겅퀴설인",
+     "nameEn": "Ice Thistle Yeti",
+     "confidence": "high",
+     "level": 56
+    },
+    {
+     "npcId": 7444,
+     "displayId": 865,
+     "nameKo": "톱니이빨곰",
+     "nameEn": "Shardtooth Bear",
+     "confidence": "high",
+     "level": 54
+    }
+   ],
+   "boss": {
+    "npcId": 10738,
+    "displayId": 9491,
+    "nameKo": "대족장 눈사태",
+    "nameEn": "High Chief Winterfall",
+    "confidence": "high",
+    "level": 59
+   }
+  },
+  "27": {
+   "zoneKo": "동부 역병지대",
+   "zoneEn": "Eastern Plaguelands",
+   "kind": "zone",
+   "levelRange": "53-60",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 8597,
+     "displayId": 7891,
+     "nameKo": "역병사냥개",
+     "nameEn": "Plaguehound",
+     "confidence": "high",
+     "level": 56
+    },
+    {
+     "npcId": 8530,
+     "displayId": 10626,
+     "nameKo": "식인 구울",
+     "nameEn": "Cannibal Ghoul",
+     "confidence": "high",
+     "level": 55
+    },
+    {
+     "npcId": 8600,
+     "displayId": 7894,
+     "nameKo": "역병박쥐",
+     "nameEn": "Plaguebat",
+     "confidence": "high",
+     "level": 55
+    },
+    {
+     "npcId": 8557,
+     "displayId": 6841,
+     "nameKo": "공포의 지하마귀",
+     "nameEn": "Crypt Horror",
+     "confidence": "high",
+     "level": 58
+    },
+    {
+     "npcId": 8522,
+     "displayId": 11172,
+     "nameKo": "역병의 괴수",
+     "nameEn": "Plague Monstrosity",
+     "confidence": "high",
+     "level": 58
+    }
+   ],
+   "boss": {
+    "npcId": 10821,
+    "displayId": 10709,
+    "nameKo": "부패의 헤드무쉬",
+    "nameEn": "Hed'mush the Rotting",
+    "confidence": "high",
+    "level": 57
+   }
+  },
+  "28": {
+   "zoneKo": "실리더스",
+   "zoneEn": "Silithus",
+   "kind": "zone",
+   "levelRange": "55-60",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 11727,
+     "displayId": 11088,
+     "nameKo": "병정 하이브조라",
+     "nameEn": "Hive'Zora Wasp",
+     "confidence": "high",
+     "level": 59
+    },
+    {
+     "npcId": 11722,
+     "displayId": 12153,
+     "nameKo": "병정 하이브아쉬",
+     "nameEn": "Hive'Ashi Defender",
+     "confidence": "high",
+     "level": 59
+    },
+    {
+     "npcId": 11735,
+     "displayId": 15383,
+     "nameKo": "돌꼬리전갈",
+     "nameEn": "Stonelash Scorpid",
+     "confidence": "high",
+     "level": 55
+    },
+    {
+     "npcId": 11881,
+     "displayId": 11819,
+     "nameKo": "황혼의 대지술사",
+     "nameEn": "Twilight Geolord",
+     "confidence": "high",
+     "level": 60
+    },
+    {
+     "npcId": 11746,
+     "displayId": 8550,
+     "nameKo": "우레의 모래정령",
+     "nameEn": "Desert Rumbler",
+     "confidence": "high",
+     "level": 58
+    }
+   ],
+   "boss": {
+    "npcId": 15203,
+    "displayId": 12002,
+    "nameKo": "왕자 스칼레녹스",
+    "nameEn": "Prince Skaldrenox",
+    "confidence": "high",
+    "level": 63
+   }
+  },
+  "29": {
+   "zoneKo": "죽음의 폐광",
+   "zoneEn": "The Deadmines",
+   "kind": "dungeon",
+   "levelRange": "17-26",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 598,
+     "displayId": 308,
+     "nameKo": "데피아즈단 광부",
+     "nameEn": "Defias Miner",
+     "confidence": "high",
+     "level": 18
+    },
+    {
+     "npcId": 4417,
+     "displayId": 2440,
+     "nameKo": "데피아즈단 작업반장",
+     "nameEn": "Defias Taskmaster",
+     "confidence": "high",
+     "level": 19
+    },
+    {
+     "npcId": 1731,
+     "displayId": 7110,
+     "nameKo": "고블린 땜장이",
+     "nameEn": "Goblin Craftsman",
+     "confidence": "high",
+     "level": 19
+    },
+    {
+     "npcId": 657,
+     "displayId": 2347,
+     "nameKo": "데피아즈단 해적",
+     "nameEn": "Defias Pirate",
+     "confidence": "high",
+     "level": 20
+    },
+    {
+     "npcId": 1732,
+     "displayId": 2349,
+     "nameKo": "데피아즈단 얼음마법사",
+     "nameEn": "Defias Squallshaper",
+     "confidence": "high",
+     "level": 19
+    }
+   ],
+   "boss": {
+    "npcId": 639,
+    "displayId": 2029,
+    "nameKo": "에드윈 밴클리프",
+    "nameEn": "Edwin VanCleef",
+    "confidence": "high",
+    "level": 20
+   }
+  },
+  "30": {
+   "zoneKo": "통곡의 동굴",
+   "zoneEn": "Wailing Caverns",
+   "kind": "dungeon",
+   "levelRange": "17-24",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 3840,
+     "displayId": 4211,
+     "nameKo": "송곳니의 드루이드",
+     "nameEn": "Druid of the Fang",
+     "confidence": "high",
+     "level": 19
+    },
+    {
+     "npcId": 3636,
+     "displayId": 1747,
+     "nameKo": "돌연변이 약탈자랩터",
+     "nameEn": "Deviate Ravager",
+     "confidence": "high",
+     "level": 19
+    },
+    {
+     "npcId": 5048,
+     "displayId": 4317,
+     "nameKo": "돌연변이 살무사",
+     "nameEn": "Deviate Adder",
+     "confidence": "high",
+     "level": 19
+    },
+    {
+     "npcId": 5055,
+     "displayId": 8172,
+     "nameKo": "돌연변이 덩굴손",
+     "nameEn": "Deviate Lasher",
+     "confidence": "high",
+     "level": 19
+    },
+    {
+     "npcId": 3640,
+     "displayId": 1751,
+     "nameKo": "진화된 세포괴물",
+     "nameEn": "Evolving Ectoplasm",
+     "confidence": "high",
+     "level": 18
+    }
+   ],
+   "boss": {
+    "npcId": 3654,
+    "displayId": 4088,
+    "nameKo": "걸신들린 무타누스",
+    "nameEn": "Mutanus the Devourer",
+    "confidence": "high",
+    "level": 20
+   }
+  },
+  "31": {
+   "zoneKo": "붉은십자군 수도원",
+   "zoneEn": "Scarlet Monastery",
+   "kind": "dungeon",
+   "levelRange": "26-45",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 4540,
+     "displayId": 2603,
+     "nameKo": "붉은십자군 수도사",
+     "nameEn": "Scarlet Monk",
+     "confidence": "high",
+     "level": 34
+    },
+    {
+     "npcId": 4295,
+     "displayId": 2514,
+     "nameKo": "붉은십자군 정예병",
+     "nameEn": "Scarlet Myrmidon",
+     "confidence": "high",
+     "level": 36
+    },
+    {
+     "npcId": 4300,
+     "displayId": 2525,
+     "nameKo": "붉은십자군 마술사",
+     "nameEn": "Scarlet Wizard",
+     "confidence": "high",
+     "level": 39
+    },
+    {
+     "npcId": 6427,
+     "displayId": 4629,
+     "nameKo": "절규하는 환영",
+     "nameEn": "Haunting Phantasm",
+     "confidence": "high",
+     "level": 31
+    },
+    {
+     "npcId": 4302,
+     "displayId": 2460,
+     "nameKo": "붉은십자군 용사",
+     "nameEn": "Scarlet Champion",
+     "confidence": "high",
+     "level": 39
+    }
+   ],
+   "boss": {
+    "npcId": 3977,
+    "displayId": 2043,
+    "nameKo": "종교재판관 화이트메인",
+    "nameEn": "High Inquisitor Whitemane",
+    "confidence": "high",
+    "level": 40
+   }
+  },
+  "32": {
+   "zoneKo": "울다만",
+   "zoneEn": "Uldaman",
+   "kind": "dungeon",
+   "levelRange": "35-45",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 4855,
+     "displayId": 11166,
+     "nameKo": "바위동굴일족 투사",
+     "nameEn": "Stonevault Brawler",
+     "confidence": "high",
+     "level": 39
+    },
+    {
+     "npcId": 4848,
+     "displayId": 6055,
+     "nameKo": "어둠괴철로단 흑마법사",
+     "nameEn": "Shadowforge Darkcaster",
+     "confidence": "high",
+     "level": 39
+    },
+    {
+     "npcId": 4857,
+     "displayId": 10805,
+     "nameKo": "바위 문지기",
+     "nameEn": "Stone Keeper",
+     "confidence": "high",
+     "level": 40
+    },
+    {
+     "npcId": 7023,
+     "displayId": 5285,
+     "nameKo": "흑요석 파수꾼",
+     "nameEn": "Obsidian Sentinel",
+     "confidence": "high",
+     "level": 40
+    },
+    {
+     "npcId": 4863,
+     "displayId": 4486,
+     "nameKo": "비취돌기 바실리스크",
+     "nameEn": "Jadespine Basilisk",
+     "confidence": "high",
+     "level": 38
+    }
+   ],
+   "boss": {
+    "npcId": 2748,
+    "displayId": 5988,
+    "nameKo": "아카에다스",
+    "nameEn": "Archaedas",
+    "confidence": "high",
+    "level": 40
+   }
+  },
+  "33": {
+   "zoneKo": "줄파락",
+   "zoneEn": "Zul'Farrak",
+   "kind": "dungeon",
+   "levelRange": "43-47",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 5649,
+     "displayId": 6423,
+     "nameKo": "성난모래부족 혈투사",
+     "nameEn": "Sandfury Blood Drinker",
+     "confidence": "high",
+     "level": 45
+    },
+    {
+     "npcId": 5648,
+     "displayId": 6419,
+     "nameKo": "성난모래부족 흑마술사",
+     "nameEn": "Sandfury Shadowcaster",
+     "confidence": "high",
+     "level": 44
+    },
+    {
+     "npcId": 7247,
+     "displayId": 6427,
+     "nameKo": "성난모래부족 영혼사냥꾼",
+     "nameEn": "Sandfury Soul Eater",
+     "confidence": "high",
+     "level": 45
+    },
+    {
+     "npcId": 7286,
+     "displayId": 6417,
+     "nameKo": "줄파락 좀비",
+     "nameEn": "Zul'Farrak Zombie",
+     "confidence": "high",
+     "level": 44
+    },
+    {
+     "npcId": 8095,
+     "displayId": 7345,
+     "nameKo": "모래집게 술리투즈",
+     "nameEn": "Sul'lithuz Sandcrawler",
+     "confidence": "high",
+     "level": 45
+    }
+   ],
+   "boss": {
+    "npcId": 7273,
+    "displayId": 7271,
+    "nameKo": "가즈릴라",
+    "nameEn": "Gahz'rilla",
+    "confidence": "high",
+    "level": 46
+   }
+  },
+  "34": {
+   "zoneKo": "마라우돈",
+   "zoneEn": "Maraudon",
+   "kind": "dungeon",
+   "levelRange": "40-52",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 11793,
+     "displayId": 11714,
+     "nameKo": "셀레브라스의 드리아드",
+     "nameEn": "Celebrian Dryad",
+     "confidence": "high",
+     "level": 45
+    },
+    {
+     "npcId": 12220,
+     "displayId": 12348,
+     "nameKo": "채찍줄기 덩굴손",
+     "nameEn": "Constrictor Vine",
+     "confidence": "high",
+     "level": 45
+    },
+    {
+     "npcId": 12206,
+     "displayId": 12309,
+     "nameKo": "태초의 거수",
+     "nameEn": "Primordial Behemoth",
+     "confidence": "high",
+     "level": 47
+    },
+    {
+     "npcId": 12207,
+     "displayId": 6737,
+     "nameKo": "텟살라 히드라",
+     "nameEn": "Thessala Hydra",
+     "confidence": "high",
+     "level": 47
+    },
+    {
+     "npcId": 13323,
+     "displayId": 13209,
+     "nameKo": "지하 디메트로돈",
+     "nameEn": "Subterranean Diemetradon",
+     "confidence": "high",
+     "level": 47
+    }
+   ],
+   "boss": {
+    "npcId": 12201,
+    "displayId": 12292,
+    "nameKo": "공주 테라드라스",
+    "nameEn": "Princess Theradras",
+    "confidence": "high",
+    "level": 48
+   }
+  },
+  "35": {
+   "zoneKo": "아탈학카르 신전",
+   "zoneEn": "Temple of Atal'Hakkar (Sunken Temple)",
+   "kind": "dungeon",
+   "levelRange": "45-55",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 5256,
+     "displayId": 7709,
+     "nameKo": "아탈라이부족 전사",
+     "nameEn": "Atal'ai Warrior",
+     "confidence": "high",
+     "level": 48
+    },
+    {
+     "npcId": 5259,
+     "displayId": 6670,
+     "nameKo": "아탈라이부족 의술사",
+     "nameEn": "Atal'ai Witch Doctor",
+     "confidence": "high",
+     "level": 48
+    },
+    {
+     "npcId": 5263,
+     "displayId": 4769,
+     "nameKo": "미라가 된 아탈라이트롤",
+     "nameEn": "Mummified Atal'ai",
+     "confidence": "high",
+     "level": 47
+    },
+    {
+     "npcId": 5280,
+     "displayId": 7863,
+     "nameKo": "악몽의 고룡족",
+     "nameEn": "Nightmare Wyrmkin",
+     "confidence": "high",
+     "level": 49
+    },
+    {
+     "npcId": 5228,
+     "displayId": 682,
+     "nameKo": "축축한 수액괴물",
+     "nameEn": "Saturated Ooze",
+     "confidence": "high",
+     "level": 48
+    }
+   ],
+   "boss": {
+    "npcId": 5709,
+    "displayId": 7806,
+    "nameKo": "에라니쿠스의 사령",
+    "nameEn": "Shade of Eranikus",
+    "confidence": "high",
+    "level": 50
+   }
+  },
+  "36": {
+   "zoneKo": "검은바위 나락",
+   "zoneEn": "Blackrock Depths",
+   "kind": "dungeon",
+   "levelRange": "52-60",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 8891,
+     "displayId": 8750,
+     "nameKo": "성난모루단 보초",
+     "nameEn": "Anvilrage Guardsman",
+     "confidence": "high",
+     "level": 51
+    },
+    {
+     "npcId": 8910,
+     "displayId": 1070,
+     "nameKo": "타오르는 화염수호정령",
+     "nameEn": "Blazing Fireguard",
+     "confidence": "high",
+     "level": 52
+    },
+    {
+     "npcId": 8908,
+     "displayId": 8179,
+     "nameKo": "뜨겁게 달궈진 전투골렘",
+     "nameEn": "Molten War Golem",
+     "confidence": "high",
+     "level": 55
+    },
+    {
+     "npcId": 8912,
+     "displayId": 8790,
+     "nameKo": "황혼의망치단 고문관",
+     "nameEn": "Twilight's Hammer Torturer",
+     "confidence": "high",
+     "level": 51
+    },
+    {
+     "npcId": 8922,
+     "displayId": 8181,
+     "nameKo": "덩치큰 핏빛사냥개",
+     "nameEn": "Bloodhound Mastiff",
+     "confidence": "high",
+     "level": 53
+    }
+   ],
+   "boss": {
+    "npcId": 9019,
+    "displayId": 8807,
+    "nameKo": "제왕 다그란 타우릿산",
+    "nameEn": "Emperor Dagran Thaurissan",
+    "confidence": "high",
+    "level": 56
+   }
+  },
+  "37": {
+   "zoneKo": "검은바위 첨탑",
+   "zoneEn": "Blackrock Spire (Lower/Upper)",
+   "kind": "dungeon",
+   "levelRange": "55-60",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 9268,
+     "displayId": 7803,
+     "nameKo": "가시불꽃부족 광전사",
+     "nameEn": "Smolderthorn Berserker",
+     "confidence": "high",
+     "level": 58
+    },
+    {
+     "npcId": 9201,
+     "displayId": 11562,
+     "nameKo": "뾰족바위일족 오우거마법사",
+     "nameEn": "Spirestone Ogre Magus",
+     "confidence": "high",
+     "level": 55
+    },
+    {
+     "npcId": 9259,
+     "displayId": 9664,
+     "nameKo": "횃불부대 그런트",
+     "nameEn": "Firebrand Grunt",
+     "confidence": "high",
+     "level": 57
+    },
+    {
+     "npcId": 9096,
+     "displayId": 2554,
+     "nameKo": "성난발톱용혈족",
+     "nameEn": "Rage Talon Dragonspawn",
+     "confidence": "high",
+     "level": 59
+    },
+    {
+     "npcId": 10442,
+     "displayId": 10095,
+     "nameKo": "오색 새끼용",
+     "nameEn": "Chromatic Whelp",
+     "confidence": "high",
+     "level": 58
+    }
+   ],
+   "boss": {
+    "npcId": 10363,
+    "displayId": 10115,
+    "nameKo": "사령관 드라키사스",
+    "nameEn": "General Drakkisath",
+    "confidence": "high",
+    "level": 62
+   }
+  },
+  "38": {
+   "zoneKo": "혈투의 전장",
+   "zoneEn": "Dire Maul",
+   "kind": "dungeon",
+   "levelRange": "55-60",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenDireMaul",
+   "loadingScreenConfidence": "medium",
+   "loadingScreenFallback": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "monsters": [
+    {
+     "npcId": 11452,
+     "displayId": 2021,
+     "nameKo": "야생혈족 도적",
+     "nameEn": "Wildspawn Rogue",
+     "confidence": "high",
+     "level": 57
+    },
+    {
+     "npcId": 11441,
+     "displayId": 12473,
+     "nameKo": "고르독일족 투사",
+     "nameEn": "Gordok Brute",
+     "confidence": "high",
+     "level": 58
+    },
+    {
+     "npcId": 11462,
+     "displayId": 10621,
+     "nameKo": "굽이나무정령",
+     "nameEn": "Warpwood Treant",
+     "confidence": "high",
+     "level": 55
+    },
+    {
+     "npcId": 11473,
+     "displayId": 14366,
+     "nameKo": "엘드레스 원혼",
+     "nameEn": "Eldreth Spectre",
+     "confidence": "high",
+     "level": 59
+    },
+    {
+     "npcId": 11480,
+     "displayId": 14253,
+     "nameKo": "불가사의한 피조물",
+     "nameEn": "Arcane Aberration",
+     "confidence": "high",
+     "level": 60
+    }
+   ],
+   "boss": {
+    "npcId": 11496,
+    "displayId": 14173,
+    "nameKo": "이몰타르",
+    "nameEn": "Immol'thar",
+    "confidence": "high",
+    "level": 61
+   }
+  },
+  "39": {
+   "zoneKo": "스칼로맨스",
+   "zoneEn": "Scholomance",
+   "kind": "dungeon",
+   "levelRange": "58-60",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 10475,
+     "displayId": 11161,
+     "nameKo": "스칼로맨스 학생",
+     "nameEn": "Scholomance Student",
+     "confidence": "high",
+     "level": 59
+    },
+    {
+     "npcId": 10476,
+     "displayId": 11161,
+     "nameKo": "스칼로맨스 수습강령술사",
+     "nameEn": "Scholomance Necrolyte",
+     "confidence": "high",
+     "level": 58
+    },
+    {
+     "npcId": 10489,
+     "displayId": 7848,
+     "nameKo": "되살아난 경비병",
+     "nameEn": "Risen Guard",
+     "confidence": "high",
+     "level": 59
+    },
+    {
+     "npcId": 11551,
+     "displayId": 11178,
+     "nameKo": "소생한 지하마귀",
+     "nameEn": "Necrofiend",
+     "confidence": "high",
+     "level": 60
+    },
+    {
+     "npcId": 10499,
+     "displayId": 3942,
+     "nameKo": "연구원 유령",
+     "nameEn": "Spectral Researcher",
+     "confidence": "high",
+     "level": 60
+    }
+   ],
+   "boss": {
+    "npcId": 1853,
+    "displayId": 11070,
+    "nameKo": "암흑스승 간들링",
+    "nameEn": "Darkmaster Gandling",
+    "confidence": "high",
+    "level": 61
+   }
+  },
+  "40": {
+   "zoneKo": "스트라솔름",
+   "zoneEn": "Stratholme",
+   "kind": "dungeon",
+   "levelRange": "58-60",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 10418,
+     "displayId": 10492,
+     "nameKo": "진홍십자군 보초",
+     "nameEn": "Crimson Guardsman",
+     "confidence": "high",
+     "level": 58
+    },
+    {
+     "npcId": 10406,
+     "displayId": 10626,
+     "nameKo": "게걸스러운 구울",
+     "nameEn": "Ghoul Ravener",
+     "confidence": "high",
+     "level": 59
+    },
+    {
+     "npcId": 10390,
+     "displayId": 9789,
+     "nameKo": "해골 수사",
+     "nameEn": "Skeletal Guardian",
+     "confidence": "high",
+     "level": 56
+    },
+    {
+     "npcId": 10398,
+     "displayId": 10631,
+     "nameKo": "투자딘 흑마술사",
+     "nameEn": "Thuzadin Shadowcaster",
+     "confidence": "high",
+     "level": 59
+    },
+    {
+     "npcId": 10417,
+     "displayId": 12819,
+     "nameKo": "독고름 누더기골렘",
+     "nameEn": "Venom Belcher",
+     "confidence": "high",
+     "level": 61
+    }
+   ],
+   "boss": {
+    "npcId": 10440,
+    "displayId": 10729,
+    "nameKo": "남작 리븐데어",
+    "nameEn": "Baron Rivendare",
+    "confidence": "high",
+    "level": 62
+   }
+  },
+  "41": {
+   "zoneKo": "줄구룹",
+   "zoneEn": "Zul'Gurub",
+   "kind": "raid",
+   "levelRange": "60 (20인)",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenZulGurub",
+   "loadingScreenConfidence": "medium",
+   "loadingScreenFallback": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "monsters": [
+    {
+     "npcId": 11352,
+     "displayId": 14832,
+     "nameKo": "구루바시부족 광전사",
+     "nameEn": "Gurubashi Berserker",
+     "confidence": "high",
+     "level": 62
+    },
+    {
+     "npcId": 11350,
+     "displayId": 11074,
+     "nameKo": "구루바시부족 도끼투척병",
+     "nameEn": "Gurubashi Axe Thrower",
+     "confidence": "high",
+     "level": 60
+    },
+    {
+     "npcId": 14821,
+     "displayId": 2571,
+     "nameKo": "래즈자쉬 랩터",
+     "nameEn": "Razzashi Raptor",
+     "confidence": "high",
+     "level": 60
+    },
+    {
+     "npcId": 11830,
+     "displayId": 11758,
+     "nameKo": "학카르부족 사제",
+     "nameEn": "Hakkari Priest",
+     "confidence": "high",
+     "level": 60
+    },
+    {
+     "npcId": 11361,
+     "displayId": 11031,
+     "nameKo": "줄리안 호랑이",
+     "nameEn": "Zulian Tiger",
+     "confidence": "high",
+     "level": 60
+    }
+   ],
+   "boss": {
+    "npcId": 14834,
+    "displayId": 15295,
+    "nameKo": "학카르",
+    "nameEn": "Hakkar",
+    "confidence": "high",
+    "level": 63
+   }
+  },
+  "42": {
+   "zoneKo": "화산 심장부",
+   "zoneEn": "Molten Core",
+   "kind": "raid",
+   "levelRange": "60 (40인)",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenMoltenCore",
+   "loadingScreenConfidence": "medium",
+   "loadingScreenFallback": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "monsters": [
+    {
+     "npcId": 11658,
+     "displayId": 8269,
+     "nameKo": "용암거인",
+     "nameEn": "Molten Giant",
+     "confidence": "high",
+     "level": 62
+    },
+    {
+     "npcId": 11671,
+     "displayId": 12168,
+     "nameKo": "심장부 사냥개",
+     "nameEn": "Core Hound",
+     "confidence": "high",
+     "level": 61
+    },
+    {
+     "npcId": 11661,
+     "displayId": 12030,
+     "nameKo": "불꽃꼬리일족 전사",
+     "nameEn": "Flamewaker",
+     "confidence": "high",
+     "level": 62
+    },
+    {
+     "npcId": 12101,
+     "displayId": 12239,
+     "nameKo": "굽이치는 용암 정령",
+     "nameEn": "Lava Surger",
+     "confidence": "high",
+     "level": 62
+    },
+    {
+     "npcId": 11668,
+     "displayId": 12231,
+     "nameKo": "불의군주",
+     "nameEn": "Firelord",
+     "confidence": "high",
+     "level": 62
+    }
+   ],
+   "boss": {
+    "npcId": 11502,
+    "displayId": 11121,
+    "nameKo": "라그나로스",
+    "nameEn": "Ragnaros",
+    "confidence": "high",
+    "level": 63
+   }
+  },
+  "43": {
+   "zoneKo": "오닉시아의 둥지",
+   "zoneEn": "Onyxia's Lair",
+   "kind": "raid",
+   "levelRange": "60 (40인)",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "loadingScreenConfidence": "medium",
+   "monsters": [
+    {
+     "npcId": 11262,
+     "displayId": 397,
+     "nameKo": "오닉시아의 새끼용",
+     "nameEn": "Onyxian Whelp",
+     "confidence": "medium"
+    },
+    {
+     "npcId": 12129,
+     "displayId": 8711,
+     "nameKo": "오닉시아의 수호병",
+     "nameEn": "Onyxian Warder",
+     "confidence": "medium"
+    },
+    {
+     "npcId": 12260,
+     "displayId": 6369,
+     "nameKo": "오닉시아의 비룡",
+     "nameEn": "Onyxian Drake",
+     "confidence": "medium",
+     "level": 61,
+     "note": "vanilla Onyxian drake (not an Onyxia's Lair trash mob in 1.x)"
+    },
+    {
+     "npcId": 4328,
+     "displayId": 8310,
+     "nameKo": "화염갈기혈족 맹독전사",
+     "nameEn": "Firemane Scalebane",
+     "confidence": "high",
+     "level": 41,
+     "note": "Wyrmbog (Dustwallow) dragonkin next to the lair"
+    },
+    {
+     "npcId": 4334,
+     "displayId": 8309,
+     "nameKo": "화염갈기혈족 불꽃소환사",
+     "nameEn": "Firemane Flamecaller",
+     "confidence": "high",
+     "level": 42,
+     "note": "Wyrmbog (Dustwallow) dragonkin next to the lair"
+    }
+   ],
+   "boss": {
+    "npcId": 10184,
+    "displayId": 8570,
+    "nameKo": "오닉시아",
+    "nameEn": "Onyxia",
+    "confidence": "high"
+   }
+  },
+  "44": {
+   "zoneKo": "검은날개 둥지",
+   "zoneEn": "Blackwing Lair",
+   "kind": "raid",
+   "levelRange": "60 (40인)",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenBlackwingLair",
+   "loadingScreenConfidence": "medium",
+   "loadingScreenFallback": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "monsters": [
+    {
+     "npcId": 12460,
+     "displayId": 14308,
+     "nameKo": "죽음의발톱 고룡수호병",
+     "nameEn": "Death Talon Wyrmguard",
+     "confidence": "high",
+     "level": 63
+    },
+    {
+     "npcId": 12420,
+     "displayId": 11979,
+     "nameKo": "검은날개 마법사",
+     "nameEn": "Blackwing Mage",
+     "confidence": "high",
+     "level": 60
+    },
+    {
+     "npcId": 12416,
+     "displayId": 12024,
+     "nameKo": "검은날개 부대원",
+     "nameEn": "Blackwing Legionnaire",
+     "confidence": "high",
+     "level": 60
+    },
+    {
+     "npcId": 12468,
+     "displayId": 12892,
+     "nameKo": "죽음의발톱 알지기",
+     "nameEn": "Death Talon Hatcher",
+     "confidence": "high",
+     "level": 61
+    },
+    {
+     "npcId": 14302,
+     "displayId": 14352,
+     "nameKo": "오색용기병",
+     "nameEn": "Chromatic Drakonid",
+     "confidence": "high",
+     "level": 60
+    }
+   ],
+   "boss": {
+    "npcId": 11583,
+    "displayId": 11380,
+    "nameKo": "네파리안",
+    "nameEn": "Nefarian",
+    "confidence": "high",
+    "level": 63
+   }
+  },
+  "45": {
+   "zoneKo": "안퀴라즈 폐허",
+   "zoneEn": "Ruins of Ahn'Qiraj",
+   "kind": "raid",
+   "levelRange": "60 (20인)",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenAhnQiraj",
+   "loadingScreenConfidence": "low",
+   "loadingScreenFallback": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "monsters": [
+    {
+     "npcId": 15324,
+     "displayId": 15741,
+     "nameKo": "퀴라지 투사",
+     "nameEn": "Qiraji Gladiator",
+     "confidence": "high",
+     "level": 61
+    },
+    {
+     "npcId": 15320,
+     "displayId": 15439,
+     "nameKo": "병정 하이브자라",
+     "nameEn": "Hive'Zara Soldier",
+     "confidence": "high",
+     "level": 61
+    },
+    {
+     "npcId": 15355,
+     "displayId": 15347,
+     "nameKo": "아누비사스 감시자",
+     "nameEn": "Anubisath Guardian",
+     "confidence": "high",
+     "level": 62
+    },
+    {
+     "npcId": 15338,
+     "displayId": 15343,
+     "nameKo": "흑요석 파괴자",
+     "nameEn": "Obsidian Destroyer",
+     "confidence": "high",
+     "level": 61
+    },
+    {
+     "npcId": 15335,
+     "displayId": 15463,
+     "nameKo": "청소부 수액괴물",
+     "nameEn": "Flesh Hunter",
+     "confidence": "high",
+     "level": 62
+    }
+   ],
+   "boss": {
+    "npcId": 15339,
+    "displayId": 15432,
+    "nameKo": "무적의 오시리안",
+    "nameEn": "Ossirian the Unscarred",
+    "confidence": "high",
+    "level": 63
+   }
+  },
+  "46": {
+   "zoneKo": "안퀴라즈 사원",
+   "zoneEn": "Temple of Ahn'Qiraj",
+   "kind": "raid",
+   "levelRange": "60 (40인)",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenAhnQiraj",
+   "loadingScreenConfidence": "low",
+   "loadingScreenFallback": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+   "monsters": [
+    {
+     "npcId": 15264,
+     "displayId": 15347,
+     "nameKo": "아누비사스 파수병",
+     "nameEn": "Anubisath Sentinel",
+     "confidence": "high",
+     "level": 61
+    },
+    {
+     "npcId": 15252,
+     "displayId": 15340,
+     "nameKo": "퀴라지 용사",
+     "nameEn": "Qiraji Champion",
+     "confidence": "high",
+     "level": 63
+    },
+    {
+     "npcId": 15229,
+     "displayId": 15434,
+     "nameKo": "병정 베크니스",
+     "nameEn": "Vekniss Soldier",
+     "confidence": "high",
+     "level": 61
+    },
+    {
+     "npcId": 15262,
+     "displayId": 15346,
+     "nameKo": "흑요석 파멸자",
+     "nameEn": "Obsidian Eradicator",
+     "confidence": "high",
+     "level": 60
+    },
+    {
+     "npcId": 15247,
+     "displayId": 15360,
+     "nameKo": "퀴라지 세뇌관",
+     "nameEn": "Qiraji Brainwasher",
+     "confidence": "high",
+     "level": 61
+    }
+   ],
+   "boss": {
+    "npcId": 15727,
+    "displayId": 15787,
+    "nameKo": "쑨",
+    "nameEn": "C'Thun",
+    "confidence": "high",
+    "level": 63
+   }
+  },
+  "47": {
+   "zoneKo": "낙스라마스",
+   "zoneEn": "Naxxramas",
+   "kind": "raid",
+   "levelRange": "60 (40인)",
+   "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenNaxxramas",
+   "loadingScreenConfidence": "medium",
+   "loadingScreenFallback": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "monsters": [
+    {
+     "npcId": 16021,
+     "displayId": 16175,
+     "nameKo": "살아 움직이는 괴물",
+     "nameEn": "Living Monstrosity",
+     "confidence": "medium"
+    },
+    {
+     "npcId": 16017,
+     "displayId": 9760,
+     "nameKo": "기워 붙인 누더기골렘",
+     "nameEn": "Patchwork Golem",
+     "confidence": "medium"
+    },
+    {
+     "npcId": 16168,
+     "displayId": 14710,
+     "nameKo": "돌가죽 가고일",
+     "nameEn": "Stoneskin Gargoyle",
+     "confidence": "medium"
+    },
+    {
+     "npcId": 15975,
+     "displayId": 15938,
+     "nameKo": "청소부 그물거미",
+     "nameEn": "Carrion Spinner",
+     "confidence": "medium"
+    },
+    {
+     "npcId": 16029,
+     "displayId": 15962,
+     "nameKo": "썩은위액 누더기골렘",
+     "nameEn": "Sludge Belcher",
+     "confidence": "medium"
+    }
+   ],
+   "boss": {
+    "npcId": 15990,
+    "displayId": 15945,
+    "nameKo": "켈투자드",
+    "nameEn": "Kel'Thuzad",
+    "confidence": "high"
+   }
+  }
+ },
+ "content": {
+  "worldBoss": [
+   {
+    "npcId": 12397,
+    "displayId": 12449,
+    "nameKo": "군주 카자크",
+    "nameEn": "Lord Kazzak",
+    "confidence": "high",
+    "zoneKo": "저주받은 땅",
+    "zoneEn": "Blasted Lands",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+    "loadingScreenConfidence": "medium"
+   },
+   {
+    "npcId": 6109,
+    "displayId": 11460,
+    "nameKo": "아주어고스",
+    "nameEn": "Azuregos",
+    "confidence": "high",
+    "level": 63,
+    "zoneKo": "아즈샤라",
+    "zoneEn": "Azshara",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+    "loadingScreenConfidence": "medium"
+   },
+   {
+    "npcId": 14887,
+    "displayId": 15364,
+    "nameKo": "이손드레",
+    "nameEn": "Ysondre",
+    "confidence": "high",
+    "level": 63,
+    "zoneKo": "에메랄드 꿈의 관문 (그늘숲/잿빛 골짜기/페랄라스/동부 내륙지)",
+    "zoneEn": "Emerald Dream portals (Duskwood/Ashenvale/Feralas/Hinterlands)",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+    "loadingScreenConfidence": "medium"
+   },
+   {
+    "npcId": 14888,
+    "displayId": 15365,
+    "nameKo": "레손",
+    "nameEn": "Lethon",
+    "confidence": "high",
+    "level": 63,
+    "zoneKo": "에메랄드 꿈의 관문",
+    "zoneEn": "Emerald Dream portals",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+    "loadingScreenConfidence": "medium"
+   },
+   {
+    "npcId": 14889,
+    "displayId": 15366,
+    "nameKo": "에메리스",
+    "nameEn": "Emeriss",
+    "confidence": "high",
+    "level": 63,
+    "zoneKo": "에메랄드 꿈의 관문",
+    "zoneEn": "Emerald Dream portals",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+    "loadingScreenConfidence": "medium"
+   },
+   {
+    "npcId": 14890,
+    "displayId": 15363,
+    "nameKo": "타에라",
+    "nameEn": "Taerar",
+    "confidence": "high",
+    "level": 63,
+    "zoneKo": "에메랄드 꿈의 관문",
+    "zoneEn": "Emerald Dream portals",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+    "loadingScreenConfidence": "medium"
+   }
+  ],
+  "raids": {
+   "zakum": {
+    "npcId": 11502,
+    "displayId": 11121,
+    "nameKo": "라그나로스",
+    "nameEn": "Ragnaros",
+    "confidence": "high",
+    "level": 63,
+    "zoneKo": "화산 심장부",
+    "zoneEn": "Molten Core",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenMoltenCore",
+    "loadingScreenConfidence": "medium",
+    "role": "Zakum replacement (multi-armed lava lord)",
+    "alternates": [
+     {
+      "npcId": 12018,
+      "displayId": 12029,
+      "nameKo": "청지기 이그젝큐투스",
+      "nameEn": "Majordomo Executus",
+      "confidence": "high",
+      "level": 63
+     }
+    ]
+   },
+   "horntail": {
+    "npcId": 10184,
+    "displayId": 8570,
+    "nameKo": "오닉시아",
+    "nameEn": "Onyxia",
+    "confidence": "high",
+    "zoneKo": "오닉시아의 둥지",
+    "zoneEn": "Onyxia's Lair",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenKalimdor",
+    "loadingScreenConfidence": "medium",
+    "role": "Horntail replacement (cave dragon)",
+    "alternates": [
+     {
+      "npcId": 11583,
+      "displayId": 11380,
+      "nameKo": "네파리안",
+      "nameEn": "Nefarian",
+      "confidence": "high",
+      "level": 63
+     },
+     {
+      "npcId": 15989,
+      "displayId": 16033,
+      "nameKo": "사피론",
+      "nameEn": "Sapphiron",
+      "confidence": "high"
+     }
+    ]
+   },
+   "pinkbean": {
+    "npcId": 15727,
+    "displayId": 15787,
+    "nameKo": "쑨",
+    "nameEn": "C'Thun",
+    "confidence": "high",
+    "level": 63,
+    "zoneKo": "안퀴라즈 사원",
+    "zoneEn": "Temple of Ahn'Qiraj",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenAhnQiraj",
+    "loadingScreenConfidence": "low",
+    "role": "Pink Bean replacement (final god-tier boss)",
+    "alternates": [
+     {
+      "npcId": 15990,
+      "displayId": 15945,
+      "nameKo": "켈투자드",
+      "nameEn": "Kel'Thuzad",
+      "confidence": "high"
+     }
+    ]
+   }
+  },
+  "dungeons": {
+   "weapon": {
+    "npcId": 9017,
+    "displayId": 1204,
+    "nameKo": "불의군주 인센디우스",
+    "nameEn": "Lord Incendius",
+    "confidence": "high",
+    "level": 53,
+    "zoneKo": "검은바위 나락 (검은 모루)",
+    "zoneEn": "Blackrock Depths (Black Anvil)",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+    "loadingScreenConfidence": "medium",
+    "role": "weapon dungeon: fire lord of the Black Anvil forge"
+   },
+   "exp": {
+    "npcId": 3975,
+    "displayId": 2041,
+    "nameKo": "헤로드",
+    "nameEn": "Herod",
+    "confidence": "high",
+    "level": 37,
+    "zoneKo": "붉은십자군 수도원 (무기고)",
+    "zoneEn": "Scarlet Monastery (Armory)",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+    "loadingScreenConfidence": "medium",
+    "role": "EXP dungeon: classic SM Armory XP farm"
+   },
+   "gear": {
+    "npcId": 7800,
+    "displayId": 6980,
+    "nameKo": "기계박사 텔마플러그",
+    "nameEn": "Mekgineer Thermaplugg",
+    "confidence": "high",
+    "level": 28,
+    "zoneKo": "놈리건",
+    "zoneEn": "Gnomeregan",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+    "loadingScreenConfidence": "medium",
+    "role": "gear dungeon: mekgineer of gears/equipment"
+   },
+   "heroTraining": {
+    "npcId": 10505,
+    "displayId": null,
+    "nameKo": "조교 말리시아",
+    "nameEn": "Instructor Malicia",
+    "confidence": "medium",
+    "level": 60,
+    "zoneKo": "스칼로맨스",
+    "zoneEn": "Scholomance",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+    "loadingScreenConfidence": "medium",
+    "role": "hero-training dungeon: Scholomance instructor"
+   },
+   "enhancement": {
+    "npcId": 8983,
+    "displayId": 8759,
+    "nameKo": "골렘 군주 아젤마크",
+    "nameEn": "Golem Lord Argelmach",
+    "confidence": "high",
+    "level": 55,
+    "zoneKo": "검은바위 나락 (제작소)",
+    "zoneEn": "Blackrock Depths (Manufactory)",
+    "loadingScreen": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+    "loadingScreenConfidence": "medium",
+    "role": "enhancement dungeon: golem upgrades"
+   }
+  },
+  "arenaBackdrop": "Interface\\Glues\\LoadingScreens\\LoadScreenWarsongGulch",
+  "arenaBackdropMeta": {
+   "zoneKo": "구루바시 투기장",
+   "zoneEn": "Gurubashi Arena (Stranglethorn Vale)",
+   "confidence": "medium",
+   "fallback": "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom",
+   "note": "Gurubashi Arena has no loading screen of its own; Warsong Gulch BG screen (1.5+) used as PvP backdrop."
+  },
+  "dummies": [
+   {
+    "npcId": 1921,
+    "displayId": 3019,
+    "nameKo": "훈련용 허수아비",
+    "nameEn": "Combat Dummy",
+    "confidence": "high",
+    "level": 1
+   },
+   {
+    "npcId": 2673,
+    "displayId": 1555,
+    "nameKo": "표적 허수아비",
+    "nameEn": "Target Dummy",
+    "confidence": "high",
+    "level": 1
+   },
+   {
+    "npcId": 2674,
+    "displayId": 1555,
+    "nameKo": "고급 표적 허수아비",
+    "nameEn": "Advanced Target Dummy",
+    "confidence": "high",
+    "level": 1
+   },
+   {
+    "npcId": 12426,
+    "displayId": 1555,
+    "nameKo": "일급 표적 허수아비",
+    "nameEn": "Masterwork Target Dummy",
+    "confidence": "high",
+    "level": 1
+   },
+   {
+    "npcId": 12385,
+    "displayId": 12434,
+    "nameKo": "박격포부대 고급 표적 허수아비",
+    "nameEn": "Mortar Team Advanced Target Dummy",
+    "confidence": "high",
+    "level": 6
+   },
+   {
+    "npcId": 5652,
+    "displayId": 3019,
+    "nameKo": "언더시티 훈련용 허수아비",
+    "nameEn": "Undercity Practice Dummy",
+    "confidence": "high",
+    "level": 25
+   },
+   {
+    "npcId": 114,
+    "displayId": 378,
+    "nameKo": "허수아비골렘 보초",
+    "nameEn": "Harvest Watcher",
+    "confidence": "high",
+    "level": 15
+   },
+   {
+    "npcId": 1933,
+    "displayId": 856,
+    "nameKo": "양",
+    "nameEn": "Sheep",
+    "confidence": "high",
+    "level": 3
+   }
+  ]
+ }
+}
