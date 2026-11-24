@@ -381,7 +381,7 @@ end
 
 local function buildRatesPopup(p)
     local pop = W.Panel(p, 340, 232, 0.97)
-    pop:SetPoint("TOPLEFT", GRID_X + 270, -4)
+    pop:SetPoint("TOPLEFT", GRID_X + 266, -4)
     pop:SetFrameLevel((p:GetFrameLevel() or 1) + 20)
     pop:EnableMouse(true)
     pop.title = W.Text(pop, 12, W.COLORS.gold, "LEFT")

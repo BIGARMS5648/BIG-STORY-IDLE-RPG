@@ -114,9 +114,9 @@ function P.UseCube(hero, item, kind, rng)
         local need = (kind == "additional") and ns.StarForce.ADDITIONAL_STAR or ns.StarForce.POTENTIAL_STAR
         return nil, string.format("스타포스 %d성 이상에서 사용할 수 있습니다.", need)
     end
-    local state = P.State(item, kind)
     local ok, err = UP.Pay(hero, P.Cost(item, kind), "cube")
     if not ok then return nil, err end
+    local state = P.State(item, kind)
     local up = P.RollState(state, part, kind, rng)
     if ns.Fire then ns.Fire("POTENTIAL_ROLLED", hero, item, kind, up) end
     Hero.Changed(hero, "potential")

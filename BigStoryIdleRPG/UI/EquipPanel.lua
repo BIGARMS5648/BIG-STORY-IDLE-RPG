@@ -12,7 +12,7 @@ local D = ns.Data
 local BAG_X, BAG_W = 128, 324
 local RX, RW = 460, 484           -- right column
 local VIEW_Y = -26
-local MAX_LINES = 12
+local MAX_LINES = 11
 local MAX_SUBS = 6
 
 local DOLL = {
@@ -636,7 +636,7 @@ local function buildInfo(p)
         v.convBtns[i] = b
     end
     v.foot = W.Text(v, 10, W.COLORS.gray, "LEFT")
-    v.foot:SetPoint("TOPLEFT", 0, -196)
+    v.foot:SetPoint("TOPLEFT", 0, -188)
     v.foot:SetWidth(RW)
     v.foot:SetJustifyV("TOP")
     return v

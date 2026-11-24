@@ -63,6 +63,11 @@ UI\Widgets.lua
 UI\Main.lua
 UI\BattleView.lua
 UI\CorePanels.lua
+UI\SummonPanel.lua
+UI\WeaponPanel.lua
+UI\CompanionPanel.lua
+UI\EquipPanel.lua
+UI\GrowthPanel.lua
 UI\ContentPanel.lua
 UI\ArenaPanel.lua
 UI\IncomePanel.lua
