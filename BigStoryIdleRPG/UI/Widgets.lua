@@ -378,6 +378,226 @@ function W.FillFor(r, g, b)
     return best
 end
 
+---------------------------------------------------------------------------
+-- 메이플 키우기-style item card: grade tinted card with "티어 Lv.N" band, framed icon, awakening
+-- stars and a copies bar (weapons, companions, equipment, artifacts)
+---------------------------------------------------------------------------
+function W.GradeCard(parent, w, h, onClick)
+    local b = CreateFrame("Button", nil, parent, BACKDROP_TEMPLATE)
+    b:SetSize(w, h)
+    backdrop(b, { 0.1, 0.1, 0.12, 1 }, { 0.3, 0.33, 0.4, 1 }, 10)
+    b.band = b:CreateTexture(nil, "BORDER")
+    b.band:SetTexture(WHITE)
+    b.band:SetPoint("TOPLEFT", 3, -3)
+    b.band:SetPoint("TOPRIGHT", -3, -3)
+    b.band:SetHeight(13)
+    b.band:SetVertexColor(0, 0, 0, 0.45)
+    b.tier = W.Text(b, 9, W.COLORS.white, "LEFT")
+    b.tier:SetPoint("TOPLEFT", 5, -4)
+    b.level = W.Text(b, 9, W.COLORS.white, "RIGHT")
+    b.level:SetPoint("TOPRIGHT", -5, -4)
+    local isz = math.min(w - 14, h - 34)
+    b.icon = W.Icon(b, isz)
+    b.icon:SetPoint("TOP", 0, -17)
+    b.icon:EnableMouse(false)
+    b.over = CreateFrame("Frame", nil, b)
+    b.over:SetAllPoints(b.icon)
+    b.over:SetFrameLevel(b.icon:GetFrameLevel() + 2)
+    b.stars = W.Text(b.over, 8, W.COLORS.gold, "CENTER")
+    b.stars:SetPoint("BOTTOM", b.icon, "BOTTOM", 0, 2)
+    b.bar = W.Bar(b, w - 12, 7, 0.3, 0.8, 0.2)
+    b.bar:SetPoint("BOTTOM", 0, 5)
+    b.bar.text:SetFont(b.bar.text:GetFont() or "Fonts\\2002.TTF", 8, "OUTLINE")
+    b.tag = W.Text(b.over, 9, W.COLORS.green, "LEFT")
+    b.tag:SetPoint("TOPLEFT", b.icon, "TOPLEFT", 4, -3)
+    b.sel = b:CreateTexture(nil, "OVERLAY", nil, 3)
+    b.sel:SetTexture("Interface\\Buttons\\CheckButtonHilight")
+    b.sel:SetBlendMode("ADD")
+    b.sel:SetPoint("TOPLEFT", -4, 4)
+    b.sel:SetPoint("BOTTOMRIGHT", 4, -4)
+    b.sel:Hide()
+    b.dot = W.Dot(b)
+    b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
+    if onClick then b:SetScript("OnClick", function(self, ...) onClick(self, ...) end) end
+    return b
+end
+
+-- grade colours and owned state of a card
+function W.SetCardGrade(b, grade, owned)
+    local r, g, bl = W.GradeColor(grade or 1)
+    local k = owned and 0.34 or 0.16
+    if b.SetBackdropColor then
+        b:SetBackdropColor(r * k + 0.03, g * k + 0.03, bl * k + 0.04, 1)
+        b:SetBackdropBorderColor(r * (owned and 1 or 0.5), g * (owned and 1 or 0.5), bl * (owned and 1 or 0.5), 1)
+    end
+    W.SetBorderGrade(b.icon, grade)
+    b.icon.icon:SetDesaturated(not owned)
+    b.icon:SetAlpha(owned and 1 or 0.55)
+    b.tier:SetTextColor(r, g, bl)
+end
+
+function W.Stars(n, max, big)
+    local s = ""
+    for i = 1, max do s = s .. (i <= n and "|cffffd100★|r" or (big and "|cff4a4a4a★|r" or "|cff555555☆|r")) end
+    return s
+end
+
+---------------------------------------------------------------------------
+-- 메이플 키우기-style detail card (the dark item info window): stars, name, icon block, then sections
+-- ("장착 효과", "보유 효과") with label / value rows. card:SetLines({ { header = "..." },
+-- { "공격력", "6,240%" [, valueColor] }, { gap = 6 } ... }) lays the body out from the top.
+---------------------------------------------------------------------------
+W.SECTION = { 0.78, 0.86, 0.32 }
+
+function W.InfoCard(parent, w, h, opts)
+    local f = CreateFrame("Frame", nil, parent, BACKDROP_TEMPLATE)
+    f:SetSize(w, h)
+    backdrop(f, { 0.06, 0.07, 0.09, 0.96 }, W.THEME.panelBorder, 12)
+    if art("frame_rivet") then W.Slice(f, "frame_rivet", 0.42, { keepBackdrop = true }) end
+    if f.slices then for _, t in ipairs(f.slices) do t:SetVertexColor(0.85, 0.85, 0.85, 1) end end
+    if f.SetBackdropColor then f:SetBackdropColor(0.06, 0.07, 0.09, 0.96) end
+    f.stars = W.Text(f, 15, W.COLORS.gold, "CENTER")
+    f.stars:SetPoint("TOP", 0, -14)
+    f.name = W.Text(f, 15, W.COLORS.white, "CENTER")
+    f.name:SetPoint("TOP", 0, -34)
+    f.name:SetWidth(w - 30)
+    f.icon = W.Icon(f, 56)
+    f.icon:SetPoint("TOPLEFT", 20, -58)
+    f.line1 = W.Text(f, 13, W.COLORS.white, "LEFT")
+    f.line1:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 10, -2)
+    f.line2 = W.Text(f, 12, W.COLORS.white, "LEFT")
+    f.line2:SetPoint("TOPLEFT", f.line1, "BOTTOMLEFT", 0, -5)
+    f.line3 = W.Text(f, 12, W.COLORS.white, "LEFT")
+    f.line3:SetPoint("TOPLEFT", f.line2, "BOTTOMLEFT", 0, -5)
+    f.tag = W.Text(f, 12, W.COLORS.green, "RIGHT")
+    f.tag:SetPoint("TOPRIGHT", -20, -60)
+    f.bodyTop = 124
+    if opts and opts.plain then
+        for _, r in ipairs({ f.stars, f.name, f.icon, f.line1, f.line2, f.line3, f.tag }) do r:Hide() end
+        f.bodyTop = opts.top or 14
+    end
+    f.pool = {}
+    local inner = w - 24
+    function f:SetLines(list)
+        local y = self.bodyTop
+        local used = 0
+        for _, it in ipairs(list) do
+            if it.gap then
+                y = y + it.gap
+            else
+                used = used + 1
+                local ln = self.pool[used]
+                if not ln then
+                    ln = {}
+                    ln.band = self:CreateTexture(nil, "ARTWORK")
+                    ln.band:SetTexture(WHITE)
+                    ln.l = W.Text(self, 12, W.COLORS.white, "LEFT")
+                    ln.r = W.Text(self, 12, W.COLORS.white, "RIGHT")
+                    self.pool[used] = ln
+                end
+                ln.band:ClearAllPoints(); ln.l:ClearAllPoints(); ln.r:ClearAllPoints()
+                if it.header then
+                    ln.band:SetPoint("TOPLEFT", 12, -y)
+                    ln.band:SetSize(inner, 20)
+                    ln.band:SetVertexColor(1, 1, 1, 0.07)
+                    ln.band:Show()
+                    ln.l:SetPoint("TOPLEFT", 18, -y - 4)
+                    ln.l:SetText(it.header)
+                    ln.l:SetTextColor(W.SECTION[1], W.SECTION[2], W.SECTION[3])
+                    ln.r:SetPoint("TOPRIGHT", -18, -y - 4)
+                    ln.r:SetText(it.right or "")
+                    ln.r:SetTextColor(0.7, 0.7, 0.7)
+                    y = y + 24
+                else
+                    ln.band:Hide()
+                    ln.l:SetPoint("TOPLEFT", 20, -y)
+                    ln.l:SetWidth(inner * 0.5)
+                    ln.l:SetText(it[1] or "")
+                    local lc = it.labelColor or { 0.86, 0.86, 0.86 }
+                    ln.l:SetTextColor(lc[1], lc[2], lc[3])
+                    ln.r:SetPoint("TOPRIGHT", -20, -y)
+                    ln.r:SetWidth(inner * 0.62)
+                    ln.r:SetText(it[2] or "")
+                    local c = it[3] or W.COLORS.white
+                    ln.r:SetTextColor(c[1], c[2], c[3])
+                    y = y + 18
+                end
+                ln.l:Show(); ln.r:Show()
+            end
+        end
+        for i = used + 1, #self.pool do
+            local ln = self.pool[i]
+            ln.band:Hide(); ln.l:Hide(); ln.r:Hide()
+        end
+        return y
+    end
+    return f
+end
+
+-- tab strip (sub menus / grade filters): selected tab gold, others gray
+function W.Tabs(parent, labels, w, h, onSelect)
+    local tabs = { buttons = {} }
+    for i, text in ipairs(labels) do
+        local b = W.Button(parent, text, w, h or 24, function() tabs:Select(i); if onSelect then onSelect(i) end end, "gray")
+        if i > 1 then b:SetPoint("LEFT", tabs.buttons[i - 1], "RIGHT", 4, 0) end
+        b.dot = W.Dot(b)
+        tabs.buttons[i] = b
+    end
+    function tabs:Select(i)
+        self.index = i
+        for k, b in ipairs(self.buttons) do
+            b:SetStyle(k == i and "orange" or "gray")
+            if b.label then
+                if k == i then b.label:SetTextColor(1, 0.95, 0.8) else b.label:SetTextColor(0.8, 0.8, 0.8) end
+            end
+        end
+    end
+    function tabs:SetPoint(...) self.buttons[1]:SetPoint(...) end
+    tabs:Select(1)
+    return tabs
+end
+
+-- ON / OFF switch (kit toggle art); toggle.value, toggle:SetValue(v), onChange(v)
+function W.Toggle(parent, w, h, onChange)
+    local b = CreateFrame("Button", nil, parent, BACKDROP_TEMPLATE)
+    b:SetSize(w or 40, h or 18)
+    b.art = b:CreateTexture(nil, "ARTWORK")
+    b.art:SetAllPoints()
+    b.text = W.Text(b, math.max(8, math.floor((h or 18) * 0.5)), W.COLORS.white, "CENTER")
+    if not art("toggle_on") then
+        backdrop(b, W.THEME.gray, W.THEME.gray, 8)
+        b.text:SetPoint("CENTER")
+    end
+    function b:SetValue(v)
+        self.value = v and true or false
+        if art("toggle_on") then
+            W.SetArt(self.art, self.value and "toggle_on" or "toggle_off")
+            self.text:SetText("")
+        else
+            local c = self.value and W.THEME.cyan or W.THEME.gray
+            if self.SetBackdropColor then self:SetBackdropColor(c[1], c[2], c[3], 1) end
+            self.text:SetText(self.value and "ON" or "OFF")
+        end
+    end
+    b:SetScript("OnClick", function(self)
+        self:SetValue(not self.value)
+        if onChange then onChange(self.value) end
+    end)
+    b:SetValue(true)
+    return b
+end
+
+-- currency counter capsule (icon + have / need) used under detail cards
+function W.Counter(parent, w)
+    local f = CreateFrame("Frame", nil, parent, BACKDROP_TEMPLATE)
+    f:SetSize(w, 22)
+    backdrop(f, { 0.03, 0.03, 0.04, 0.9 }, { 0.25, 0.27, 0.3, 1 }, 8)
+    if art("box_dark") then W.Slice(f, "box_dark", 0.5) end
+    f.text = W.Text(f, 11, W.COLORS.white, "CENTER")
+    f.text:SetPoint("CENTER", 0, 0)
+    return f
+end
+
 function W.Tooltip(frame, fn)
     frame:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")

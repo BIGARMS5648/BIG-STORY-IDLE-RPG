@@ -6,8 +6,6 @@ local U = ns.U
 local UI = ns.UI
 local D = ns.Data
 
-local GRID_ICON, GRID_STEP, GRID_LABEL_W = 26, 28, 56
-local DX = 186  -- details column x
 
 local WEAPON_FALLBACK = {
     hero = "INV_Sword_39", paladin = "INV_Hammer_04", darkKnight = "INV_Spear_04", archMageIL = "INV_Staff_08",
@@ -180,8 +178,13 @@ local function weaponTooltip(tt, icon)
 end
 
 ---------------------------------------------------------------------------
--- panel
+-- panel: card grid (2 grades per row, 4 tiers each) + detail card on the right (original layout)
 ---------------------------------------------------------------------------
+local CW, CH, GAP, GG, ROW = 64, 76, 4, 20, 94
+local CARD_W = 352
+
+local function tierWord(t) return (t.label or ""):match("(%S+)$") or "" end
+
 UI.RegisterPanel("weapons", {
     title = "무기", order = 32,
     build = function(p)
@@ -192,49 +195,15 @@ UI.RegisterPanel("weapons", {
             t:SetText("무기 시스템을 불러오지 못했습니다.")
             return
         end
-        -- grid: one row per grade, one column per tier
-        p.icons = {}
-        p.gradeLabels = {}
-        for g = 1, 8 do
-            local l = W.Text(p, 11, { W.GradeColor(g) }, "LEFT")
-            l:SetPoint("TOPLEFT", 0, -6 - (g - 1) * GRID_STEP)
-            l:SetWidth(GRID_LABEL_W)
-            l:SetText(gradeName(g))
-            p.gradeLabels[g] = l
-        end
-        for idx = 1, WP.Count() do
-            local t = WP.Tier(idx)
-            local ic = W.Icon(p, GRID_ICON)
-            ic:SetPoint("TOPLEFT", GRID_LABEL_W + (t.tier - 1) * GRID_STEP, -(t.grade - 1) * GRID_STEP)
-            ic.idx = idx
-            ic.sel = ic:CreateTexture(nil, "OVERLAY")
-            ic.sel:SetTexture("Interface\\Buttons\\CheckButtonHilight")
-            ic.sel:SetBlendMode("ADD")
-            ic.sel:SetAllPoints()
-            ic.sel:Hide()
-            ic.copies = W.Text(ic, 9, W.COLORS.green, "LEFT")
-            ic.copies:SetPoint("TOPLEFT", 1, -1)
-            ic.eq = W.Text(ic, 10, W.COLORS.gold, "RIGHT")
-            ic.eq:SetPoint("TOPRIGHT", -1, -1)
-            ic:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
-            ic:SetScript("OnClick", function(self)
-                p.selected = self.idx
-                UI.RefreshPanel()
-            end)
-            W.Tooltip(ic, weaponTooltip)
-            p.icons[idx] = ic
-        end
-
-        -- header: owned total + bulk buttons
         p.summary = W.Text(p, 12, W.COLORS.white, "LEFT")
-        p.summary:SetPoint("TOPLEFT", DX, -4)
-        p.summary:SetWidth(470)
-        p.bestBtn = W.Button(p, "최적 장착", 80, 20, function() equipBest(p) end)
-        p.bestBtn:SetPoint("TOPRIGHT", -2, 0)
+        p.summary:SetPoint("TOPLEFT", 2, -6)
+        p.summary:SetWidth(440)
+        p.bestBtn = W.Button(p, "최적 장착", 96, 24, function() equipBest(p) end, "cyan")
+        p.bestBtn:SetPoint("TOPLEFT", 4 * CW + 3 * GAP + GG + 4 * CW + 3 * GAP - 96, 0)
         p.optBtns = {}
         local anchor = p.bestBtn
         for i, def in ipairs(OPTIONAL) do
-            local b = W.Button(p, def.label, 80, 20, function() optional(p, def) end)
+            local b = W.Button(p, def.label, 86, 24, function() optional(p, def) end, "cyan")
             b:SetPoint("RIGHT", anchor, "LEFT", -4, 0)
             b.def = def
             b:Hide()
@@ -242,162 +211,161 @@ UI.RegisterPanel("weapons", {
             anchor = b
         end
 
-        -- selected weapon
-        p.bigIcon = W.Icon(p, 44)
-        p.bigIcon:SetPoint("TOPLEFT", DX, -28)
-        W.Tooltip(p.bigIcon, function(tt, self) if p.selected then self.idx = p.selected; weaponTooltip(tt, self) end end)
-        p.name = W.Text(p, 15, W.COLORS.gold, "LEFT")
-        p.name:SetPoint("TOPLEFT", p.bigIcon, "TOPRIGHT", 10, -2)
-        p.status = W.Text(p, 11, W.COLORS.gray, "LEFT")
-        p.status:SetPoint("TOPLEFT", p.name, "BOTTOMLEFT", 0, -6)
-        p.status:SetWidth(420)
-        p.equipBtn = W.Button(p, "장착", 90, 24, function() equip(p) end)
-        p.equipBtn:SetPoint("TOPRIGHT", -2, -30)
-
-        local function row(x, y, label)
-            local l = W.Text(p, 12, W.COLORS.gray, "LEFT")
-            l:SetPoint("TOPLEFT", x, y)
-            l:SetWidth(70)
-            l:SetText(label)
-            local v = W.Text(p, 12, W.COLORS.white, "LEFT")
-            v:SetPoint("TOPLEFT", x + 72, y)
-            v:SetWidth(300)
-            return v
+        p.cards = {}
+        p.gradeLabels = {}
+        for g = 1, 8 do
+            local col, row = (g - 1) % 2, math.floor((g - 1) / 2)
+            local gx = col * (4 * CW + 3 * GAP + GG)
+            local gy = -30 - row * ROW
+            local l = W.Text(p, 11, { W.GradeColor(g) }, "LEFT")
+            l:SetPoint("TOPLEFT", gx + 2, gy)
+            l:SetText(gradeName(g))
+            p.gradeLabels[g] = l
         end
-        p.lvText = row(DX, -82, "레벨")
-        p.awText = row(DX, -102, "각성")
-        p.cpText = row(DX, -122, "여분")
-        p.eqText = row(DX + 370, -82, "장착 효과")
-        p.owText = row(DX + 370, -102, "보유 효과")
-        p.exText = row(DX + 370, -122, "추가")
+        for idx = 1, WP.Count() do
+            local t = WP.Tier(idx)
+            local col, row = (t.grade - 1) % 2, math.floor((t.grade - 1) / 2)
+            local gx = col * (4 * CW + 3 * GAP + GG)
+            local c = W.GradeCard(p, CW, CH, function(self)
+                p.selected = self.idx
+                UI.RefreshPanel()
+            end)
+            c:SetPoint("TOPLEFT", gx + (t.tier - 1) * (CW + GAP), -30 - row * ROW - 14)
+            c.idx = idx
+            c.icon.idx = idx
+            W.Tooltip(c, weaponTooltip)
+            p.cards[idx] = c
+        end
 
-        -- enhance
-        p.enhCost = W.Text(p, 11, W.COLORS.white, "LEFT")
-        p.enhCost:SetPoint("TOPLEFT", DX, -148)
-        p.enhCost:SetWidth(740)
-        p.enh1 = W.Button(p, "강화", 90, 22, function() enhance(p, 1) end)
-        p.enh1:SetPoint("TOPLEFT", DX, -166)
-        p.enh10 = W.Button(p, "강화 x10", 90, 22, function() enhance(p, 10) end)
-        p.enh10:SetPoint("LEFT", p.enh1, "RIGHT", 6, 0)
-        p.enhMax = W.Button(p, "최대 강화", 90, 22, function() enhance(p, nil) end)
-        p.enhMax:SetPoint("LEFT", p.enh10, "RIGHT", 6, 0)
-
-        -- awaken / promote
-        p.awCost = W.Text(p, 11, W.COLORS.white, "LEFT")
-        p.awCost:SetPoint("TOPLEFT", DX, -196)
-        p.awCost:SetWidth(360)
-        p.awBtn = W.Button(p, "각성", 90, 22, function() awaken(p) end)
-        p.awBtn:SetPoint("TOPLEFT", DX, -214)
-        p.prCost = W.Text(p, 11, W.COLORS.white, "LEFT")
-        p.prCost:SetPoint("TOPLEFT", DX + 370, -196)
-        p.prCost:SetWidth(380)
-        p.prBtn = W.Button(p, "승급", 90, 22, function() promote(p, 1) end)
-        p.prBtn:SetPoint("TOPLEFT", DX + 370, -214)
-        p.prAllBtn = W.Button(p, "모두 승급", 90, 22, function() promote(p, nil) end)
+        -- detail card
+        local card = W.InfoCard(p, CARD_W, 406)
+        card:SetPoint("TOPRIGHT", 0, 0)
+        p.card = card
+        W.Tooltip(card.icon, function(tt, self) if p.selected then self.idx = p.selected; weaponTooltip(tt, self) end end)
+        card.copies = W.Counter(card, 150)
+        card.copies:SetPoint("TOPLEFT", 20, -262)
+        card.stones = W.Counter(card, 150)
+        card.stones:SetPoint("TOPRIGHT", -20, -262)
+        card.hint = W.Text(card, 11, W.COLORS.gray, "CENTER")
+        card.hint:SetPoint("TOP", 0, -290)
+        card.hint:SetWidth(CARD_W - 30)
+        local bw = math.floor((CARD_W - 40 - 12) / 3)
+        p.awBtn = W.Button(card, "각성", bw, 26, function() awaken(p) end, "cyan")
+        p.awBtn:SetPoint("TOPLEFT", 20, -306)
+        p.prBtn = W.Button(card, "승급", bw, 26, function() promote(p, 1) end, "green")
+        p.prBtn:SetPoint("LEFT", p.awBtn, "RIGHT", 6, 0)
+        p.prAllBtn = W.Button(card, "모두 승급", bw, 26, function() promote(p, nil) end, "green")
         p.prAllBtn:SetPoint("LEFT", p.prBtn, "RIGHT", 6, 0)
+        p.enh1 = W.Button(card, "레벨업", bw, 26, function() enhance(p, 1) end, "cyan")
+        p.enh1:SetPoint("TOPLEFT", 20, -336)
+        p.enh10 = W.Button(card, "레벨업 x10", bw, 26, function() enhance(p, 10) end, "cyan")
+        p.enh10:SetPoint("LEFT", p.enh1, "RIGHT", 6, 0)
+        p.enhMax = W.Button(card, "최대 레벨업", bw, 26, function() enhance(p, nil) end, "cyan")
+        p.enhMax:SetPoint("LEFT", p.enh10, "RIGHT", 6, 0)
+        p.equipBtn = W.Button(card, "장착", CARD_W - 40, 30, function() equip(p) end, "green")
+        p.equipBtn:SetPoint("BOTTOM", 0, 10)
     end,
 
     refresh = function(p, hero)
         local WP = ns.Weapons
-        if not (WP and p.icons) then return end
+        if not (WP and p.cards) then return end
         local eqIdx = WP.Equipped(hero)
         if not p.selected then p.selected = eqIdx or 1 end
 
-        -- grid
-        for idx, ic in ipairs(p.icons) do
+        -- cards
+        local owned = 0
+        for idx, c in ipairs(p.cards) do
             local t = WP.Tier(idx)
             local rec = WP.Get(hero, idx)
-            ic.icon:SetTexture(weaponIcon(hero, t.grade))
-            W.SetBorderGrade(ic, t.grade)
-            ic.icon:SetDesaturated(not rec)
-            ic:SetAlpha(rec and 1 or 0.45)
-            ic.count:SetText(rec and tostring(rec.level) or "")
-            ic.copies:SetText((rec and (rec.count or 0) > 0) and ("+" .. rec.count) or "")
-            ic.eq:SetText(idx == eqIdx and "E" or "")
-            if idx == p.selected then ic.sel:Show() else ic.sel:Hide() end
+            if rec then owned = owned + 1 end
+            c.icon.icon:SetTexture(weaponIcon(hero, t.grade))
+            W.SetCardGrade(c, t.grade, rec ~= nil)
+            c.tier:SetText(tierWord(t))
+            c.level:SetText(rec and ("Lv." .. rec.level) or "")
+            c.stars:SetText(rec and W.Stars(rec.awaken or 0, WP.MAX_AWAKEN or 5) or "")
+            if rec then
+                local need = WP.AwakenCost(rec) or WP.PROMOTE_COPIES or 5
+                c.bar:Show()
+                c.bar:SetValue(math.min(1, (rec.count or 0) / need))
+                c.bar.text:SetText(string.format("%d/%d", rec.count or 0, need))
+            else
+                c.bar:Hide()
+            end
+            c.tag:SetText(idx == eqIdx and "|cff9be05aE|r" or "")
+            c.sel:SetShown(idx == p.selected)
+            local can = rec and ((WP.AwakenCost(rec) and (rec.count or 0) >= WP.AwakenCost(rec)) or WP.CanPromote(hero, idx))
+            c.dot:SetShown(can and true or false)
         end
-
-        -- header
-        local owned = 0
-        for idx = 1, WP.Count() do if WP.Get(hero, idx) then owned = owned + 1 end end
-        p.summary:SetText(string.format("보유 %d / %d · 보유 효과 합계 |cff40ff40공격력 +%s|r · %s", owned, WP.Count(),
-            pct(WP.OwnedTotalM(hero)), (W.Money("weaponStone", ns.Hero.Count(hero, "weaponStone")))))
+        p.summary:SetText(string.format("보유 |cffffffff%d|r / %d    보유 효과 합계 |cff40ff40공격력 +%s|r", owned, WP.Count(),
+            pct(WP.OwnedTotalM(hero))))
         for _, b in ipairs(p.optBtns) do
             if WP[b.def.fn] then b:Show() else b:Hide() end
         end
 
-        -- details
+        -- detail card
+        local card = p.card
         local idx = p.selected
         local t = WP.Tier(idx)
         local rec = WP.Get(hero, idx)
-        p.bigIcon.icon:SetTexture(weaponIcon(hero, t.grade))
-        p.bigIcon.icon:SetDesaturated(not rec)
-        W.SetBorderGrade(p.bigIcon, t.grade)
-        p.name:SetText(gradeHex(t.grade) .. WP.Name(hero, idx) .. "|r")
-        if not rec then
-            p.status:SetText("|cffff6060미보유|r · 무기 소환이나 하위 무기 승급으로 획득합니다.")
-        elseif idx == eqIdx then
-            p.status:SetText("|cffffd100장착 중|r")
-        else
-            p.status:SetText("보유 중")
-        end
-        p.equipBtn:SetEnabled(rec ~= nil and idx ~= eqIdx)
-        p.equipBtn:SetText(idx == eqIdx and "장착 중" or "장착")
-
         local level = rec and rec.level or 1
         local cap = rec and WP.MaxLevel(rec) or WP.MaxLevel(nil)
         local cur = WP.Effects(idx, level)
         local nxt = (rec and level < cap) and WP.Effects(idx, level + 1) or nil
-        p.lvText:SetText(string.format("Lv.%d / %d  |cff999999(최대 %d)|r", level, cap, D.Weapons.maxLevel or 200))
-        p.awText:SetText(stars(rec and rec.awaken or 0, WP.MAX_AWAKEN or 5))
-        p.cpText:SetText(rec and string.format("%d개", rec.count or 0) or "-")
-        p.eqText:SetText("공격력 +" .. pct(cur.equipM) .. (nxt and (" |cff40ff40→ +" .. pct(nxt.equipM) .. "|r") or ""))
-        p.owText:SetText("공격력 +" .. pct(cur.ownedM) .. (nxt and (" |cff40ff40→ +" .. pct(nxt.ownedM) .. "|r") or ""))
-        p.exText:SetText(string.format("명중 +%s · 공격 속도 +%s", U.Comma(cur.hit or 0), pct(cur.aspdM)))
+        card.stars:SetText(W.Stars(rec and rec.awaken or 0, WP.MAX_AWAKEN or 5, true))
+        card.name:SetText(WP.Name(hero, idx))
+        card.icon.icon:SetTexture(weaponIcon(hero, t.grade))
+        card.icon.icon:SetDesaturated(not rec)
+        W.SetBorderGrade(card.icon, t.grade)
+        card.line1:SetText(gradeHex(t.grade) .. (t.label or "") .. "|r")
+        card.line2:SetText(string.format("%d 각성", rec and rec.awaken or 0))
+        card.line3:SetText(string.format("Lv. |cffffffff%d|r |cff999999/ %d|r", level, cap))
+        if idx == eqIdx then card.tag:SetText("|cff9be05a장착중|r")
+        elseif rec then card.tag:SetText("|cffccccccc보유|r")
+        else card.tag:SetText("|cffff6060미보유|r") end
+        local function up(a, b) return "+" .. pct(a) .. ((b and b ~= a) and (" |cff9be05a→ +" .. pct(b) .. "|r") or "") end
+        local lines = {
+            { header = "장착 효과" },
+            { "공격력", up(cur.equipM, nxt and nxt.equipM) },
+        }
+        if (cur.hit or 0) > 0 then lines[#lines + 1] = { "명중", U.Comma(cur.hit) } end
+        if (cur.aspdM or 0) > 0 then lines[#lines + 1] = { "공격 속도", "+" .. pct(cur.aspdM) } end
+        lines[#lines + 1] = { gap = 6 }
+        lines[#lines + 1] = { header = "보유 효과" }
+        lines[#lines + 1] = { "공격력", up(cur.ownedM, nxt and nxt.ownedM) }
+        card:SetLines(lines)
 
-        -- enhance costs
+        -- counters: spare copies toward awakening / promotion, stones toward the next level
+        local need = rec and (WP.AwakenCost(rec) or WP.PROMOTE_COPIES or 5) or (WP.PROMOTE_COPIES or 5)
+        local cnt = rec and rec.count or 0
+        card.copies.text:SetText(string.format("|T%s:14:14|t %s%d|r / %d", weaponIcon(hero, t.grade),
+            cnt >= need and "|cff40ff40" or "|cffffffff", cnt, need))
         local stones = ns.Hero.Count(hero, "weaponStone")
-        if rec and level < cap then
-            local c1 = WP.EnhanceCost(idx, level) or 0
-            local to10 = math.min(level + 10, cap)
-            local c10 = WP.CostRange(idx, level, to10)
-            local toMax = WP.CostRange(idx, level, cap)
-            p.enhCost:SetText(string.format("다음 레벨 %s · Lv.%d까지 %s · 상한(Lv.%d)까지 %s", (W.Money("weaponStone", c1)),
-                to10, (W.Money("weaponStone", c10)), cap, (W.Money("weaponStone", toMax))))
-            p.enh1:SetEnabled(stones >= c1)
-            p.enh10:SetEnabled(stones >= c1)
-            p.enhMax:SetEnabled(stones >= c1)
-        else
-            p.enhCost:SetText(rec and "|cffffd100레벨 상한입니다.|r 각성하면 상한이 20 오릅니다." or "|cff808080미보유 무기는 강화할 수 없습니다.|r")
-            p.enh1:SetEnabled(false)
-            p.enh10:SetEnabled(false)
-            p.enhMax:SetEnabled(false)
-        end
+        local c1 = (rec and level < cap) and (WP.EnhanceCost(idx, level) or 0) or 0
+        card.stones.text:SetText(string.format("|T%s:14:14|t %s%s|r / %s", D.CurrencyIcon("weaponStone"),
+            stones >= c1 and "|cffffffff" or "|cffff5050", U.FormatNumber(stones), U.FormatNumber(c1)))
 
-        -- awaken
-        local need = rec and WP.AwakenCost(rec)
-        if not rec then
-            p.awCost:SetText("|cff808080각성: 미보유|r")
-            p.awBtn:SetEnabled(false)
-        elseif need then
-            p.awCost:SetText(string.format("각성 %d단계: 같은 무기 %d개 필요 (여분 %s%d|r)", (rec.awaken or 0) + 1, need,
-                (rec.count or 0) >= need and "|cff40ff40" or "|cffff5050", rec.count or 0))
-            p.awBtn:SetEnabled((rec.count or 0) >= need)
-        else
-            p.awCost:SetText("|cffffd100최대 각성|r")
-            p.awBtn:SetEnabled(false)
-        end
-
-        -- promote
+        -- hint + buttons
         local can, why = WP.CanPromote(hero, idx)
         local nextT = WP.Tier(idx + 1)
-        if nextT then
-            p.prCost:SetText(string.format("승급: 최대 각성 + 같은 무기 %d개 → %s%s|r 1개%s", WP.PROMOTE_COPIES or 5,
-                gradeHex(nextT.grade), nextT.label, can and "" or ("  |cffff5050" .. tostring(why or "") .. "|r")))
+        local awNeed = rec and WP.AwakenCost(rec)
+        if not rec then
+            card.hint:SetText("무기 소환이나 하위 무기 승급으로 획득합니다.")
+        elseif awNeed then
+            card.hint:SetText(string.format("각성 %d단계: 같은 무기 %d개 · 레벨 상한 +20", (rec.awaken or 0) + 1, awNeed))
+        elseif nextT then
+            card.hint:SetText(string.format("승급: 같은 무기 %d개 → %s%s|r 1개", WP.PROMOTE_COPIES or 5, gradeHex(nextT.grade), nextT.label))
         else
-            p.prCost:SetText("|cff808080더 높은 등급의 무기가 없습니다.|r")
+            card.hint:SetText("최대 각성")
         end
+        p.awBtn:SetEnabled(awNeed ~= nil and cnt >= awNeed)
         p.prBtn:SetEnabled(can and true or false)
         p.prAllBtn:SetEnabled(can and true or false)
+        local canLv = rec and level < cap and stones >= c1
+        p.enh1:SetEnabled(canLv and true or false)
+        p.enh10:SetEnabled(canLv and true or false)
+        p.enhMax:SetEnabled(canLv and true or false)
+        p.equipBtn:SetEnabled(rec ~= nil and idx ~= eqIdx)
+        p.equipBtn:SetText(idx == eqIdx and "장착중" or "장착")
+        if not can and why and rec and not awNeed and nextT then card.hint:SetText("|cffff6060" .. why .. "|r") end
     end,
 })

@@ -9,9 +9,10 @@ local U = ns.U
 local UI = ns.UI
 local D = ns.Data
 
-local BAG_X, BAG_W = 128, 324
-local RX, RW = 460, 484           -- right column
-local VIEW_Y = -26
+local BAG_X, BAG_W = 232, 254     -- bag grid column (5 icons per row)
+local RX, RW = 498, 450           -- right column (views)
+local VIEW_Y = -50
+local BAG_COLS, BAG_CELL = 5, 46
 local MAX_LINES = 11
 local MAX_SUBS = 6
 
@@ -478,17 +479,40 @@ end
 ---------------------------------------------------------------------------
 -- build: paper doll
 ---------------------------------------------------------------------------
+local DOLL_POS = {
+    Cap = { 1, 1 }, Clothes = { 1, 2 }, Pants = { 1, 3 }, Glove = { 1, 4 }, Shoes = { 1, 5 },
+    EyeAccessory = { 3, 1 }, EarAccessory = { 3, 2 }, Pendant = { 3, 3 }, Ring = { 3, 4 }, Ring2 = { 3, 5 },
+    Shoulder = { 2, 6, 1 }, Cape = { 2, 6, 2 }, Belt = { 2, 6, 3 }, BrowAccessory = { 2, 6, 4 }, Pocket = { 2, 6, 5 },
+}
+
 local function buildDoll(p)
+    local box = W.InfoCard(p, 226, 406, { plain = true })
+    box:SetPoint("TOPLEFT", 0, 0)
+    p.dollBox = box
+    local m = CreateFrame("DressUpModel", nil, box)
+    m:SetPoint("TOPLEFT", 58, -20)
+    m:SetSize(110, 250)
+    p.model = m
+    if ns.BattleView then
+        ns.BattleView.extraModels = ns.BattleView.extraModels or {}
+        table.insert(ns.BattleView.extraModels, m)
+    end
     p.slots = {}
-    for row, parts in ipairs(DOLL) do
-        for col, part in ipairs(parts) do
-            local s = W.Icon(p, 32)
-            s:SetPoint("TOPLEFT", (col - 1) * 41 + 4, -(row - 1) * 45)
+    for _, parts in ipairs(DOLL) do
+        for _, part in ipairs(parts) do
+            local pos = DOLL_POS[part]
+            local s = W.Icon(box, 40)
+            if pos[2] <= 5 then
+                s:SetPoint("TOPLEFT", pos[1] == 1 and 12 or 174, -14 - (pos[2] - 1) * 54)
+            else
+                s:SetPoint("TOPLEFT", 12 + (pos[3] - 1) * 41, -300)
+                s:SetSize(36, 36)
+            end
             s.part = part
             s.label = W.Text(s, 9, W.COLORS.gray, "CENTER")
             s.label:SetPoint("TOP", s, "BOTTOM", 0, -1)
             s.label:SetText(ns.Equipment.PartName(part))
-            s.sel = s:CreateTexture(nil, "OVERLAY")
+            s.sel = s:CreateTexture(nil, "OVERLAY", nil, 3)
             s.sel:SetTexture("Interface\\Buttons\\CheckButtonHilight")
             s.sel:SetBlendMode("ADD")
             s.sel:SetAllPoints()
@@ -514,77 +538,92 @@ local function buildDoll(p)
             p.slots[part] = s
         end
     end
+    p.autoBtn = W.Button(box, "자동 장착", 200, 26, function() autoEquip(p) end, "green")
+    p.autoBtn:SetPoint("BOTTOM", 0, 12)
 end
 
 ---------------------------------------------------------------------------
 -- build: bag
 ---------------------------------------------------------------------------
 local function buildBag(p)
-    p.bagCount = W.Text(p, 11, W.COLORS.white, "LEFT")
-    p.bagCount:SetPoint("TOPLEFT", BAG_X, -5)
-    p.bagCount:SetWidth(72)
-    p.filterBtn = W.Button(p, "전체", 52, 20, function()
+    local box = CreateFrame("Frame", nil, p, BackdropTemplateMixin and "BackdropTemplate" or nil)
+    box:SetPoint("TOPLEFT", BAG_X - 4, 0)
+    box:SetSize(BAG_W + 8, 406)
+    W.Backdrop(box, { 0.05, 0.05, 0.06, 0.9 }, { 0.3, 0.3, 0.32, 1 }, 10)
+    if W.ArtInfo("box_dark") then W.Slice(box, "box_dark", 0.7) end
+    p.bagBox = box
+    local title = W.Text(box, 13, W.COLORS.white, "LEFT")
+    title:SetPoint("TOPLEFT", 8, -8)
+    title:SetText("장비 관리")
+    p.bagCount = W.Text(box, 12, W.COLORS.white, "RIGHT")
+    p.bagCount:SetPoint("TOPRIGHT", -10, -8)
+    p.bagCount:SetWidth(120)
+    p.filterBtn = W.Button(p, "전체", 74, 22, function()
         if p.filter then p.filter = nil else
             local hero = ns.Hero.Active()
             local it = hero and selectedItem(p, hero)
             p.filter = it and it.part or nil
         end
         refreshNow()
-    end)
-    p.filterBtn:SetPoint("TOPLEFT", BAG_X + 72, 0)
-    p.autoBtn = W.Button(p, "자동 장착", 66, 20, function() autoEquip(p) end)
-    p.autoBtn:SetPoint("LEFT", p.filterBtn, "RIGHT", 2, 0)
-    p.rankBtn = W.Button(p, "", 80, 20, function()
+    end, "cyan")
+    p.filterBtn:SetPoint("TOPLEFT", BAG_X + 2, -28)
+    p.rankBtn = W.Button(p, "", 96, 22, function()
         local n = D.EquipLabels and #D.EquipLabels.gradeOrder or 8
         p.dismRank = (p.dismRank % (n - 1)) + 1
         refreshNow()
-    end)
-    p.rankBtn:SetPoint("LEFT", p.autoBtn, "RIGHT", 2, 0)
+    end, "gray")
+    p.rankBtn:SetPoint("LEFT", p.filterBtn, "RIGHT", 4, 0)
     W.Tooltip(p.rankBtn, function(tt)
         tt:AddLine("일괄 분해 기준 등급", 1, 0.82, 0)
         tt:AddLine("클릭할 때마다 기준 등급이 바뀝니다.", 1, 1, 1)
     end)
-    p.dismBtn = W.Button(p, "분해", 46, 20, function() dismantleBelow(p) end)
-    p.dismBtn:SetPoint("LEFT", p.rankBtn, "RIGHT", 2, 0)
+    p.dismBtn = W.Button(p, "분해", 64, 22, function() dismantleBelow(p) end, "cyan")
+    p.dismBtn:SetPoint("LEFT", p.rankBtn, "RIGHT", 4, 0)
 
-    p.bag = W.ScrollList(p, BAG_W, 214, 20, function(parent)
-        local r = CreateFrame("Button", nil, parent)
-        r:SetHeight(20)
-        r:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
-        r.sel = r:CreateTexture(nil, "BACKGROUND")
-        r.sel:SetAllPoints()
-        r.sel:SetColorTexture(1, 0.82, 0, 0.18)
-        r.sel:Hide()
-        r.icon = W.Icon(r, 18)
-        r.icon:SetPoint("LEFT", 1, 0)
-        r.icon:EnableMouse(false)
-        r.name = W.Text(r, 11, W.COLORS.white, "LEFT")
-        r.name:SetPoint("LEFT", r.icon, "RIGHT", 4, 0)
-        r.name:SetWidth(168)
-        r.info = W.Text(r, 10, W.COLORS.gray, "RIGHT")
-        r.info:SetPoint("RIGHT", -2, 0)
-        r.info:SetWidth(100)
-        r:SetScript("OnClick", function(self)
-            if self.item then p.selectedId = self.item.id end
-            refreshNow()
-        end)
-        W.Tooltip(r, function(tt, self) itemTooltip(tt, self.item, ns.Hero.Active()) end)
+    p.bag = W.ScrollList(p, BAG_W, 346, BAG_CELL, function(parent)
+        local r = CreateFrame("Frame", nil, parent)
+        r:SetHeight(BAG_CELL)
+        r.cells = {}
+        for i = 1, BAG_COLS do
+            local c = W.Icon(r, 42)
+            c:SetPoint("TOPLEFT", (i - 1) * BAG_CELL, -2)
+            c.sel = c:CreateTexture(nil, "OVERLAY", nil, 3)
+            c.sel:SetTexture("Interface\\Buttons\\CheckButtonHilight")
+            c.sel:SetBlendMode("ADD")
+            c.sel:SetAllPoints()
+            c.sel:Hide()
+            c.count:SetFont(c.count:GetFont() or "Fonts\\2002.TTF", 10, "OUTLINE")
+            c.mark = W.Text(c, 10, W.COLORS.gold, "LEFT")
+            c.mark:SetPoint("TOPLEFT", 4, -3)
+            c.mark:SetDrawLayer("OVERLAY", 4)
+            c:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
+            c:SetScript("OnClick", function(self)
+                if self.item then p.selectedId = self.item.id; if p.view == "elite" then p.view = "info" end end
+                refreshNow()
+            end)
+            W.Tooltip(c, function(tt, self) if self.item then itemTooltip(tt, self.item, ns.Hero.Active()) end end)
+            r.cells[i] = c
+        end
         return r
-    end, function(r, e)
+    end, function(r, row)
         local hero = ns.Hero.Active()
-        local item = e.item
-        r.item = item
-        r.icon.icon:SetTexture(gearIcon(hero, item))
-        W.SetBorderGrade(r.icon, rankOf(item))
-        r.name:SetText(gradeHexRank(rankOf(item)) .. ns.Equipment.ItemName(item) .. "|r")
-        local marks = ""
-        if e.equipped then marks = marks .. "|cffffd100E|r " end
-        if item.locked then marks = marks .. "|cffff6060L|r " end
-        r.info:SetText(string.format("%sLv.%d%s", marks, item.level or 1,
-            (item.star or 0) > 0 and (" |cffffd100★" .. item.star .. "|r") or ""))
-        if item.id == p.selectedId then r.sel:Show() else r.sel:Hide() end
+        for i, c in ipairs(r.cells) do
+            local e = row[i]
+            c.item = e and e.item
+            if e then
+                local item = e.item
+                c:Show()
+                c.icon:SetTexture(gearIcon(hero, item))
+                W.SetBorderGrade(c, rankOf(item))
+                c.count:SetText((item.star or 0) > 0 and ("★" .. item.star) or ("Lv." .. (item.level or 1)))
+                c.mark:SetText((e.equipped and "|cff9be05aE|r" or "") .. (item.locked and "|cffff6060L|r" or ""))
+                c.sel:SetShown(item.id == p.selectedId)
+            else
+                c:Hide()
+            end
+        end
     end)
-    p.bag:SetPoint("TOPLEFT", BAG_X, -24)
+    p.bag:SetPoint("TOPLEFT", BAG_X + 2, -56)
 end
 
 ---------------------------------------------------------------------------
@@ -626,7 +665,7 @@ local function buildInfo(p)
     for i = 1, MAX_LINES do
         local t = W.Text(v, 11, W.COLORS.white, "LEFT")
         t:SetPoint("TOPLEFT", 4, -40 - (i - 1) * 13)
-        t:SetWidth(380)
+        t:SetWidth(360)
         v.lines[i] = t
     end
     for i = 1, MAX_SUBS do
@@ -714,13 +753,13 @@ local function buildStarForce(p)
     v.chance:SetWidth(200)
     v.chance:SetJustifyV("TOP")
     v.pointLabel = W.Text(v, 11, W.COLORS.white, "LEFT")
-    v.pointLabel:SetPoint("TOPLEFT", 220, -24)
-    v.pointLabel:SetWidth(260)
+    v.pointLabel:SetPoint("TOPLEFT", 210, -24)
+    v.pointLabel:SetWidth(240)
     v.points = W.Bar(v, 250, 12, 0.9, 0.7, 0.2)
-    v.points:SetPoint("TOPLEFT", 220, -42)
+    v.points:SetPoint("TOPLEFT", 210, -42)
     v.special = W.Text(v, 11, W.COLORS.green, "LEFT")
-    v.special:SetPoint("TOPLEFT", 220, -60)
-    v.special:SetWidth(260)
+    v.special:SetPoint("TOPLEFT", 210, -60)
+    v.special:SetWidth(240)
     v.special:SetJustifyV("TOP")
 
     local function check(x, label, field)
@@ -747,7 +786,7 @@ local function buildStarForce(p)
     v.btn:SetPoint("TOPLEFT", 0, -150)
     v.last = W.Text(v, 12, W.COLORS.white, "LEFT")
     v.last:SetPoint("LEFT", v.btn, "RIGHT", 10, 0)
-    v.last:SetWidth(340)
+    v.last:SetWidth(320)
 
     v.restoreText = W.Text(v, 11, W.COLORS.red, "LEFT")
     v.restoreText:SetPoint("TOPLEFT", 0, -182)
@@ -764,7 +803,7 @@ local function buildStarForce(p)
     v.restoreBtn:SetPoint("LEFT", v.targetBtn, "RIGHT", 4, 0)
     v.restoreCost = W.Text(v, 11, W.COLORS.white, "LEFT")
     v.restoreCost:SetPoint("LEFT", v.restoreBtn, "RIGHT", 8, 0)
-    v.restoreCost:SetWidth(320)
+    v.restoreCost:SetWidth(280)
     return v
 end
 
@@ -845,36 +884,36 @@ local function buildPotential(p)
     v.boxes = {}
     for i, ck in ipairs(CUBE_KINDS) do
         local b = CreateFrame("Frame", nil, v)
-        b:SetPoint("TOPLEFT", (i - 1) * 244, 0)
-        b:SetSize(236, 218)
+        b:SetPoint("TOPLEFT", (i - 1) * 228, 0)
+        b:SetSize(222, 218)
         b.title = W.Text(b, 13, W.COLORS.gold, "LEFT")
         b.title:SetPoint("TOPLEFT", 0, 0)
         b.title:SetText(ck.title)
         b.grade = W.Text(b, 12, W.COLORS.white, "LEFT")
         b.grade:SetPoint("TOPLEFT", 0, -20)
-        b.grade:SetWidth(236)
+        b.grade:SetWidth(222)
         b.lines = {}
         for ln = 1, 3 do
             local t = W.Text(b, 11, W.COLORS.white, "LEFT")
             t:SetPoint("TOPLEFT", 6, -40 - (ln - 1) * 16)
-            t:SetWidth(230)
+            t:SetWidth(216)
             b.lines[ln] = t
         end
         b.chance = W.Text(b, 11, W.COLORS.gray, "LEFT")
         b.chance:SetPoint("TOPLEFT", 0, -94)
-        b.chance:SetWidth(236)
+        b.chance:SetWidth(222)
         b.chance:SetJustifyV("TOP")
         b.cost = W.Text(b, 11, W.COLORS.white, "LEFT")
         b.cost:SetPoint("TOPLEFT", 0, -128)
-        b.cost:SetWidth(236)
+        b.cost:SetWidth(222)
         b.btn = W.Button(b, "큐브 사용", 100, 24, function() useCube(p, ck.kind) end)
         b.btn:SetPoint("TOPLEFT", 0, -148)
         b.last = W.Text(b, 11, W.COLORS.white, "LEFT")
         b.last:SetPoint("LEFT", b.btn, "RIGHT", 8, 0)
-        b.last:SetWidth(126)
+        b.last:SetWidth(112)
         b.lock = W.Text(b, 11, W.COLORS.red, "LEFT")
         b.lock:SetPoint("TOPLEFT", 0, -180)
-        b.lock:SetWidth(236)
+        b.lock:SetWidth(222)
         W.Tooltip(b.btn, function(tt)
             local hero = ns.Hero.Active()
             local item = hero and selectedItem(p, hero)
@@ -942,23 +981,23 @@ local function buildScroll(p)
         local c = ns.Scrolls and ns.Scrolls.Cost("innocent")
         if c then tt:AddLine("비용: " .. costText(c, ns.Hero.Active()), 0.8, 0.8, 0.8) end
     end)
-    v.list = W.ScrollList(v, 290, 196, 18, function(parent)
+    v.list = W.ScrollList(v, 270, 196, 18, function(parent)
         local r = CreateFrame("Frame", nil, parent)
         r:SetHeight(18)
         r.name = W.Text(r, 10, W.COLORS.white, "LEFT")
         r.name:SetPoint("LEFT", 2, 0)
-        r.name:SetWidth(128)
+        r.name:SetWidth(112)
         r.rate = W.Text(r, 10, W.COLORS.green, "RIGHT")
-        r.rate:SetPoint("LEFT", 130, 0)
+        r.rate:SetPoint("LEFT", 114, 0)
         r.rate:SetWidth(34)
         r.have = W.Text(r, 10, W.COLORS.gray, "RIGHT")
-        r.have:SetPoint("LEFT", 166, 0)
+        r.have:SetPoint("LEFT", 150, 0)
         r.have:SetWidth(50)
         r.btn = W.Button(r, "사용", 42, 16)
         r.btn:SetPoint("RIGHT", -2, 0)
         r.tip = CreateFrame("Frame", nil, r)
         r.tip:SetPoint("LEFT", 0, 0)
-        r.tip:SetSize(216, 18)
+        r.tip:SetSize(200, 18)
         r.tip:EnableMouse(true)
         return r
     end, function(r, e)
@@ -983,30 +1022,30 @@ local function buildScroll(p)
     v.list:SetPoint("TOPLEFT", 0, -20)
 
     -- enchant (마법 부여)
-    local EX = 296
+    local EX = 272
     v.enTitle = W.Text(v, 12, W.COLORS.gold, "LEFT")
     v.enTitle:SetPoint("TOPLEFT", EX, 0)
-    v.enTitle:SetWidth(188)
+    v.enTitle:SetWidth(176)
     v.enLines, v.enBtns = {}, {}
     for i = 1, MAX_SUBS do
         local t = W.Text(v, 10, W.COLORS.white, "LEFT")
         t:SetPoint("TOPLEFT", EX, -20 - (i - 1) * 18)
-        t:SetWidth(144)
+        t:SetWidth(132)
         v.enLines[i] = t
         local b = W.Button(v, "부여", 40, 16, function(self) enchant(p, self.line) end)
-        b:SetPoint("TOPLEFT", EX + 146, -18 - (i - 1) * 18)
+        b:SetPoint("TOPLEFT", EX + 134, -18 - (i - 1) * 18)
         b.line = i
         v.enBtns[i] = b
     end
     v.bagText = W.Text(v, 10, W.COLORS.gray, "LEFT")
     v.bagText:SetPoint("TOPLEFT", EX, -132)
-    v.bagText:SetWidth(188)
+    v.bagText:SetWidth(176)
     v.pouchBtns = {}
     local pouches = D.Scrolls and D.Scrolls.enchant and D.Scrolls.enchant.pouches or {}
     local short = { "하급", "중급", "상급", "최상급" }
     for i, pouch in ipairs(pouches) do
-        local b = W.Button(v, short[i] or pouch.name, 92, 18, function() openPouch(p, pouch.key) end)
-        b:SetPoint("TOPLEFT", EX + ((i - 1) % 2) * 95, -148 - math.floor((i - 1) / 2) * 22)
+        local b = W.Button(v, short[i] or pouch.name, 86, 18, function() openPouch(p, pouch.key) end)
+        b:SetPoint("TOPLEFT", EX + ((i - 1) % 2) * 89, -148 - math.floor((i - 1) / 2) * 22)
         b.key = pouch.key
         b.short = short[i] or pouch.name
         W.Tooltip(b, function(tt)
@@ -1110,25 +1149,25 @@ local function buildElite(p)
     v.info:SetPoint("TOPLEFT", 0, -40)
     v.info:SetWidth(RW)
     v.sumBtn = W.Button(v, "소환", 80, 22, function() eliteSummon(p, false) end)
-    v.sumBtn:SetPoint("TOPLEFT", 308, -18)
+    v.sumBtn:SetPoint("TOPLEFT", 270, -18)
     v.sumAllBtn = W.Button(v, "모두 소환", 86, 22, function() eliteSummon(p, true) end)
     v.sumAllBtn:SetPoint("LEFT", v.sumBtn, "RIGHT", 4, 0)
 
     v.step = W.Text(v, 11, W.COLORS.white, "LEFT")
     v.step:SetPoint("TOPLEFT", 0, -64)
-    v.step:SetWidth(300)
+    v.step:SetWidth(264)
     v.stepBtn = W.Button(v, "단계 강화", 86, 20, function() eliteStep(p) end)
-    v.stepBtn:SetPoint("TOPLEFT", 308, -60)
+    v.stepBtn:SetPoint("TOPLEFT", 270, -60)
     v.lvText = W.Text(v, 11, W.COLORS.white, "LEFT")
     v.lvText:SetPoint("TOPLEFT", 0, -88)
-    v.lvText:SetWidth(300)
+    v.lvText:SetWidth(264)
     v.lvBtn = W.Button(v, "레벨업", 86, 20, function() eliteLevelUp(p) end)
-    v.lvBtn:SetPoint("TOPLEFT", 308, -84)
+    v.lvBtn:SetPoint("TOPLEFT", 270, -84)
     v.timer = W.Text(v, 12, W.COLORS.gold, "LEFT")
     v.timer:SetPoint("TOPLEFT", 0, -112)
-    v.timer:SetWidth(300)
+    v.timer:SetWidth(264)
     v.skipBtn = W.Button(v, "시간 단축", 86, 20, function() eliteSkip(p) end)
-    v.skipBtn:SetPoint("TOPLEFT", 308, -108)
+    v.skipBtn:SetPoint("TOPLEFT", 270, -108)
 
     v.autoEq = CreateFrame("CheckButton", nil, v, "UICheckButtonTemplate")
     v.autoEq:SetSize(22, 22)
@@ -1263,22 +1302,23 @@ UI.RegisterPanel("equipment", {
         p.sfPreventDown, p.sfPreventDestroy = false, false
         buildDoll(p)
         buildBag(p)
-
-        p.viewBtns = {}
-        for i, def in ipairs(VIEWS) do
-            local b = W.Button(p, def.label, 92, 20, function()
-                p.view = def.key
-                refreshNow()
-            end)
-            b:SetPoint("TOPLEFT", RX + (i - 1) * 96, 0)
-            p.viewBtns[def.key] = b
-        end
+        local vbox = W.InfoCard(p, 962 - RX + 12, 406, { plain = true })
+        vbox:SetPoint("TOPLEFT", RX - 12, 0)
+        p.viewBox = vbox
+        local labels = {}
+        for i, def in ipairs(VIEWS) do labels[i] = def.label end
+        p.viewTabs = W.Tabs(p, labels, 86, 24, function(i)
+            p.view = VIEWS[i].key
+            refreshNow()
+        end)
+        p.viewTabs:SetPoint("TOPLEFT", RX - 2, -12)
+        for _, b in ipairs(p.viewTabs.buttons) do b:SetFrameLevel(vbox:GetFrameLevel() + 5) end
         p.views = {
             info = buildInfo(p), sf = buildStarForce(p), pot = buildPotential(p),
             scroll = buildScroll(p), elite = buildElite(p),
         }
-        p.noItem = W.Text(p, 12, W.COLORS.gray, "CENTER")
-        p.noItem:SetPoint("TOPLEFT", RX, -90)
+        p.noItem = W.Text(vbox, 12, W.COLORS.gray, "CENTER")
+        p.noItem:SetPoint("TOPLEFT", 12, -90)
         p.noItem:SetWidth(RW)
         p.noItem:SetText("장비를 선택하세요.\n정예 소환으로 장비를 얻을 수 있습니다.")
         p.noItem:Hide()
@@ -1318,15 +1358,27 @@ UI.RegisterPanel("equipment", {
             if (a.item.level or 0) ~= (b.item.level or 0) then return (a.item.level or 0) > (b.item.level or 0) end
             return a.item.id > b.item.id
         end)
-        p.bag:SetData(list)
-        p.bagCount:SetText(string.format("가방 %d/%d", E.ItemCount(hero), E.BAG_SIZE or 0))
+        local rows = {}
+        for i, e in ipairs(list) do
+            local r = math.floor((i - 1) / BAG_COLS) + 1
+            rows[r] = rows[r] or {}
+            rows[r][#rows[r] + 1] = e
+        end
+        p.bag:SetData(rows)
+        if not p.modelReady and p.model then
+            p.modelReady = true
+            pcall(p.model.SetUnit, p.model, "player")
+            pcall(p.model.SetFacing, p.model, math.rad(15))
+            if ns.BattleView and ns.BattleView.ApplyLooks then ns.BattleView.ApplyLooks(p.model) end
+        end
+        p.bagCount:SetText(string.format("|cffffffff%d|r / %d", E.ItemCount(hero), E.BAG_SIZE or 0))
         p.filterBtn:SetText(p.filter and E.PartName(p.filter) or "전체")
         local order = D.EquipLabels and D.EquipLabels.gradeOrder or {}
         p.rankBtn:SetText(E.GradeName(order[p.dismRank] or "") .. " 이하")
 
         -- right side
-        for key, b in pairs(p.viewBtns) do
-            if key == p.view then b:LockHighlight() else b:UnlockHighlight() end
+        for i, def in ipairs(VIEWS) do
+            if def.key == p.view and p.viewTabs.index ~= i then p.viewTabs:Select(i) end
         end
         for key, v in pairs(p.views) do
             if key ~= p.view then v:Hide() end

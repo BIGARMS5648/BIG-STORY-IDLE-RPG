@@ -25,6 +25,10 @@ ns.MapleRank.AutoUpgrade(hero)
 for _ = 1, 10 do ns.Summon.Pull(hero, "weapon", 10) end
 for _ = 1, 5 do ns.Summon.Pull(hero, "companion", 10) end
 if ns.Weapons.AutoEquip then pcall(ns.Weapons.AutoEquip, hero) end
+if ns.Equipment and ns.Equipment.EliteSummonInstant then
+    pcall(ns.Equipment.EliteSummonInstant, hero, 24)
+    pcall(ns.Equipment.AutoEquip, hero)
+end
 if ns.Companions.AutoEquip then pcall(ns.Companions.AutoEquip, hero) end
 if not (ns.UI.frame and ns.UI.frame:IsShown()) then ns.UI.Toggle() end
 -- the stub has no layout engine: give frames sized by anchors their real size

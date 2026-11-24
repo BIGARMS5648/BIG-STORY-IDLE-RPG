@@ -111,8 +111,8 @@ function BV.SetupHeroModel()
 end
 
 -- Equipped addon gear -> WoW item appearances (ns.Skin.GearLooks returns {itemId,...})
-function BV.ApplyLooks()
-    local m = BV.heroModel
+function BV.ApplyLooks(model)
+    local m = model or BV.heroModel
     local hero = ns.Hero.Active()
     if not (m and hero and ns.Skin and ns.Skin.GearLooks) then return end
     local looks = ns.Skin.GearLooks(hero)
@@ -126,7 +126,7 @@ end
 
 ns.On("HERO_CHANGED", function(hero, what)
     if what == "equipment" or what == "weapon" or what == "looks" then
-        if ns.Compat then ns.Compat.After(0.2, BV.ApplyLooks) else BV.ApplyLooks() end
+        if ns.Compat then ns.Compat.After(0.2, function() BV.ApplyLooks() end) else BV.ApplyLooks() end
     end
 end)
 
@@ -135,7 +135,11 @@ if ns.RegisterEvent then
     ns.RegisterEvent("GET_ITEM_INFO_RECEIVED", function()
         if BV.looksTimer then return end
         BV.looksTimer = true
-        ns.Compat.After(0.5, function() BV.looksTimer = nil; BV.ApplyLooks() end)
+        ns.Compat.After(0.5, function()
+            BV.looksTimer = nil
+            BV.ApplyLooks()
+            if BV.extraModels then for _, m in ipairs(BV.extraModels) do BV.ApplyLooks(m) end end
+        end)
     end)
 end
 

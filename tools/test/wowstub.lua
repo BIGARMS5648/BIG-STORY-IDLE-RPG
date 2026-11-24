@@ -14,6 +14,16 @@ frameMT.__index = function(t, k)
     return nil
 end
 
+-- scroll frames: the child is laid out from the scroll frame's top left (the client does this itself)
+function frameMT.SetScrollChild(self, c)
+    self._scrollChild = c
+    self._clip = true
+    if c and not (c._points and #c._points > 0) then
+        c._points = { { point = "TOPLEFT", rel = self, relPoint = "TOPLEFT", x = 0, y = 0 } }
+    end
+end
+function frameMT.GetScrollChild(self) return self._scrollChild end
+
 local function newObject(kind)
     local o = setmetatable({ _kind = kind, _shown = true, _scripts = {}, _w = 100, _h = 100, _text = "" }, frameMT)
     return o

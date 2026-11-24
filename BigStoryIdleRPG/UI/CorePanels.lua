@@ -31,104 +31,279 @@ function ns.FormatStat(stat, v)
     return U.FormatNumber(v or 0)
 end
 
-local STAT_ORDER = { "Attack", "MaxHp", "MaxMp", "Defence", "Str", "Dex", "Int", "Luk", "MainDamagePower",
-    "AttackPower", "FinalDamage", "CriticalChance", "CriticalPower", "MinDamageRatio", "MaxDamageRatio",
-    "AttackPowerToBoss", "AttackPowerExcludeBoss", "BaseAttackPower", "SkillPower", "AttackSpeed", "PiercePower",
-    "Toughness", "HitChance", "AvoidChance", "CoolTimeReduceRatio", "BonusExpPercent", "BonusGoldPercent" }
+-- 캐릭터 stat boxes (original 캐릭터 정보: 기본 / 공격 / 기타 sections)
+local STAT_GROUPS = {
+    { title = "기본 능력치", stats = { "Attack", "MaxHp", "MaxMp", "Defence", "Str", "Dex", "Int", "Luk", "MainDamagePower" } },
+    { title = "공격 능력치", stats = { "AttackPower", "FinalDamage", "CriticalChance", "CriticalPower", "MinDamageRatio",
+        "MaxDamageRatio", "AttackPowerToBoss", "AttackPowerExcludeBoss", "BaseAttackPower", "SkillPower" } },
+    { title = "기타 능력치", stats = { "AttackSpeed", "PiercePower", "Toughness", "HitChance", "AvoidChance",
+        "CoolTimeReduceRatio", "BonusExpPercent", "BonusGoldPercent" } },
+}
 
 ---------------------------------------------------------------------------
--- 캐릭터
+-- 캐릭터: hero model + name plate on the left, stat boxes on the right
 ---------------------------------------------------------------------------
 UI.RegisterPanel("character", {
     title = "캐릭터", order = 10,
     build = function(p)
-        p.rows = {}
-        for i, stat in ipairs(STAT_ORDER) do
-            local col, row = math.floor((i - 1) / 9), (i - 1) % 9
-            local l = W.Text(p, 12, W.COLORS.gray, "LEFT")
-            l:SetPoint("TOPLEFT", 10 + col * 310, -10 - row * 22)
-            l:SetText(ns.StatLabels[stat] or stat)
-            local v = W.Text(p, 12, W.COLORS.white, "RIGHT")
-            v:SetPoint("TOPLEFT", 160 + col * 310, -10 - row * 22)
-            v:SetWidth(130)
-            p.rows[stat] = v
+        local left = W.InfoCard(p, 300, 406, { plain = true })
+        left:SetPoint("TOPLEFT", 0, 0)
+        p.left = left
+        p.level = W.Text(left, 14, W.COLORS.gold, "CENTER")
+        p.level:SetPoint("TOP", 0, -16)
+        p.name = W.Text(left, 17, W.COLORS.white, "CENTER")
+        p.name:SetPoint("TOP", 0, -36)
+        p.job = W.Text(left, 12, W.COLORS.gray, "CENTER")
+        p.job:SetPoint("TOP", 0, -60)
+        local stage = left:CreateTexture(nil, "ARTWORK")
+        stage:SetTexture("Interface\\Buttons\\WHITE8X8")
+        stage:SetPoint("TOPLEFT", 16, -80)
+        stage:SetPoint("BOTTOMRIGHT", -16, 96)
+        stage:SetVertexColor(0.16, 0.2, 0.28, 0.55)
+        local m = CreateFrame("DressUpModel", nil, left)
+        m:SetPoint("TOPLEFT", 16, -80)
+        m:SetPoint("BOTTOMRIGHT", -16, 96)
+        p.model = m
+        ns.BattleView.extraModels = ns.BattleView.extraModels or {}
+        table.insert(ns.BattleView.extraModels, m)
+        p.cp = W.Counter(left, 230)
+        p.cp:SetPoint("BOTTOM", 0, 60)
+        p.cp:SetHeight(28)
+        p.cp.text:SetFont(p.cp.text:GetFont() or "Fonts\\2002.TTF", 15, "")
+        p.info = W.Text(left, 11, W.COLORS.gray, "CENTER")
+        p.info:SetPoint("BOTTOM", 0, 36)
+        p.info:SetWidth(270)
+        p.play = W.Text(left, 11, W.COLORS.gray, "CENTER")
+        p.play:SetPoint("BOTTOM", 0, 16)
+        p.play:SetWidth(270)
+
+        p.boxes = {}
+        for i, grp in ipairs(STAT_GROUPS) do
+            local box = W.InfoCard(p, 214, 406, { plain = true })
+            box:SetPoint("TOPLEFT", 306 + (i - 1) * 220, 0)
+            box.group = grp
+            p.boxes[i] = box
         end
-        p.hint = W.Text(p, 11, W.COLORS.gray, "LEFT")
-        p.hint:SetPoint("BOTTOMLEFT", 10, 6)
     end,
     refresh = function(p, hero)
         local b = ns.Game.battle
         local c = b and b.heroCreature
-        if not c then return end
-        for stat, fs in pairs(p.rows) do fs:SetText(ns.FormatStat(stat, c:Stat(stat))) end
         local job = ns.Hero.Job(hero)
         local skin = ns.Skin.Job(job)
-        p.hint:SetText(string.format("%s · 주스탯 %s / 부스탯 %s · 처치 %s · 플레이 %s",
-            skin.display or "", job.mainStat, job.subStat, U.Comma(hero.stats.kills or 0),
-            U.FormatDuration(hero.stats.playSeconds or 0)))
+        p.level:SetText("Lv." .. hero.level)
+        p.name:SetText(hero.name or "")
+        p.job:SetText(string.format("%s · %d차 전직", skin.display or "", hero.jobStep or 0))
+        local cp = ns.Game.profile and ns.Hero.CombatPower(ns.Game.profile) or 0
+        p.cp.text:SetText("|TInterface\\Icons\\INV_Sword_04:16:16|t 전투력 |cffffd100" .. U.Comma(cp) .. "|r")
+        p.info:SetText(string.format("주스탯 %s · 부스탯 %s", job.mainStat or "-", job.subStat or "-"))
+        p.play:SetText(string.format("처치 %s · 플레이 %s", U.Comma(hero.stats.kills or 0), U.FormatDuration(hero.stats.playSeconds or 0)))
+        if not p.modelReady then
+            p.modelReady = true
+            pcall(p.model.SetUnit, p.model, "player")
+            pcall(p.model.SetFacing, p.model, math.rad(20))
+            ns.BattleView.ApplyLooks(p.model)
+        end
+        for _, box in ipairs(p.boxes) do
+            local lines = { { header = box.group.title } }
+            for _, stat in ipairs(box.group.stats) do
+                lines[#lines + 1] = { ns.StatLabels[stat] or stat, c and ns.FormatStat(stat, c:Stat(stat)) or "-" }
+            end
+            box:SetLines(lines)
+        end
     end,
 })
 
 ---------------------------------------------------------------------------
--- 스킬
+-- 스킬: auto-use strip (장착중인 스킬, ON/OFF), job step tabs, skill cards, detail card
 ---------------------------------------------------------------------------
 local CAT = { basic = "기본 공격", active = "액티브", passive = "패시브" }
+local STEP_TABS = { "기본·1차", "2차", "3차", "4차" }
+local function tabOf(step) return math.max(1, step or 0) end
+local SK_CARD_W = 352
+
+local function skillEntries(hero)
+    local job = ns.Hero.Job(hero)
+    local list = {}
+    for _, row in ipairs(job.rows) do
+        local unlocked = ns.SkillBook.RowUnlocked(row, hero.level, hero.jobStep)
+        local unlock = math.max(D.SkillRules.stepUnlockLevel[row.JobStep or 0] or 1, row.RequireLevel or 0)
+        local needJob = (row.JobStep or 0) > (hero.jobStep or 4) and hero.level >= unlock
+        list[#list + 1] = { row = row, sid = row.SkillIndex, unlocked = unlocked, unlock = unlock,
+            needJob = needJob and row.JobStep, cat = ns.SkillBook.Category(row),
+            level = ns.SkillBook.RowLevel(row, hero.level, {}) }
+    end
+    return list
+end
+
+local function autoOn(hero, sid) return not (hero.disabledActives and hero.disabledActives[sid]) end
+local function setAuto(hero, sid, on)
+    hero.disabledActives = hero.disabledActives or {}
+    hero.disabledActives[sid] = (not on) or nil
+    ns.Hero.Changed(hero, "skills")
+end
 
 UI.RegisterPanel("skills", {
     title = "스킬", order = 20,
     build = function(p)
-        p.list = W.ScrollList(p, 940, 230, 30, function(parent)
-            local r = CreateFrame("Frame", nil, parent)
-            r:SetHeight(28)
-            r.icon = W.Icon(r, 24)
-            r.icon:SetPoint("LEFT", 2, 0)
-            r.name = W.Text(r, 12, W.COLORS.white, "LEFT")
-            r.name:SetPoint("LEFT", r.icon, "RIGHT", 6, 0)
-            r.name:SetWidth(260)
-            r.info = W.Text(r, 11, W.COLORS.gray, "LEFT")
-            r.info:SetPoint("LEFT", r.name, "RIGHT", 6, 0)
-            r.info:SetWidth(460)
-            r.toggle = CreateFrame("CheckButton", nil, r, "UICheckButtonTemplate")
-            r.toggle:SetSize(22, 22)
-            r.toggle:SetPoint("RIGHT", -6, 0)
-            return r
-        end, function(r, e)
+        p.tab = 1
+        -- auto-use strip
+        local strip = CreateFrame("Frame", nil, p, BackdropTemplateMixin and "BackdropTemplate" or nil)
+        strip:SetPoint("TOPLEFT", 0, 0)
+        strip:SetSize(600, 84)
+        W.Backdrop(strip, { 0.04, 0.04, 0.05, 0.85 }, { 0.3, 0.3, 0.32, 1 }, 10)
+        if W.ArtInfo("box_dark") then W.Slice(strip, "box_dark", 0.7) end
+        local st = W.Text(strip, 11, W.COLORS.gold, "LEFT")
+        st:SetPoint("TOPLEFT", 12, -7)
+        st:SetText("자동 사용 스킬")
+        p.autoSlots = {}
+        for i = 1, 10 do
+            local ic = W.Icon(strip, 38)
+            ic:SetPoint("TOPLEFT", 12 + (i - 1) * 58, -22)
+            ic.toggle = W.Toggle(strip, 42, 16, function(v)
+                local hero = ns.Hero.Active()
+                if hero and ic.sid then setAuto(hero, ic.sid, v); UI.RefreshPanel() end
+            end)
+            ic.toggle:SetPoint("TOP", ic, "BOTTOM", 0, -2)
+            ic:SetScript("OnClick", function(self) if self.sid then p.selected = self.sid; UI.RefreshPanel() end end)
+            p.autoSlots[i] = ic
+        end
+        p.tabs = W.Tabs(p, STEP_TABS, 90, 24, function(i) p.tab = i; UI.RefreshPanel() end)
+        p.tabs:SetPoint("TOPLEFT", 0, -92)
+        p.cards = {}
+        for i = 1, 12 do
+            local col, row = (i - 1) % 2, math.floor((i - 1) / 2)
+            local c = CreateFrame("Button", nil, p, BackdropTemplateMixin and "BackdropTemplate" or nil)
+            c:SetSize(296, 44)
+            c:SetPoint("TOPLEFT", col * 304, -122 - row * 47)
+            W.Backdrop(c, { 0.08, 0.09, 0.11, 0.92 }, { 0.3, 0.32, 0.36, 1 }, 10)
+            c.icon = W.Icon(c, 36)
+            c.icon:SetPoint("LEFT", 4, 0)
+            c.icon:EnableMouse(false)
+            c.name = W.Text(c, 13, W.COLORS.white, "LEFT")
+            c.name:SetPoint("TOPLEFT", c.icon, "TOPRIGHT", 8, -3)
+            c.name:SetWidth(170)
+            c.sub = W.Text(c, 11, W.COLORS.gray, "LEFT")
+            c.sub:SetPoint("BOTTOMLEFT", c.icon, "BOTTOMRIGHT", 8, 3)
+            c.sub:SetWidth(170)
+            c.lv = W.Text(c, 13, W.COLORS.gold, "RIGHT")
+            c.lv:SetPoint("RIGHT", -10, 0)
+            c.sel = c:CreateTexture(nil, "OVERLAY")
+            c.sel:SetTexture("Interface\\Buttons\\WHITE8X8")
+            c.sel:SetPoint("TOPLEFT", 3, -3)
+            c.sel:SetPoint("BOTTOMRIGHT", -3, 3)
+            c.sel:SetVertexColor(0.3, 0.75, 1, 0.16)
+            c:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
+            c:SetScript("OnClick", function(self) if self.sid then p.selected = self.sid; UI.RefreshPanel() end end)
+            p.cards[i] = c
+        end
+        local card = W.InfoCard(p, SK_CARD_W, 406)
+        card:SetPoint("TOPRIGHT", 0, 0)
+        p.card = card
+        card.desc = W.Text(card, 11, W.COLORS.gray, "LEFT")
+        card.desc:SetPoint("TOPLEFT", 20, -300)
+        card.desc:SetWidth(SK_CARD_W - 40)
+        card.desc:SetJustifyV("TOP")
+        p.autoBtn = W.Button(card, "자동 사용 ON", SK_CARD_W - 40, 30, function()
             local hero = ns.Hero.Active()
-            r.icon.icon:SetTexture(ns.Skin.SkillIcon(e.row.SkillIndex))
-            local lvText = e.unlocked and ("Lv." .. e.level)
-                or (e.needJob and string.format("|cffff6060%d차 전직 필요|r", e.needJob))
-                or string.format("|cffff6060%d레벨 해금|r", e.unlock)
-            r.name:SetText(string.format("%s  |cffffd100%s|r", ns.Skin.SkillName(e.row.SkillIndex), lvText))
-            local s = D.Skills[e.row.SkillIndex]
-            local cd = s and s.CoolTimeMs and string.format(" · 재사용 %.0f초", s.CoolTimeMs / 1000) or ""
-            r.info:SetText(string.format("%d차 · %s%s", e.row.JobStep or 0, CAT[e.cat] or e.cat, cd))
-            r.icon.icon:SetDesaturated(not e.unlocked)
-            r.toggle:SetShown(e.cat == "active" and e.unlocked)
-            r.toggle:SetChecked(not (hero.disabledActives and hero.disabledActives[e.row.SkillIndex]))
-            r.toggle:SetScript("OnClick", function(self)
-                hero.disabledActives = hero.disabledActives or {}
-                hero.disabledActives[e.row.SkillIndex] = (not self:GetChecked()) or nil
-                ns.Hero.Changed(hero, "skills")
-            end)
-            W.Tooltip(r.icon, function(tt)
-                tt:AddLine(ns.Skin.SkillName(e.row.SkillIndex), 1, 0.82, 0)
-                if s and s.Mp then tt:AddLine("MP " .. s.Mp, 0.4, 0.7, 1) end
-            end)
-        end)
-        p.list:SetPoint("TOPLEFT", 0, 0)
+            if hero and p.selected then setAuto(hero, p.selected, not autoOn(hero, p.selected)); UI.RefreshPanel() end
+        end, "green")
+        p.autoBtn:SetPoint("BOTTOM", 0, 10)
     end,
     refresh = function(p, hero)
-        local job = ns.Hero.Job(hero)
-        local list = {}
-        for _, row in ipairs(job.rows) do
-            local unlocked = ns.SkillBook.RowUnlocked(row, hero.level, hero.jobStep)
-            local unlock = math.max(D.SkillRules.stepUnlockLevel[row.JobStep or 0] or 1, row.RequireLevel or 0)
-            local needJob = (row.JobStep or 0) > (hero.jobStep or 4) and hero.level >= unlock
-            list[#list + 1] = { row = row, unlocked = unlocked, unlock = unlock, needJob = needJob and row.JobStep,
-                cat = ns.SkillBook.Category(row),
-                level = ns.SkillBook.RowLevel(row, hero.level, {}) }
+        local list = skillEntries(hero)
+        local byId = {}
+        for _, e in ipairs(list) do byId[e.sid] = e end
+        if not (p.selected and byId[p.selected]) then
+            p.selected = list[1] and list[1].sid
+            p.tab = 1
+            p.tabs:Select(1)
         end
-        p.list:SetData(list)
+        -- auto strip: unlocked actives
+        local actives = {}
+        for _, e in ipairs(list) do if e.cat == "active" and e.unlocked then actives[#actives + 1] = e end end
+        for i, ic in ipairs(p.autoSlots) do
+            local e = actives[i]
+            ic.sid = e and e.sid
+            if e then
+                ic:Show(); ic.toggle:Show()
+                ic.icon:SetTexture(ns.Skin.SkillIcon(e.sid))
+                ic.icon:SetDesaturated(not autoOn(hero, e.sid))
+                ic.count:SetText(tostring(e.level))
+                ic.toggle:SetValue(autoOn(hero, e.sid))
+                W.SetBorderGrade(ic, nil)
+            else
+                ic:Hide(); ic.toggle:Hide()
+            end
+        end
+        -- tab dots: newly unlockable steps are not tracked; show red dot when a step needs job advancement
+        for i, b in ipairs(p.tabs.buttons) do
+            local need = false
+            for _, e in ipairs(list) do if tabOf(e.row.JobStep) == i and e.needJob then need = true end end
+            b.dot:SetShown(need)
+        end
+        -- cards for the current tab
+        local shown = {}
+        for _, e in ipairs(list) do if tabOf(e.row.JobStep) == p.tab then shown[#shown + 1] = e end end
+        for i, c in ipairs(p.cards) do
+            local e = shown[i]
+            c.sid = e and e.sid
+            if e then
+                c:Show()
+                c.icon.icon:SetTexture(ns.Skin.SkillIcon(e.sid))
+                c.icon.icon:SetDesaturated(not e.unlocked)
+                c.name:SetText(ns.Skin.SkillName(e.sid))
+                c.name:SetTextColor(e.unlocked and 1 or 0.55, e.unlocked and 1 or 0.55, e.unlocked and 1 or 0.55)
+                local s = D.Skills[e.sid]
+                local cd = s and s.CoolTimeMs and string.format(" · %.0f초", s.CoolTimeMs / 1000) or ""
+                c.sub:SetText(string.format("%s%s", CAT[e.cat] or e.cat, cd))
+                if e.unlocked then
+                    c.lv:SetText(e.row.DisableSkillLevel and "" or ("Lv." .. e.level))
+                elseif e.needJob then
+                    c.lv:SetText(string.format("|cffff6060%d차 전직|r", e.needJob))
+                else
+                    c.lv:SetText(string.format("|cffff6060Lv.%d 해금|r", e.unlock))
+                end
+                c.sel:SetShown(e.sid == p.selected)
+                local cat = e.cat == "active" and { 0.3, 0.75, 1 } or (e.cat == "basic" and { 1, 0.82, 0 } or { 0.6, 0.6, 0.65 })
+                if c.SetBackdropBorderColor then c:SetBackdropBorderColor(cat[1] * 0.7, cat[2] * 0.7, cat[3] * 0.7, 1) end
+            else
+                c:Hide()
+            end
+        end
+        -- detail
+        local e = byId[p.selected]
+        if not e then return end
+        local card = p.card
+        local s = D.Skills[e.sid] or {}
+        card.stars:SetText((e.cat == "active" and "|cff4dbfff" or (e.cat == "basic" and "|cffffd100" or "|cffb0b0b0")) .. (CAT[e.cat] or e.cat) .. " 스킬|r")
+        card.name:SetText(ns.Skin.SkillName(e.sid))
+        card.icon.icon:SetTexture(ns.Skin.SkillIcon(e.sid))
+        card.icon.icon:SetDesaturated(not e.unlocked)
+        W.SetBorderGrade(card.icon, nil)
+        card.line1:SetText(string.format("%d차 스킬", e.row.JobStep or 0))
+        card.line2:SetText(e.row.DisableSkillLevel and "레벨 없음" or string.format("Lv. |cffffffff%d|r", e.level))
+        card.line3:SetText(e.unlocked and "|cff9be05a사용 가능|r" or (e.needJob and string.format("|cffff6060%d차 전직 필요|r", e.needJob)
+            or string.format("|cffff6060Lv.%d에 해금|r", e.unlock)))
+        if e.cat == "active" and e.unlocked then
+            card.tag:SetText(autoOn(hero, e.sid) and "|cff9be05a자동 ON|r" or "|cffaaaaaa자동 OFF|r")
+        else
+            card.tag:SetText("")
+        end
+        local lines = { { header = "스킬 정보" },
+            { "분류", CAT[e.cat] or e.cat },
+            { "해금 레벨", "Lv." .. e.unlock },
+        }
+        if s.Mp then lines[#lines + 1] = { "MP 소모", U.Comma(s.Mp) } end
+        if s.CoolTimeMs then lines[#lines + 1] = { "재사용 대기시간", string.format("%.1f초", s.CoolTimeMs / 1000) } end
+        if s.TargetCount then lines[#lines + 1] = { "최대 대상 수", tostring(s.TargetCount) } end
+        card:SetLines(lines)
+        card.desc:SetText(e.cat == "passive" and "패시브 스킬은 해금되면 항상 적용됩니다."
+            or (e.cat == "basic" and "기본 공격은 적이 사거리 안에 있으면 자동으로 사용합니다."
+            or "액티브 스킬은 재사용 대기시간마다 자동으로 사용합니다. 끄면 전투에서 사용하지 않습니다."))
+        p.autoBtn:SetShown(e.cat == "active")
+        p.autoBtn:SetEnabled(e.unlocked and true or false)
+        p.autoBtn:SetText(autoOn(hero, e.sid) and "자동 사용 끄기" or "자동 사용 켜기")
+        p.autoBtn:SetStyle(autoOn(hero, e.sid) and "cyan" or "green")
     end,
 })
 

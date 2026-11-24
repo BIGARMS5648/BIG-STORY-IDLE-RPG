@@ -88,10 +88,15 @@ function L.Dump(path)
         while f and f ~= UIParent do a = a * (f._alpha or 1); f = f._parent end
         return a
     end
+    local clip   -- {l, b, r, t} of the innermost scroll frame
+    local function outside(l, b, r, t)
+        return clip and (t <= clip[2] or b >= clip[4] or r <= clip[1] or l >= clip[3])
+    end
     local function drawRegion(rg)
         if rg._shown == false then return end
         local l, b, r, t = rect(rg)
         if not l then return end
+        if outside(l, b, r, t) then return end
         local a = alphaOf(rg)
         if rg._kind == "Texture" then
             if rg._color then
@@ -109,6 +114,9 @@ function L.Dump(path)
         if f._shown == false then return end
         local l, b, r, t = rect(f)
         local a = alphaOf(f)
+        if l and outside(l, b, r, t) then return end
+        local saved = clip
+        if l and f._clip then clip = { l, b, r, t } end
         if l then
             if f._backdrop then
                 local bd = f._backdrop
@@ -149,6 +157,7 @@ function L.Dump(path)
             return (x._order or 0) < (y._order or 0)
         end)
         for _, c in ipairs(kids) do drawFrame(c, depth + 1) end
+        clip = saved
     end
     emit("screen", SW, SH)
     drawFrame(UIParent, 0)

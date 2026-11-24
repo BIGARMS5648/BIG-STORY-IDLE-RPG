@@ -6,9 +6,6 @@ local U = ns.U
 local UI = ns.UI
 local D = ns.Data
 
-local ICON, STEP, LABEL_W = 26, 28, 56
-local SLOT_ICON, SLOT_STEP = 30, 36
-local DX = 520 -- details column x
 
 ---------------------------------------------------------------------------
 -- helpers
@@ -191,8 +188,17 @@ local function companionTooltip(tt, icon)
 end
 
 ---------------------------------------------------------------------------
--- panel
+-- panel: equipped slots on top, grade tabs + card grid, detail card on the right (original layout)
 ---------------------------------------------------------------------------
+local CW, CH, GAP = 66, 80, 4
+local CARD_W = 352
+
+local function statRow(stat, raw)
+    local txt = fmtStat(stat, raw)
+    local l, v = txt:match("^(.-)%s+(%+.*)$")
+    return { l or txt, v or "" }
+end
+
 UI.RegisterPanel("companions", {
     title = "동료", order = 34,
     build = function(p)
@@ -204,59 +210,35 @@ UI.RegisterPanel("companions", {
             return
         end
         p.subSlot = 1
-        -- grid: one row per grade
-        p.icons = {}
-        for g = 1, 5 do
-            local l = W.Text(p, 11, { W.GradeColor(g) }, "LEFT")
-            l:SetPoint("TOPLEFT", 0, -6 - (g - 1) * (STEP + 2))
-            l:SetWidth(LABEL_W)
-            l:SetText(gradeName(g))
-            for i, sid in ipairs(C.ByGrade(g)) do
-                local ic = W.Icon(p, ICON)
-                ic:SetPoint("TOPLEFT", LABEL_W + (i - 1) * STEP, -(g - 1) * (STEP + 2))
-                ic.sid = sid
-                ic.sel = ic:CreateTexture(nil, "OVERLAY")
-                ic.sel:SetTexture("Interface\\Buttons\\CheckButtonHilight")
-                ic.sel:SetBlendMode("ADD")
-                ic.sel:SetAllPoints()
-                ic.sel:Hide()
-                ic.copies = W.Text(ic, 9, W.COLORS.green, "LEFT")
-                ic.copies:SetPoint("TOPLEFT", 1, -1)
-                ic.mark = W.Text(ic, 9, W.COLORS.gold, "RIGHT")
-                ic.mark:SetPoint("TOPRIGHT", -1, -1)
-                ic:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
-                ic:SetScript("OnClick", function(self)
-                    p.selected = self.sid
-                    UI.RefreshPanel()
-                end)
-                W.Tooltip(ic, companionTooltip)
-                p.icons[#p.icons + 1] = ic
-            end
-        end
+        p.grade = 1
 
-        -- slots
-        local sy = -158
-        local ml = W.Text(p, 12, W.COLORS.gold, "LEFT")
-        ml:SetPoint("TOPLEFT", 0, sy - 8)
+        -- equipped slots strip
+        local strip = CreateFrame("Frame", nil, p, BackdropTemplateMixin and "BackdropTemplate" or nil)
+        strip:SetPoint("TOPLEFT", 0, 0)
+        strip:SetSize(590, 74)
+        W.Backdrop(strip, { 0.04, 0.04, 0.05, 0.85 }, { 0.3, 0.3, 0.32, 1 }, 10)
+        if W.ArtInfo("box_dark") then W.Slice(strip, "box_dark", 0.7) end
+        local ml = W.Text(strip, 11, W.COLORS.gold, "CENTER")
+        ml:SetPoint("TOPLEFT", 14, -6)
         ml:SetText("메인")
-        p.mainSlot = W.Icon(p, SLOT_ICON)
-        p.mainSlot:SetPoint("TOPLEFT", 34, sy)
+        p.mainSlot = W.Icon(strip, 50)
+        p.mainSlot:SetPoint("TOPLEFT", 8, -20)
         p.mainSlot:RegisterForClicks("LeftButtonUp", "RightButtonUp")
         p.mainSlot:SetScript("OnClick", function(self, button)
             if button == "RightButton" then setMain(p, nil)
             elseif p.selected then setMain(p, p.selected) end
         end)
         W.Tooltip(p.mainSlot, companionTooltip)
-        local sl = W.Text(p, 12, W.COLORS.gold, "LEFT")
-        sl:SetPoint("TOPLEFT", 84, sy - 8)
+        local sl = W.Text(strip, 11, W.COLORS.gold, "LEFT")
+        sl:SetPoint("TOPLEFT", 74, -6)
         sl:SetText("서브")
         p.subSlots = {}
         local nSub = D.CompanionSlots and D.CompanionSlots.subUnlockSummonLevel and #D.CompanionSlots.subUnlockSummonLevel or 6
         for i = 1, nSub do
-            local s = W.Icon(p, SLOT_ICON)
-            s:SetPoint("TOPLEFT", 118 + (i - 1) * SLOT_STEP, sy)
+            local s = W.Icon(strip, 44)
+            s:SetPoint("TOPLEFT", 70 + (i - 1) * 48, -22)
             s.slot = i
-            s.lock = W.Text(s, 9, W.COLORS.red, "CENTER")
+            s.lock = W.Text(s, 10, W.COLORS.red, "CENTER")
             s.lock:SetPoint("CENTER")
             s:RegisterForClicks("LeftButtonUp", "RightButtonUp")
             s:SetScript("OnClick", function(self, button)
@@ -268,86 +250,127 @@ UI.RegisterPanel("companions", {
             W.Tooltip(s, companionTooltip)
             p.subSlots[i] = s
         end
-        p.slotHint = W.Text(p, 10, W.COLORS.gray, "LEFT")
-        p.slotHint:SetPoint("TOPLEFT", 0, sy - 38)
-        p.slotHint:SetWidth(340)
-        p.slotHint:SetText("칸 클릭: 선택한 동료 장착 · 우클릭: 해제")
+        p.autoBtn = W.Button(strip, "자동 장착", 104, 26, autoEquip, "cyan")
+        p.autoBtn:SetPoint("TOPRIGHT", -10, -10)
+        p.allBtn = W.Button(strip, "모두 레벨업", 104, 26, levelUpAll, "green")
+        p.allBtn:SetPoint("TOPRIGHT", -10, -40)
 
-        p.allBtn = W.Button(p, "모두 레벨업", 100, 22, levelUpAll)
-        p.allBtn:SetPoint("TOPLEFT", 346, sy)
-        p.autoBtn = W.Button(p, "자동 장착", 100, 22, autoEquip)
-        p.autoBtn:SetPoint("TOPLEFT", 346, sy - 26)
-        p.ownedText = W.Text(p, 11, W.COLORS.white, "LEFT")
-        p.ownedText:SetPoint("TOPLEFT", 0, sy - 56)
-        p.ownedText:SetWidth(500)
-
-        -- details
-        p.bigIcon = W.Icon(p, 40)
-        p.bigIcon:SetPoint("TOPLEFT", DX, -2)
-        W.Tooltip(p.bigIcon, function(tt, self) self.sid = p.selected; companionTooltip(tt, self) end)
-        p.name = W.Text(p, 14, W.COLORS.gold, "LEFT")
-        p.name:SetPoint("TOPLEFT", p.bigIcon, "TOPRIGHT", 8, -2)
-        p.name:SetWidth(370)
-        p.sub = W.Text(p, 11, W.COLORS.gray, "LEFT")
-        p.sub:SetPoint("TOPLEFT", p.name, "BOTTOMLEFT", 0, -4)
-        p.sub:SetWidth(370)
-
-        local function line(y)
-            local t = W.Text(p, 11, W.COLORS.white, "LEFT")
-            t:SetPoint("TOPLEFT", DX, y)
-            t:SetWidth(420)
-            t:SetJustifyV("TOP")
-            return t
+        -- grade tabs + grid
+        local labels = {}
+        for g = 1, 5 do labels[g] = gradeName(g) end
+        p.tabs = W.Tabs(p, labels, 84, 24, function(i) p.grade = i; UI.RefreshPanel() end)
+        p.tabs:SetPoint("TOPLEFT", 0, -82)
+        p.cards = {}
+        for i = 1, 16 do
+            local col, row = (i - 1) % 8, math.floor((i - 1) / 8)
+            local c = W.GradeCard(p, CW, CH, function(self)
+                if self.sid then p.selected = self.sid; UI.RefreshPanel() end
+            end)
+            c:SetPoint("TOPLEFT", col * (CW + GAP), -114 - row * (CH + 6))
+            W.Tooltip(c, companionTooltip)
+            p.cards[i] = c
         end
-        p.lvText = line(-48)
-        p.eqText = line(-66)
-        p.owText = line(-84)
-        p.inText = line(-102)
+        p.ownedText = W.Text(p, 12, W.COLORS.white, "LEFT")
+        p.ownedText:SetPoint("TOPLEFT", 2, -296)
+        p.ownedText:SetWidth(580)
+        p.slotHint = W.Text(p, 11, W.COLORS.gray, "LEFT")
+        p.slotHint:SetPoint("TOPLEFT", 2, -316)
+        p.slotHint:SetWidth(580)
+        p.slotHint:SetText("장착 칸 클릭: 선택한 동료 장착 · 우클릭: 해제 · 메인 동료는 전투에 함께 참여합니다.")
 
-        p.lvBtn = W.Button(p, "레벨업", 80, 22, function() levelUp(p, 1) end)
-        p.lvBtn:SetPoint("TOPLEFT", DX, -122)
-        p.lvMaxBtn = W.Button(p, "최대 레벨업", 90, 22, function() levelUp(p, nil) end)
-        p.lvMaxBtn:SetPoint("LEFT", p.lvBtn, "RIGHT", 4, 0)
-        p.mainBtn = W.Button(p, "메인 장착", 80, 22, function() if p.selected then setMain(p, p.selected) end end)
-        p.mainBtn:SetPoint("LEFT", p.lvMaxBtn, "RIGHT", 4, 0)
-        p.subBtn = W.Button(p, "서브 장착", 80, 22, function() equipSub(p) end)
-        p.subBtn:SetPoint("LEFT", p.mainBtn, "RIGHT", 4, 0)
-        p.offBtn = W.Button(p, "해제", 60, 22, function() unequip(p) end)
-        p.offBtn:SetPoint("TOPLEFT", DX, -148)
-
-        p.prText = line(-178)
-        p.prBtn = W.Button(p, "승급", 80, 22, function() promote(p) end)
-        p.prBtn:SetPoint("TOPLEFT", DX, -210)
+        -- detail card
+        local card = W.InfoCard(p, CARD_W, 406)
+        card:SetPoint("TOPRIGHT", 0, 0)
+        p.card = card
+        W.Tooltip(card.icon, function(tt, self) self.sid = p.selected; companionTooltip(tt, self) end)
+        card.shards = W.Counter(card, 150)
+        card.shards:SetPoint("TOPLEFT", 20, -262)
+        card.promo = W.Counter(card, 150)
+        card.promo:SetPoint("TOPRIGHT", -20, -262)
+        card.hint = W.Text(card, 11, W.COLORS.gray, "CENTER")
+        card.hint:SetPoint("TOP", 0, -290)
+        card.hint:SetWidth(CARD_W - 30)
+        local bw2 = math.floor((CARD_W - 40 - 6) / 2)
+        local bw3 = math.floor((CARD_W - 40 - 12) / 3)
+        p.lvBtn = W.Button(card, "레벨업", bw2, 26, function() levelUp(p, 1) end, "cyan")
+        p.lvBtn:SetPoint("TOPLEFT", 20, -306)
+        p.lvMaxBtn = W.Button(card, "최대 레벨업", bw2, 26, function() levelUp(p, nil) end, "cyan")
+        p.lvMaxBtn:SetPoint("LEFT", p.lvBtn, "RIGHT", 6, 0)
+        p.mainBtn = W.Button(card, "메인 장착", bw3, 26, function() if p.selected then setMain(p, p.selected) end end, "green")
+        p.mainBtn:SetPoint("TOPLEFT", 20, -336)
+        p.subBtn = W.Button(card, "서브 장착", bw3, 26, function() equipSub(p) end, "green")
+        p.subBtn:SetPoint("LEFT", p.mainBtn, "RIGHT", 6, 0)
+        p.offBtn = W.Button(card, "해제", bw3, 26, function() unequip(p) end, "cyan")
+        p.offBtn:SetPoint("LEFT", p.subBtn, "RIGHT", 6, 0)
+        p.prBtn = W.Button(card, "승급", CARD_W - 40, 30, function() promote(p) end, "orange")
+        p.prBtn:SetPoint("BOTTOM", 0, 10)
     end,
 
     refresh = function(p, hero)
         local C = ns.Companions
-        if not (C and p.icons) then return end
+        if not (C and p.cards) then return end
         local main, subs = C.Equipped(hero)
         local open = C.SubSlotsUnlocked(hero)
         if not p.selected then p.selected = main or C.All()[1] end
+        if not p.gradeSynced and p.selected and C.Def(p.selected) then
+            p.grade = C.Def(p.selected).grade
+            p.tabs:Select(p.grade)
+            p.gradeSynced = true
+        end
 
         local where = {}
         if main then where[main] = "M" end
         for i, sid in pairs(subs) do where[sid] = "S" .. i end
 
+        -- tabs: red dot when a companion of that grade can level up
         local owned, total = 0, 0
-        for _, ic in ipairs(p.icons) do
-            local sid = ic.sid
-            local c = C.Def(sid)
-            local rec = C.Get(hero, sid)
-            total = total + 1
-            if rec then owned = owned + 1 end
-            ic.icon:SetTexture(companionIcon(sid))
-            W.SetBorderGrade(ic, c.grade)
-            ic.icon:SetDesaturated(not rec)
-            ic:SetAlpha(rec and 1 or 0.45)
-            ic.count:SetText(rec and tostring(rec.level) or "")
-            local need = rec and C.LevelUpCost(sid, rec.level)
-            local cnt = rec and rec.count or 0
-            ic.copies:SetText(cnt > 0 and ((need and cnt >= need) and ("|cffffd100" .. cnt .. "|r") or tostring(cnt)) or "")
-            ic.mark:SetText(where[sid] or "")
-            if sid == p.selected then ic.sel:Show() else ic.sel:Hide() end
+        for g = 1, 5 do
+            local any = false
+            for _, sid in ipairs(C.ByGrade(g)) do
+                local rec = C.Get(hero, sid)
+                total = total + 1
+                if rec then
+                    owned = owned + 1
+                    local need = C.LevelUpCost(sid, rec.level)
+                    if need and (rec.count or 0) >= need then any = true end
+                end
+            end
+            p.tabs.buttons[g].dot:SetShown(any)
+        end
+
+        local list = C.ByGrade(p.grade)
+        for i, c in ipairs(p.cards) do
+            local sid = list[i]
+            c.sid = sid
+            c.icon.sid = sid
+            if sid then
+                local def = C.Def(sid)
+                local rec = C.Get(hero, sid)
+                c:Show()
+                c.icon.icon:SetTexture(companionIcon(sid))
+                W.SetCardGrade(c, def.grade, rec ~= nil)
+                c.tier:SetText(U.Utf8Sub(jobDisplay(def.job), 5))
+                c.level:SetText(rec and ("Lv." .. rec.level) or "")
+                c.stars:SetText("")
+                local need = rec and C.LevelUpCost(sid, rec.level)
+                if rec then
+                    c.bar:Show()
+                    if need then
+                        c.bar:SetValue(math.min(1, (rec.count or 0) / need))
+                        c.bar.text:SetText(string.format("%d/%d", rec.count or 0, need))
+                    else
+                        c.bar:SetValue(1)
+                        c.bar.text:SetText("MAX")
+                    end
+                else
+                    c.bar:Hide()
+                end
+                c.tag:SetText(where[sid] and ("|cff9be05a" .. where[sid] .. "|r") or "")
+                c.sel:SetShown(sid == p.selected)
+                c.dot:SetShown(rec ~= nil and need ~= nil and (rec.count or 0) >= need)
+            else
+                c:Hide()
+            end
         end
 
         -- slots
@@ -379,52 +402,55 @@ UI.RegisterPanel("companions", {
                 s.lock:SetText("Lv" .. (unlockLv[i] or "?"))
             end
         end
-        p.ownedText:SetText(string.format("보유 동료 %d / %d · 서브 칸 %d / %d 개방", owned, total, open, #p.subSlots))
+        p.ownedText:SetText(string.format("보유 동료 |cffffffff%d|r / %d    서브 칸 %d / %d 개방", owned, total, open, #p.subSlots))
 
-        -- details
+        -- detail card
+        local card = p.card
         local sid = p.selected
         local c = C.Def(sid)
         if not c then return end
         local rec = C.Get(hero, sid)
-        p.bigIcon.icon:SetTexture(companionIcon(sid))
-        p.bigIcon.icon:SetDesaturated(not rec)
-        W.SetBorderGrade(p.bigIcon, c.grade)
-        p.name:SetText(gradeHex(c.grade) .. c.name .. "|r")
         local slot = rec and slotOf(hero, sid)
-        p.sub:SetText(string.format("%s · %s · %s", gradeName(c.grade), jobDisplay(c.job),
-            not rec and "|cffff6060미보유|r" or (slot == "main" and "|cffffd100메인 장착|r")
-            or (slot and string.format("|cffffd100서브 %d칸|r", slot)) or "보유 중"))
         local lv = rec and rec.level or 1
         local need = rec and C.LevelUpCost(sid, rec.level)
-        if rec then
-            p.lvText:SetText(string.format("Lv.%d / %d · 조각 %s%d|r%s", rec.level, c.maxLevel,
-                (need and (rec.count or 0) >= need) and "|cff40ff40" or "|cffffffff", rec.count or 0,
-                need and string.format(" · 다음 레벨 %d개", need) or " · |cffffd100최대 레벨|r"))
-        else
-            p.lvText:SetText("|cff808080미보유 · 동료 소환으로 획득합니다.|r")
-        end
+        card.stars:SetText(gradeHex(c.grade) .. gradeName(c.grade) .. "|r")
+        card.name:SetText(c.name)
+        card.icon.icon:SetTexture(companionIcon(sid))
+        card.icon.icon:SetDesaturated(not rec)
+        W.SetBorderGrade(card.icon, c.grade)
+        card.line1:SetText(gradeHex(c.grade) .. jobDisplay(c.job) .. "|r")
+        card.line2:SetText(string.format("Lv. |cffffffff%d|r |cff999999/ %d|r", lv, c.maxLevel))
+        card.line3:SetText(rec and (need and string.format("다음 레벨: 조각 %d개", need) or "|cffffd100최대 레벨|r") or "|cff808080동료 소환으로 획득|r")
+        card.tag:SetText(not rec and "|cffff6060미보유|r" or (slot == "main" and "|cff9be05a메인|r")
+            or (slot and string.format("|cff9be05a서브 %d|r", slot)) or "|cffcccccc보유|r")
         local eff = C.Effects(sid, lv)
-        p.eqText:SetText("|cff66ccff장착 효과|r  " .. effectText(eff.equip))
-        p.owText:SetText("|cff40ff40보유 효과|r  " .. effectText(eff.owned))
+        local lines = { { header = "장착 효과" } }
+        for _, e in ipairs(eff.equip or {}) do lines[#lines + 1] = statRow(e[1], e[2]) end
+        lines[#lines + 1] = { gap = 4 }
+        lines[#lines + 1] = { header = "보유 효과" }
+        for _, e in ipairs(eff.owned or {}) do lines[#lines + 1] = statRow(e[1], e[2]) end
         local okInh, inh = pcall(C.AttackInheritM, sid, lv, hero.level)
-        p.inText:SetText(okInh and string.format("|cffffd100메인 계승|r  영웅 공격력의 %s", U.PctM(inh, 1)) or "")
+        if okInh then
+            lines[#lines + 1] = { gap = 4 }
+            lines[#lines + 1] = { "메인 공격력 계승", "영웅의 " .. U.PctM(inh, 1), W.COLORS.gold }
+        end
+        card:SetLines(lines)
+
+        card.shards.text:SetText(string.format("|T%s:14:14|t 조각 %s%d|r / %s", companionIcon(sid),
+            (need and rec and (rec.count or 0) >= need) and "|cff40ff40" or "|cffffffff", rec and rec.count or 0, need and tostring(need) or "-"))
+        local pc = C.PromoteCost(c.grade)
+        local have = C.PromotableCopies(hero, c.grade)
+        local canPromote = pc and C.ByGrade(c.grade + 1)[1]
+        card.promo.text:SetText(canPromote and string.format("승급 %s%s|r / %s", have >= pc and "|cff40ff40" or "|cffffffff",
+            U.Comma(have), U.Comma(pc)) or "승급 -")
+        card.hint:SetText(canPromote and string.format("%s 조각 %s개 → %s%s|r 동료 1명 (무작위)", gradeName(c.grade), U.Comma(pc),
+            gradeHex(c.grade + 1), gradeName(c.grade + 1)) or "최고 등급은 승급할 수 없습니다.")
 
         p.lvBtn:SetEnabled(rec ~= nil and need ~= nil and (rec.count or 0) >= need)
         p.lvMaxBtn:SetEnabled(rec ~= nil and need ~= nil and (rec.count or 0) >= need)
         p.mainBtn:SetEnabled(rec ~= nil and slot ~= "main")
         p.subBtn:SetEnabled(rec ~= nil and open > 0 and type(slot) ~= "number")
         p.offBtn:SetEnabled(slot ~= nil)
-
-        local pc = C.PromoteCost(c.grade)
-        local have = C.PromotableCopies(hero, c.grade)
-        if pc and C.ByGrade(c.grade + 1)[1] then
-            p.prText:SetText(string.format("승급: %s 등급 조각 %s%s|r / %s → %s%s|r 동료 1명 (무작위)\n|cff999999같은 등급 동료들의 조각을 고르게 사용합니다.|r",
-                gradeName(c.grade), have >= pc and "|cff40ff40" or "|cffff5050", U.Comma(have), U.Comma(pc),
-                gradeHex(c.grade + 1), gradeName(c.grade + 1)))
-            p.prBtn:SetEnabled(have >= pc)
-        else
-            p.prText:SetText("|cff808080최고 등급은 승급할 수 없습니다.|r")
-            p.prBtn:SetEnabled(false)
-        end
+        p.prBtn:SetEnabled(canPromote and have >= pc or false)
     end,
 })

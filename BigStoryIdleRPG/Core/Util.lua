@@ -35,6 +35,18 @@ end
 ---------------------------------------------------------------------------
 local UNITS = { "", "만", "억", "조", "경", "해", "자", "양", "구", "간", "정", "재", "극" }
 
+-- first n characters of a UTF-8 string (never cuts a multi-byte character)
+function U.Utf8Sub(s, n)
+    s = tostring(s or "")
+    local out, count = {}, 0
+    for ch in s:gmatch("[%z\1-\127\194-\244][\128-\191]*") do
+        count = count + 1
+        if count > n then break end
+        out[count] = ch
+    end
+    return table.concat(out)
+end
+
 function U.FormatNumber(n, digits)
     if n == nil then return "0" end
     if n ~= n then return "NaN" end

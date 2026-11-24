@@ -171,8 +171,9 @@ end
 -- sub-tab buttons of a panel (summon kinds, equipment / growth views)
 local function tabButtons(p)
     local list = {}
-    for _, field in ipairs({ "tabs", "viewBtns" }) do
+    for _, field in ipairs({ "tabs", "viewBtns", "viewTabs" }) do
         local t = p[field]
+        if type(t) == "table" and type(t.buttons) == "table" then t = t.buttons end   -- W.Tabs objects
         if type(t) == "table" then
             local keys = {}
             for k in pairs(t) do keys[#keys + 1] = k end
