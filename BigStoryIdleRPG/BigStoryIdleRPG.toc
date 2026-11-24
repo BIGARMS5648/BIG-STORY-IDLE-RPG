@@ -29,6 +29,8 @@ Engine\Creature.lua
 Engine\Battle.lua
 Engine\SkillBook.lua
 
+Net\Comm.lua
+
 Systems\Hero.lua
 Systems\Weapons.lua
 Systems\Companions.lua
@@ -46,8 +48,8 @@ Systems\Skin.lua
 Systems\Mastery.lua
 Systems\Campaign.lua
 Systems\Game.lua
+Systems\Arena.lua
 
-Net\Comm.lua
 
 UI\Widgets.lua
 UI\Main.lua

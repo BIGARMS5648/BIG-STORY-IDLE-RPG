@@ -65,6 +65,20 @@ function BV.Create(parent)
         BV.mobs[i] = m
     end
 
+    -- dressed character models: arena opponent + companions
+    BV.allies = {}
+    for i = 1, 5 do
+        local m = CreateFrame("DressUpModel", nil, v)
+        m:SetSize(150, 200)
+        m:Hide()
+        m.hp = W.Bar(m, 70, 5, 0.2, 0.8, 0.2)
+        m.hp:SetPoint("BOTTOM", m, "TOP", 0, -18)
+        m.hp.text:Hide()
+        m.label = W.Text(m, 10, W.COLORS.white, "CENTER")
+        m.label:SetPoint("BOTTOM", m.hp, "TOP", 0, 1)
+        BV.allies[i] = m
+    end
+
     -- boss bar
     v.bossBar = W.Bar(v, 420, 16, 0.75, 0.1, 0.1)
     v.bossBar:SetPoint("TOP", 0, -8)
@@ -190,7 +204,7 @@ function BV.AssignModels(b)
     local used = {}
     local list = {}
     for _, c in ipairs(b.creatures) do
-        if c.side == 2 and (c.alive or (c.deathAt and b.time - c.deathAt < 900)) and not c.isServant then
+        if c.side == 2 and not c.isHero and (c.alive or (c.deathAt and b.time - c.deathAt < 900)) and not c.isServant then
             list[#list + 1] = c
         end
     end
@@ -219,6 +233,71 @@ function BV.AssignModels(b)
             m:Hide()
             if m.owner then m.owner.viewModel = nil end
             m.owner = nil
+        end
+    end
+end
+
+---------------------------------------------------------------------------
+-- Character models for creatures that are "people" (arena opponent, companions)
+---------------------------------------------------------------------------
+local RACE_IDS = { Human = 1, Orc = 2, Dwarf = 3, NightElf = 4, Scourge = 5, Tauren = 6, Gnome = 7, Troll = 8 }
+local CLASS_RACES = {
+    WARRIOR = { 1, 2, 3, 4, 6, 8 }, PALADIN = { 1, 3 }, HUNTER = { 2, 3, 4, 6, 8 }, ROGUE = { 1, 2, 3, 4, 5, 7, 8 },
+    PRIEST = { 1, 3, 4, 5, 8 }, SHAMAN = { 2, 6, 8 }, MAGE = { 1, 5, 7, 8 }, WARLOCK = { 1, 2, 5, 7 }, DRUID = { 4, 6 },
+}
+
+local function dressPerson(m, c)
+    local key = c.id
+    if m.dressedFor == key then return end
+    m.dressedFor = key
+    local race, sex, looks
+    if c.def.arenaLooks then
+        looks = c.def.arenaLooks
+        race = RACE_IDS[c.def.arenaRace or ""] or 1
+        sex = (c.def.arenaSex == 3) and 1 or 0
+    else
+        local info = c.def.companion or {}
+        looks = ns.Skin and ns.Skin.CompanionLooks and ns.Skin.CompanionLooks(info) or {}
+        local cls = ns.Skin and ns.Skin.JobClass and ns.Skin.JobClass(info.jobKey) or "WARRIOR"
+        local opts = CLASS_RACES[cls] or { 1 }
+        race = opts[((info.sid or 1) % #opts) + 1]
+        sex = (info.sid or 0) % 2
+    end
+    if m.SetCustomRace then
+        safe(m.SetCustomRace, m, race, sex)
+    else
+        safe(m.SetUnit, m, "player")
+    end
+    safe(m.Undress, m)
+    for _, id in ipairs(looks or {}) do safe(m.TryOn, m, "item:" .. id) end
+    safe(m.SetCamDistanceScale, m, 1.3)
+end
+
+function BV.UpdatePeople(b)
+    local v = BV.frame
+    local list = {}
+    for _, c in ipairs(b.creatures) do
+        if c.alive and ((c.side == 2 and c.isHero) or c.isSupporter) then list[#list + 1] = c end
+    end
+    for i, m in ipairs(BV.allies) do
+        local c = list[i]
+        if c then
+            local x = screenX(c, b)
+            dressPerson(m, c)
+            m:ClearAllPoints()
+            m:SetPoint("BOTTOM", v, "BOTTOMLEFT", x, GROUND_Y - 20)
+            safe(m.SetFacing, m, c.facing > 0 and FACE_RIGHT or FACE_LEFT)
+            m.hp:SetValue(c.hp / math.max(1, c:Stat("MaxHp")))
+            m.label:SetText(c.name or "")
+            if c.isSupporter then m:SetSize(120, 160) else m:SetSize(170, 220) end
+            if not m:IsShown() then m:Show(); safe(m.SetAnimation, m, ANIM.ready) end
+            if c.castUntil and c.castUntil > b.time and m.lastCast ~= c.castUntil then
+                m.lastCast = c.castUntil
+                safe(m.SetAnimation, m, ns.Skin and ns.Skin.AttackAnim and ns.Skin.AttackAnim(c.job, true) or ANIM.attack1H)
+            end
+        else
+            m:Hide()
+            m.dressedFor = nil
         end
     end
 end
@@ -347,8 +426,9 @@ function BV.OnUpdate(elapsed)
         v.heroMp:SetValue(hero.mp / math.max(1, hero:Stat("MaxMp")))
     end
 
-    -- monsters
+    -- monsters and people
     BV.AssignModels(b)
+    BV.UpdatePeople(b)
     local boss
     for _, m in ipairs(BV.mobs) do
         local c = m.owner

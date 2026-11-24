@@ -223,3 +223,31 @@ function S.GearLooks(hero)
     end
     return looks
 end
+
+function S.JobClass(jobKey)
+    local sj = jobKey and D.SkinJobs and D.SkinJobs[jobKey]
+    return sj and sj.classToken
+end
+
+-- companion look: its class armor set at the companion's grade (노말..레전드리 -> Grade1..Grade5)
+function S.CompanionLooks(info)
+    local looks = {}
+    local L = D.SkinLooks
+    local cls = S.JobClass(info.jobKey)
+    if not (L and cls) then return looks end
+    local grade = "Grade" .. math.max(1, math.min(5, info.grade or 1))
+    for _, slot in ipairs(LOOK_SLOTS) do
+        local e
+        if slot == "Cape" then e = L.cape and L.cape[grade]
+        else e = L.armor[cls] and L.armor[cls][slot] and L.armor[cls][slot][grade] end
+        if e and e.id then looks[#looks + 1] = e.id end
+    end
+    local wl = L.weapons and L.weapons[info.jobKey]
+    if wl then
+        local mh = wl.mainHand and wl.mainHand[grade]
+        local oh = wl.offHand and wl.offHand[grade]
+        if mh and mh.id then looks[#looks + 1] = mh.id end
+        if oh and oh.id then looks[#looks + 1] = oh.id end
+    end
+    return looks
+end
