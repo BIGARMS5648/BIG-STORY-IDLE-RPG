@@ -167,11 +167,26 @@ local function updateAll(list, steps)
     end
 end
 
-local function clickAll(key, button)
+-- sub-tab buttons of a panel (summon kinds, equipment / growth views)
+local function tabButtons(p)
+    local list = {}
+    for _, field in ipairs({ "tabs", "viewBtns" }) do
+        local t = p[field]
+        if type(t) == "table" then
+            local keys = {}
+            for k in pairs(t) do keys[#keys + 1] = k end
+            table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
+            for _, k in ipairs(keys) do list[#list + 1] = t[k] end
+        end
+    end
+    return list
+end
+
+local function clickAll(key, button, skip)
     local n = 0
     for _, f in ipairs(panelFrames(key)) do
         local fn = f._scripts.OnClick
-        if fn then
+        if fn and not (skip and skip[f]) then
             if f._kind == "CheckButton" then f._checked = not f._checked end
             run(key .. " OnClick", fn, f, button or "LeftButton")
             ns.UI.RefreshPanel()
@@ -187,16 +202,31 @@ end
 ---------------------------------------------------------------------------
 local perPanel = {}
 for round = 1, 4 do
+    -- later rounds: pickup banner and companion sub slots unlocked
+    if round == 3 then hero.summon.companion.level = math.max(hero.summon.companion.level, 9) end
     for _, pdef in ipairs(PANELS) do
         ns.UI.ShowPanel(pdef.key)
-        check(ns.UI.panels[pdef.key].frame ~= nil, pdef.key .. " panel built")
+        local frame = ns.UI.panels[pdef.key].frame
+        check(frame ~= nil, pdef.key .. " panel built")
         ns.UI.RefreshPanel()
-        local n = clickAll(pdef.key, "LeftButton")
-        if round == 2 then n = n + clickAll(pdef.key, "RightButton") end
+        local tabs = tabButtons(frame)
+        local skip = {}
+        for _, b in ipairs(tabs) do skip[b] = true end
+        if #tabs == 0 then tabs = { false } end
+        local n = 0
+        for _, tab in ipairs(tabs) do
+            if tab then
+                run(pdef.key .. " tab", tab._scripts.OnClick, tab, "LeftButton")
+                ns.UI.RefreshPanel()
+                n = n + 1
+            end
+            n = n + clickAll(pdef.key, "LeftButton", skip)
+            if round == 2 then n = n + clickAll(pdef.key, "RightButton", skip) end
+            local list = panelFrames(pdef.key)
+            hoverAll(list)
+            updateAll(list, 12)
+        end
         perPanel[pdef.key] = math.max(perPanel[pdef.key] or 0, n)
-        local list = panelFrames(pdef.key)
-        hoverAll(list)
-        updateAll(list, 12)
         ns.UI.RefreshPanel()
         tickTimers()
     end
@@ -221,6 +251,7 @@ end
 local function count(t) local n = 0 for _ in pairs(t or {}) do n = n + 1 end return n end
 check((hero.summon.weapon.total or 0) > 0, "weapon summons happened")
 check((hero.summon.companion.total or 0) > 0, "companion summons happened")
+check((hero.summon.pickup.total or 0) > 0, "pickup summons happened")
 check(count(hero.weapons.owned) > 2, "weapons owned after summons")
 check(count(hero.companions.owned) > 2, "companions owned after summons")
 local starred, cubed, scrolled = false, false, false
