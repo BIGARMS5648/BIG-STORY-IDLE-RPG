@@ -63,6 +63,8 @@ D.Currencies = {
     journeyKey        = { maple = "여정의 상자 열쇠", name = "여정의 열쇠", icon = "Interface\\Icons\\INV_Misc_Key_14", order = 60 },
     journeyToken      = { maple = "여정의 증표", name = "여정의 증표", icon = "Interface\\Icons\\INV_Misc_Token_ScarletCrusade", order = 61 },
     journeyEnergy     = { maple = "여정의 기운", name = "여정의 기운", icon = "Interface\\Icons\\Spell_Nature_WispSplode", order = 62 },
+    memorialScroll    = { maple = "메모리얼 스크롤", name = "추억의 주문서", icon = "Interface\\Icons\\INV_Scroll_07", order = 35 },
+    legendaryArtifactSummon = { maple = "레전드리 유물 소환", name = "전설 유물 소환권", icon = "Interface\\Icons\\INV_Misc_Rune_06", order = 36 },
     worldBossCoin     = { maple = "월드보스 코인", name = "세계 우두머리 주화", icon = "Interface\\Icons\\INV_Misc_Coin_04", order = 70 },
     arenaCoin         = { maple = "아레나 코인", name = "결투장 주화", icon = "Interface\\Icons\\INV_Misc_Coin_05", order = 71 },
     guildCoin         = { maple = "길드 코인", name = "길드 주화", icon = "Interface\\Icons\\INV_Misc_Coin_06", order = 72 },

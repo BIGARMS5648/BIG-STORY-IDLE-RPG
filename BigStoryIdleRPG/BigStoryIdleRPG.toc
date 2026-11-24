@@ -23,6 +23,7 @@ Data\Upgrades.lua
 Data\BaseStats.lua
 Data\RewardTables.lua
 Data\SkinData.lua
+Data\Income.lua
 
 Engine\Expr.lua
 Engine\Creature.lua
@@ -49,6 +50,7 @@ Systems\Mastery.lua
 Systems\Campaign.lua
 Systems\Game.lua
 Systems\Arena.lua
+Systems\Income.lua
 
 
 UI\Widgets.lua
@@ -56,3 +58,4 @@ UI\Main.lua
 UI\BattleView.lua
 UI\CorePanels.lua
 UI\ArenaPanel.lua
+UI\IncomePanel.lua
