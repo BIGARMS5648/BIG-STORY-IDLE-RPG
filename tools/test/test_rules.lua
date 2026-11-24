@@ -119,6 +119,18 @@ ns.MapleRank.AutoUpgrade(maxed)
 local stM = ns.MapleRank.State(maxed)
 check(stM.rank == 28 and stM.maxed and stM.pointsFree == 0, "Lv140 completes all 28 ranks with 0 points left")
 
+-- rank-15 screen: main +50, defense +150, HP +2,500 per point; maxed special stats
+local R15 = ns.Data.MapleRank
+check(R15.mainPerPoint(15) == 50 and R15.defencePerPoint[15] == 150 and R15.hpPerPoint(15) == 2500, "rank 15 per point")
+local expect = { AttackSpeed = 70, CriticalChance = 100, MinDamageRatio = 110, MaxDamageRatio = 110, HitChance = 23,
+    CriticalPower = 200, AttackPowerExcludeBoss = 200 }
+for _, d in ipairs(R15.special) do
+    if expect[d.key] then
+        check(ns.MapleRank.SpecialValue(d, true, d.max) == expect[d.key], "maxed " .. d.label)
+    end
+end
+check(ns.MapleRank.SpecialValue(R15.special[8], true, 10) == 100, "보스 몬스터 데미지 10/30 = 10%")
+
 print(string.format("rules: %d checks, %d failed, errors %d (CP %s, PvP CP %s)", checks, failed, errors,
     ns.U.FormatNumber(cp), ns.U.FormatNumber(pvp)))
 if failed > 0 or errors > 0 then os.exit(1) end

@@ -30,21 +30,26 @@ D.MapleRank = {
     -- points per stat in a rank: rank 1 is 10 / 5 / 5 = 20 (screenshot); later ranks 10 / 5 / 10 = 25
     -- (user-compiled data from the game screen + overseas community, 2026-11-24)
     caps = { [1] = { main = 10, defence = 5, hp = 5 }, default = { main = 10, defence = 5, hp = 10 } },
-    -- PROVISIONAL: main stat / HP per point after rank 1 are not published; they scale like defense
-    -- (rank 1 ratio main 1 : defense 3 : HP 10).
+    -- per point by rank. Screens: rank 1 main +1 / defense +3 / HP +10; rank 15 main +50 / defense +150 /
+    -- HP +2,500. Main stat = defense / 3 holds at both ranks.
     mainPerPoint = function(rank) return math.max(1, math.floor(D.MapleRank.defencePerPoint[rank] / 3)) end,
-    hpPerPoint = function(rank) return math.floor(D.MapleRank.defencePerPoint[rank] * 10 / 3) end,
+    -- PROVISIONAL between the two known ranks: power law through (main 1 -> HP 10) and (main 50 -> HP 2,500)
+    hpPerPoint = function(rank)
+        if rank == 1 then return 10 end
+        if rank == 15 then return 2500 end
+        local m = D.MapleRank.mainPerPoint(rank)
+        return math.floor(10 * m ^ (math.log(250) / math.log(50)) + 0.5)
+    end,
     -- special stat points per completed rank: 10 early, 20 from about Lv30. Ranks complete every
     -- 5 levels, so ranks 1-6 give 10 and later ranks 20 (PROVISIONAL boundary: "about Lv30").
     specialPointsPerRank = function(rank) return rank <= 6 and 10 or 20 end,
-    -- PROVISIONAL: special stat costs are not published. Opening costs 1; upgrade n (0-based) costs
-    -- 1 + floor(n / 5) (all 6 known stats maxed ~320 points vs ~480 earned by Lv140).
+    -- costs: an upgrade costs 1 special point (screen: "★1 강화"); opening is assumed to cost 1 as well
     specialOpenCost = 1,
-    specialUpgradeCost = function(n) return 1 + math.floor(n / 5) end,
-    -- 특별 능력치: opening gives `base`; each of the `max` upgrades adds `step` (raw 0.1% units).
-    -- Screen values: 공격 속도 3% -> 3.2% (+0.2%, 20 upgrades), 크리티컬 확률 5% -> 5.5% (+0.5%, 10),
-    -- 최소 / 최대 데미지 배율 5% -> 5.3% (+0.3%, 20), 명중 3 -> 4 (+1, 20), 크리티컬 데미지 5% -> 5.5% (+0.5%, 30).
-    -- 데미지 opens at Lv85 (overseas community); its values are PROVISIONAL.
+    specialUpgradeCost = function(n) return 1 end,
+    -- 특별 능력치 (11, screens at Lv1 and rank 15): opening gives `base`, each of `max` upgrades adds
+    -- `step` (raw 0.1% units). Maxed values on the rank-15 screen confirm the model:
+    -- 공격 속도 7%, 크리티컬 확률 10%, 최소/최대 데미지 배율 11%, 명중 23, 크리티컬 데미지 20%,
+    -- 일반 몬스터 데미지 20% (30/30), 보스 몬스터 데미지 10% at 10/30.
     special = {
         { key = "AttackSpeed", label = "공격 속도", unlock = 10, max = 20, base = 30, step = 2 },
         { key = "CriticalChance", label = "크리티컬 확률", unlock = 20, max = 10, base = 50, step = 5 },
@@ -52,6 +57,11 @@ D.MapleRank = {
         { key = "MaxDamageRatio", label = "최대 데미지 배율", unlock = 35, max = 20, base = 50, step = 3 },
         { key = "HitChance", label = "명중", unlock = 45, max = 20, base = 3, step = 1, flat = true },
         { key = "CriticalPower", label = "크리티컬 데미지", unlock = 55, max = 30, base = 50, step = 5 },
-        { key = "AttackPower", label = "데미지", unlock = 85, max = 20, base = 50, step = 5, provisional = true },
+        -- PROVISIONAL unlock levels 60 / 65 (between 55 and 75; already opened on the screen)
+        { key = "AttackPowerExcludeBoss", label = "일반 몬스터 데미지", unlock = 60, max = 30, base = 50, step = 5 },
+        { key = "AttackPowerToBoss", label = "보스 몬스터 데미지", unlock = 65, max = 30, base = 50, step = 5 },
+        { key = "SkillPower", label = "스킬 데미지", unlock = 75, max = 30, base = 100, step = 5 },
+        { key = "AttackPower", label = "데미지", unlock = 85, max = 50, base = 100, step = 5 },
+        { key = "MainStat", label = "주 스탯", unlock = 100, max = 160, base = 300, step = 5, flat = true },
     },
 }
