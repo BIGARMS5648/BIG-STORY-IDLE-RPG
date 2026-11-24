@@ -7,7 +7,7 @@ local U = ns.U
 local UI = ns.UI
 local D = ns.Data
 
-local VIEW_Y = -26
+local VIEW_Y = -48
 local VIEWS = {
     { key = "heroPower", label = "영웅의 힘", sys = "HeroPower" },
     { key = "ability", label = "어빌리티", sys = "Ability" },
@@ -90,7 +90,7 @@ end
 
 local function view(p)
     local v = CreateFrame("Frame", nil, p)
-    v:SetPoint("TOPLEFT", 0, VIEW_Y)
+    v:SetPoint("TOPLEFT", 9, VIEW_Y)
     v:SetSize(944, 218)
     v:Hide()
     return v
@@ -1017,16 +1017,21 @@ UI.RegisterPanel("growth", {
     build = function(p)
         p.view = "heroPower"
         p.viewBtns, p.views = {}, {}
-        local x = 0
+        local box = W.InfoCard(p, 962, 374, { plain = true })
+        box:SetPoint("TOPLEFT", 0, -32)
+        p.box = box
+        local labels, keys = {}, {}
         for _, def in ipairs(VIEWS) do
+            if ns[def.sys] then labels[#labels + 1] = def.label; keys[#keys + 1] = def.key end
+        end
+        p.viewTabs = W.Tabs(p, labels, 120, 26, function(i)
+            p.view = keys[i]
+            refreshNow()
+        end)
+        p.viewTabs:SetPoint("TOPLEFT", 0, 0)
+        p.viewKeys = keys
+        for i, def in ipairs(VIEWS) do
             if ns[def.sys] then
-                local b = W.Button(p, def.label, 100, 22, function()
-                    p.view = def.key
-                    refreshNow()
-                end)
-                b:SetPoint("TOPLEFT", x, 0)
-                x = x + 104
-                p.viewBtns[def.key] = b
                 local ok, v = pcall(BUILD[def.key], p)
                 if ok then p.views[def.key] = v
                 else
@@ -1042,8 +1047,8 @@ UI.RegisterPanel("growth", {
     end,
 
     refresh = function(p, hero)
-        for key, b in pairs(p.viewBtns) do
-            if key == p.view then b:LockHighlight() else b:UnlockHighlight() end
+        for i, key in ipairs(p.viewKeys or {}) do
+            if key == p.view and p.viewTabs.index ~= i then p.viewTabs:Select(i) end
         end
         for key, v in pairs(p.views) do
             if key ~= p.view then v:Hide() end

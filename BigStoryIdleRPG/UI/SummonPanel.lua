@@ -10,7 +10,10 @@ local D = ns.Data
 local KINDS = { "weapon", "companion", "pickup" }
 local KIND_NAMES = { weapon = "무기 소환", companion = "동료 소환", pickup = "픽업 소환" }
 
-local GRID_X, GRID_Y = 336, -24
+local RX = 312                      -- right column (selected summon)
+local GRID_X, GRID_Y = RX + 20, -212
+local KIND_ICON = { weapon = "Interface\\Icons\\INV_Sword_27", companion = "Interface\\Icons\\INV_Misc_Head_Human_01",
+    pickup = "Interface\\Icons\\Spell_Holy_PrayerOfSpirit" }
 local CELL, ICON = 38, 32
 local COLS, ROWS = 16, 5
 local CELLS = COLS * ROWS
@@ -381,7 +384,7 @@ end
 
 local function buildRatesPopup(p)
     local pop = W.Panel(p, 340, 232, 0.97)
-    pop:SetPoint("TOPLEFT", GRID_X + 266, -4)
+    pop:SetPoint("TOPRIGHT", p, "TOPRIGHT", -14, -40)
     pop:SetFrameLevel((p:GetFrameLevel() or 1) + 20)
     pop:EnableMouse(true)
     pop.title = W.Text(pop, 12, W.COLORS.gold, "LEFT")
@@ -417,33 +420,62 @@ UI.RegisterPanel("summon", {
         p.kind = "weapon"
         p.results = {}
 
-        -- kind tabs
+        -- kind banners on the left (act as tabs)
         p.tabs = {}
         for i, kind in ipairs(KINDS) do
-            local b = W.Button(p, KIND_NAMES[kind], 100, 22, function()
+            local b = CreateFrame("Button", nil, p, BackdropTemplateMixin and "BackdropTemplate" or nil)
+            b:SetSize(300, 128)
+            b:SetPoint("TOPLEFT", 0, -(i - 1) * 139)
+            W.Backdrop(b, { 0.08, 0.06, 0.05, 0.95 }, { 0.45, 0.35, 0.2, 1 }, 12)
+            if W.ArtInfo("box_row") then W.Slice(b, "box_row", 0.6, { keepBackdrop = true }) end
+            b.glow = b:CreateTexture(nil, "OVERLAY")
+            b.glow:SetTexture("Interface\\Buttons\\CheckButtonHilight")
+            b.glow:SetBlendMode("ADD")
+            b.glow:SetPoint("TOPLEFT", 4, -4)
+            b.glow:SetPoint("BOTTOMRIGHT", -4, 4)
+            b.glow:SetAlpha(0.35)
+            b.icon = W.Icon(b, 62, KIND_ICON[kind])
+            b.icon:SetPoint("LEFT", 14, 4)
+            b.icon:EnableMouse(false)
+            b.name = W.Text(b, 16, W.COLORS.white, "LEFT")
+            b.name:SetPoint("TOPLEFT", b.icon, "TOPRIGHT", 12, -4)
+            b.name:SetText(KIND_NAMES[kind])
+            b.lv = W.Text(b, 12, W.COLORS.gold, "LEFT")
+            b.lv:SetPoint("TOPLEFT", b.name, "BOTTOMLEFT", 0, -6)
+            b.sub = W.Text(b, 11, W.COLORS.gray, "LEFT")
+            b.sub:SetPoint("TOPLEFT", b.lv, "BOTTOMLEFT", 0, -4)
+            b.sub:SetWidth(190)
+            b.bar = W.Bar(b, 270, 10, 0.85, 0.6, 0.15)
+            b.bar:SetPoint("BOTTOM", 0, 12)
+            b.bar.text:SetText("")
+            b.dot = W.Dot(b)
+            b:SetScript("OnClick", function()
                 p.kind = kind
                 showResults(p, p.results[kind], false)
                 if p.ratesPop:IsShown() then p.ratesPop.key = nil end
                 UI.RefreshPanel()
             end)
-            b:SetPoint("TOPLEFT", (i - 1) * 104, 0)
             p.tabs[kind] = b
         end
 
-        p.title = W.Text(p, 14, W.COLORS.gold, "LEFT")
-        p.title:SetPoint("TOPLEFT", 2, -32)
+        -- selected summon
+        local box = W.InfoCard(p, 962 - RX, 406, { plain = true })
+        box:SetPoint("TOPLEFT", RX, 0)
+        p.box = box
+        p.title = W.Text(box, 17, W.COLORS.gold, "LEFT")
+        p.title:SetPoint("TOPLEFT", 18, -14)
 
-        p.ratesBtn = W.Button(p, "확률표", 70, 20, function()
+        p.ratesBtn = W.Button(box, "확률표", 86, 24, function()
             if p.ratesPop:IsShown() then p.ratesPop:Hide() else
                 p.ratesPop.key = nil
                 p.ratesPop:Show()
                 UI.RefreshPanel()
             end
-        end)
-        p.ratesBtn:SetPoint("TOPLEFT", 248, -28)
+        end, "cyan")
+        p.ratesBtn:SetPoint("TOPRIGHT", -16, -10)
 
-        p.levelBar = W.Bar(p, 316, 14, 0.85, 0.6, 0.15)
-        p.levelBar:SetPoint("TOPLEFT", 2, -54)
+        p.levelBar = W.Bar(box, 962 - RX - 36, 14, 0.85, 0.6, 0.15)
+        p.levelBar:SetPoint("TOPLEFT", 18, -42)
         p.levelBar:EnableMouse(true)
         W.Tooltip(p.levelBar, function(tt)
             local hero = ns.Hero.Active()
@@ -471,43 +503,43 @@ UI.RegisterPanel("summon", {
             tt:AddLine("확률표 버튼으로 전체 목록을 볼 수 있습니다.", 0.6, 0.6, 0.6)
         end)
 
-        p.pity = W.Text(p, 11, W.COLORS.white, "LEFT")
-        p.pity:SetPoint("TOPLEFT", 2, -74)
-        p.pity:SetWidth(320)
+        p.pity = W.Text(box, 11, W.COLORS.white, "LEFT")
+        p.pity:SetPoint("TOPLEFT", 18, -62)
+        p.pity:SetWidth(962 - RX - 36)
         p.pity:SetJustifyV("TOP")
 
-        p.wallet = W.Text(p, 12, W.COLORS.white, "LEFT")
-        p.wallet:SetPoint("TOPLEFT", 2, -108)
-        p.wallet:SetWidth(320)
-
-        p.info = W.Text(p, 11, W.COLORS.gray, "LEFT")
-        p.info:SetPoint("TOPLEFT", 2, -126)
-        p.info:SetWidth(320)
+        p.walletBox = W.Counter(box, 220)
+        p.walletBox:SetPoint("TOPLEFT", 18, -92)
+        p.wallet = p.walletBox.text
+        p.info = W.Text(box, 11, W.COLORS.gray, "LEFT")
+        p.info:SetPoint("LEFT", p.walletBox, "RIGHT", 12, 0)
+        p.info:SetWidth(370)
 
         p.pullBtns, p.costs = {}, {}
+        local bw = math.floor((962 - RX - 36 - 20) / 3)
         for i = 1, 3 do
-            local b = W.Button(p, "", 102, 26, function(self) doPull(p, self.count) end)
-            b:SetPoint("TOPLEFT", 2 + (i - 1) * 108, -146)
+            local b = W.Button(box, "", bw, 34, function(self) doPull(p, self.count) end, "green")
+            b:SetPoint("TOPLEFT", 18 + (i - 1) * (bw + 10), -122)
             p.pullBtns[i] = b
-            local c = W.Text(p, 11, W.COLORS.white, "CENTER")
+            local c = W.Text(box, 11, W.COLORS.white, "CENTER")
             c:SetPoint("TOP", b, "BOTTOM", 0, -3)
-            c:SetWidth(106)
+            c:SetWidth(bw)
             p.costs[i] = c
         end
 
-        p.note = W.Text(p, 11, W.COLORS.gray, "LEFT")
-        p.note:SetPoint("TOPLEFT", 2, -196)
-        p.note:SetWidth(326)
+        p.note = W.Text(box, 11, W.COLORS.gray, "LEFT")
+        p.note:SetPoint("TOPLEFT", 18, -176)
+        p.note:SetWidth(962 - RX - 36)
         p.note:SetJustifyV("TOP")
 
         -- results
-        p.resTitle = W.Text(p, 12, W.COLORS.gold, "LEFT")
-        p.resTitle:SetPoint("TOPLEFT", GRID_X, -4)
-        p.resSummary = W.Text(p, 11, W.COLORS.white, "LEFT")
+        p.resTitle = W.Text(p.box, 12, W.COLORS.gold, "LEFT")
+        p.resTitle:SetPoint("TOPLEFT", p, "TOPLEFT", GRID_X, GRID_Y + 16)
+        p.resSummary = W.Text(p.box, 11, W.COLORS.white, "LEFT")
         p.resSummary:SetPoint("LEFT", p.resTitle, "RIGHT", 10, 0)
         p.resSummary:SetWidth(380)
-        p.skipBtn = W.Button(p, "모두 보기", 70, 18, function() finishAnim(p.grid) end)
-        p.skipBtn:SetPoint("TOPRIGHT", -2, -1)
+        p.skipBtn = W.Button(p, "모두 보기", 76, 20, function() finishAnim(p.grid) end, "cyan")
+        p.skipBtn:SetPoint("TOPRIGHT", -18, GRID_Y + 20)
 
         local grid = CreateFrame("Frame", nil, p)
         grid:SetPoint("TOPLEFT", GRID_X, GRID_Y)
@@ -540,8 +572,25 @@ UI.RegisterPanel("summon", {
             p.title:SetText("소환 시스템을 불러오지 못했습니다.")
             return
         end
-        for kind, b in pairs(p.tabs) do
-            if kind == p.kind then b:LockHighlight() else b:UnlockHighlight() end
+        for k, b in pairs(p.tabs) do
+            local inf = ns.Summon.Info(hero, k)
+            b.glow:SetShown(k == p.kind)
+            if b.SetBackdropBorderColor then
+                if k == p.kind then b:SetBackdropBorderColor(1, 0.82, 0.3, 1) else b:SetBackdropBorderColor(0.45, 0.35, 0.2, 1) end
+            end
+            if inf then
+                b.lv:SetText(string.format("소환 Lv.%d |cff999999/ %d|r", inf.level, inf.maxLevel))
+                if inf.need and inf.level < inf.maxLevel then
+                    b.bar:SetValue(math.min(1, inf.exp / inf.need))
+                    b.sub:SetText(string.format("다음 레벨까지 %s회", U.Comma(inf.need - inf.exp)))
+                else
+                    b.bar:SetValue(1)
+                    b.sub:SetText("최대 레벨")
+                end
+                if not inf.unlocked then b.sub:SetText("|cffff6060잠김|r") end
+                b.icon.icon:SetDesaturated(not inf.unlocked)
+                b.dot:SetShown(inf.unlocked and (inf.tickets or 0) >= 10 or false)
+            end
         end
         local kind = p.kind
         local info = ns.Summon.Info(hero, kind)
@@ -572,7 +621,7 @@ UI.RegisterPanel("summon", {
         if #lines == 0 then lines[1] = "|cff808080확정 소환 없음|r" end
         p.pity:SetText(table.concat(lines, "\n"))
 
-        p.wallet:SetText(string.format("보유  %s   %s", (W.Money(info.ticketKey, info.tickets)), (W.Money("redDia", info.redDia))))
+        p.wallet:SetText(string.format("%s   %s", (W.Money(info.ticketKey, info.tickets)), (W.Money("redDia", info.redDia))))
         p.info:SetText(string.format("누적 %s회 · 1회당 소환서 %d 또는 다이아 %d · 가능 %s회", U.Comma(info.total or 0),
             info.cost.ticket or 1, info.cost.redDia or 0, U.Comma(math.floor(info.affordable or 0))))
 

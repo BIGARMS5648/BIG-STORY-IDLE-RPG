@@ -313,57 +313,55 @@ UI.RegisterPanel("skills", {
 UI.RegisterPanel("mastery", {
     title = "마스터리", order = 25,
     build = function(p)
-        p.status = W.Text(p, 12, W.COLORS.gold, "LEFT")
-        p.status:SetPoint("TOPLEFT", 4, -2)
-        p.list = W.ScrollList(p, 940, 210, 28, function(parent)
-            local r = CreateFrame("Frame", nil, parent)
-            r:SetHeight(26)
-            r.icon = W.Icon(r, 22)
-            r.icon:SetPoint("LEFT", 2, 0)
-            r.name = W.Text(r, 12, W.COLORS.white, "LEFT")
-            r.name:SetPoint("LEFT", r.icon, "RIGHT", 6, 0)
-            r.name:SetWidth(380)
-            r.cost = W.Text(r, 11, W.COLORS.gray, "LEFT")
-            r.cost:SetPoint("LEFT", r.name, "RIGHT", 6, 0)
-            r.cost:SetWidth(330)
-            r.btn = W.Button(r, "배우기", 80, 20)
-            r.btn:SetPoint("RIGHT", -6, 0)
-            return r
+        local head = W.InfoCard(p, 962, 40, { plain = true })
+        head:SetPoint("TOPLEFT", 0, 0)
+        p.status = W.Text(head, 14, W.COLORS.gold, "LEFT")
+        p.status:SetPoint("LEFT", 16, 0)
+        p.bar = W.Bar(head, 420, 10, 0.3, 0.8, 0.2)
+        p.bar:SetPoint("LEFT", 160, 0)
+        p.hint = W.Text(head, 11, W.COLORS.gray, "RIGHT")
+        p.hint:SetPoint("RIGHT", -16, 0)
+        p.hint:SetText("학습 중인 마스터리는 시간이 지나면 완료됩니다.")
+        p.list = W.ScrollList(p, 962, 358, 54, function(parent)
+            return W.RowCard(parent, 936, 50)
         end, function(r, e)
             local n = e.node
             local icon = n.ParentSkillIndex and ns.Skin.SkillIcon(n.ParentSkillIndex) or "Interface\\Icons\\Spell_Holy_MagicalSentry"
-            r.icon.icon:SetTexture(icon)
             local entry = ns.Skin.SkillEntry(n.MasteryIndex)
             local name = (entry and (entry.nameKo or entry.nameEn)) or n.nameKo or tostring(n.MasteryIndex)
             if n.ParentSkillIndex and not entry then
                 name = ns.Skin.SkillName(n.ParentSkillIndex) .. " 숙련"
             end
             local color = ({ learned = "|cff40ff40", learning = "|cffffd100", available = "|cffffffff" })[e.state] or "|cff808080"
-            r.name:SetText(string.format("%s%s|r  |cff999999Lv.%d|r", color, name, n.RequireCreatureLevel or 0))
             local key, cnt = ns.Mastery.Cost(n)
-            local t = e.state == "learning" and ("남은 시간 " .. U.FormatDuration(e.remain or 0))
-                or string.format("%s · 학습 %s", (W.Money(key, cnt)), U.FormatDuration(n.LearnedDelaySeconds or 0))
-            r.cost:SetText(t)
-            r.btn:SetShown(e.state == "available" or e.state == "learning")
-            r.btn:SetText(e.state == "learning" and "단축" or "배우기")
-            r.btn:SetScript("OnClick", function()
-                local hero = ns.Hero.Active()
-                if e.state == "learning" then
-                    if not ns.Mastery.Skip(hero, math.huge) then W.Toast("시간 단축권이 없습니다.") end
-                else
-                    local ok, err = ns.Mastery.Learn(hero, n.MasteryIndex)
-                    if not ok then W.Toast(err) end
-                end
-                UI.RefreshPanel()
-            end)
+            local stateText = ({ learned = "|cff40ff40습득 완료|r", learning = "|cffffd100학습 중 · 남은 시간 " .. U.FormatDuration(e.remain or 0) .. "|r",
+                available = "학습 가능 · 학습 시간 " .. U.FormatDuration(n.LearnedDelaySeconds or 0) })[e.state]
+                or (((ns.Hero.Active() or {}).level or 0) >= (n.RequireCreatureLevel or 0) and "|cffa0a0a0이전 마스터리를 먼저 배워야 합니다.|r"
+                or string.format("|cffff6060Lv.%d 필요|r", n.RequireCreatureLevel or 0))
+            r:Set({ icon = icon, title = string.format("%s%s|r  |cff999999Lv.%d|r", color, name, n.RequireCreatureLevel or 0),
+                sub = stateText, right = e.state ~= "learned" and (W.Money(key, cnt)) or nil,
+                btn = (e.state == "available" or e.state == "learning") and (e.state == "learning" and "단축" or "배우기") or "",
+                enabled = true, dot = false, claimed = e.state == "learned",
+                fn = function()
+                    local hero = ns.Hero.Active()
+                    if e.state == "learning" then
+                        if not ns.Mastery.Skip(hero, math.huge) then W.Toast("시간 단축권이 없습니다.") end
+                    else
+                        local ok, err = ns.Mastery.Learn(hero, n.MasteryIndex)
+                        if not ok then W.Toast(err) end
+                    end
+                    UI.RefreshPanel()
+                end })
+            r.icon.icon:SetDesaturated(e.state == "locked")
         end)
-        p.list:SetPoint("TOPLEFT", 0, -20)
+        p.list:SetPoint("TOPLEFT", 0, -48)
     end,
     refresh = function(p, hero)
         local nodes = ns.Mastery.Nodes(hero)
         local learned = 0
         for _, e in ipairs(nodes) do if e.state == "learned" then learned = learned + 1 end end
         p.status:SetText(string.format("습득 %d / %d", learned, #nodes))
+        p.bar:SetValue(#nodes > 0 and learned / #nodes or 0)
         -- available / learning first
         table.sort(nodes, function(a, b)
             local order = { learning = 1, available = 2, locked = 3, learned = 4 }
@@ -380,43 +378,70 @@ UI.RegisterPanel("mastery", {
 UI.RegisterPanel("chapters", {
     title = "챕터", order = 5,
     build = function(p)
-        p.chList = W.ScrollList(p, 260, 230, 24, function(parent)
-            local b = W.Button(parent, "", 230, 22)
-            return b
-        end, function(b, e)
-            b:SetText(string.format("%d. %s", e.ch, ns.Skin.ChapterName(e.ch) or ("챕터 " .. e.ch)))
-            b:SetEnabled(e.unlocked)
-            b:SetScript("OnClick", function() p.selected = e.ch; UI.RefreshPanel() end)
+        p.chList = W.ScrollList(p, 318, 406, 50, function(parent)
+            local r = W.RowCard(parent, 292, 46)
+            r.btn:SetWidth(70)
+            return r
+        end, function(r, e)
+            local hero = ns.Hero.Active()
+            local cp = hero and hero.campaign or {}
+            local cur = e.ch == cp.chapter
+            r:Set({ icon = "Interface\\Icons\\INV_Misc_Map_01", grade = cur and 4 or nil,
+                title = string.format("%d. %s", e.ch, ns.Skin.ChapterName(e.ch) or ("챕터 " .. e.ch)),
+                sub = not e.unlocked and "|cffa0a0a0잠김|r" or (cur and "|cff9be05a사냥 중|r" or (e.ch < (cp.maxChapter or 1) and "클리어" or "진행 중")),
+                btn = "선택", enabled = e.unlocked, dot = false,
+                fn = function() p.selected = e.ch; UI.RefreshPanel() end })
+            r.icon.icon:SetDesaturated(not e.unlocked)
+            if r.SetBackdropBorderColor and e.ch == p.selected then r:SetBackdropBorderColor(1, 0.82, 0.3, 1) end
         end)
         p.chList:SetPoint("TOPLEFT", 0, 0)
+        local box = W.InfoCard(p, 630, 406, { plain = true })
+        box:SetPoint("TOPLEFT", 332, 0)
+        p.box = box
+        box.art = box:CreateTexture(nil, "ARTWORK")
+        box.art:SetPoint("TOPLEFT", 12, -12)
+        box.art:SetPoint("TOPRIGHT", -12, -12)
+        box.art:SetHeight(96)
+        box.art:SetTexCoord(0, 1, 0.32, 0.6)
+        box.shade = box:CreateTexture(nil, "ARTWORK", nil, 1)
+        box.shade:SetTexture("Interface\\Buttons\\WHITE8X8")
+        box.shade:SetAllPoints(box.art)
+        box.shade:SetVertexColor(0, 0, 0, 0.35)
+        p.chTitle = W.Text(box, 20, W.COLORS.gold, "LEFT")
+        p.chTitle:SetPoint("BOTTOMLEFT", box.art, "BOTTOMLEFT", 14, 10)
         p.stages = {}
         for i = 1, 20 do
-            local b = W.Button(p, tostring(i), 120, 24)
-            b:SetPoint("TOPLEFT", 280 + ((i - 1) % 5) * 126, -10 - math.floor((i - 1) / 5) * 30)
+            local b = W.Button(box, tostring(i), 112, 30)
+            b:SetPoint("TOPLEFT", 18 + ((i - 1) % 5) * 119, -120 - math.floor((i - 1) / 5) * 36)
             p.stages[i] = b
         end
-        p.info = W.Text(p, 12, W.COLORS.white, "LEFT")
-        p.info:SetPoint("TOPLEFT", 280, -140)
-        p.info:SetWidth(640)
+        p.info = W.Text(box, 12, W.COLORS.white, "LEFT")
+        p.info:SetPoint("TOPLEFT", 20, -272)
+        p.info:SetWidth(590)
         p.info:SetJustifyV("TOP")
     end,
     refresh = function(p, hero)
         local cp = hero.campaign
         local chs = {}
         for ch = 1, #D.Chapters do chs[#chs + 1] = { ch = ch, unlocked = ch <= cp.maxChapter } end
-        p.chList:SetData(chs)
         local ch = p.selected or cp.chapter
+        p.selected = ch
+        p.chList:SetData(chs)
         local cd = D.Chapters[ch]
+        p.chTitle:SetText(string.format("%d. %s", ch, ns.Skin.ChapterName(ch) or ""))
+        local sw = D.SkinWorld and D.SkinWorld.chapters and D.SkinWorld.chapters[ch]
+        p.box.art:SetTexture(sw and sw.loadingScreen or "Interface\\Glues\\LoadingScreens\\LoadScreenEasternKingdom")
         for i, b in ipairs(p.stages) do
             local sd = cd and cd.stages[i]
             if sd then
                 b:Show()
                 local isBoss = sd.boss or sd.bossFight
-                b:SetText(string.format("%d-%d%s", ch, i, isBoss and " 보스" or ""))
+                local here = ch == cp.chapter and i == cp.stage
+                b:SetText(string.format("%s%d-%d%s", here and "▶ " or "", ch, i, isBoss and " 보스" or ""))
                 local unlocked = ns.Campaign.IsUnlocked(hero, ch, i) and not isBoss
-                b:SetEnabled(unlocked)
-                if ch == cp.chapter and i == cp.stage then b:LockHighlight() else b:UnlockHighlight() end
-                b:SetScript("OnClick", function() ns.Campaign.SetStage(hero, ch, i) end)
+                b:SetStyle(here and "orange" or (isBoss and "green" or "cyan"))
+                b:SetEnabled(unlocked or here)
+                b:SetScript("OnClick", function() ns.Campaign.SetStage(hero, ch, i); UI.RefreshPanel() end)
             else
                 b:Hide()
             end
@@ -424,7 +449,7 @@ UI.RegisterPanel("chapters", {
         local sd = ns.Campaign.StageData(cp.chapter, cp.stage)
         local lines = {}
         if sd and sd.hunt then
-            lines[#lines + 1] = string.format("현재 사냥터: %s", ns.Campaign.StageName(cp.chapter, cp.stage))
+            lines[#lines + 1] = string.format("|cffffd100현재 사냥터|r  %s", ns.Campaign.StageName(cp.chapter, cp.stage))
             lines[#lines + 1] = string.format("몬스터 HP %s · 공격력 %s · 방어력 %s · 회피 %s (필요 명중)",
                 U.FormatNumber(sd.hunt.hp), U.FormatNumber(sd.hunt.atk), U.FormatNumber(sd.hunt.def), sd.hunt.avoid or 0)
             lines[#lines + 1] = string.format("처치당 경험치 %s · %d마리 / %d초", U.FormatNumber(sd.exp or 0),
@@ -432,7 +457,7 @@ UI.RegisterPanel("chapters", {
         end
         local nch, nst, kind = ns.Campaign.NextChallenge(hero)
         if nch then
-            lines[#lines + 1] = string.format("다음 목표: %s %s", kind == "boss" and "보스" or "도전", ns.Campaign.StageName(nch, nst))
+            lines[#lines + 1] = string.format("|cffffd100다음 목표|r  %s %s", kind == "boss" and "보스" or "도전", ns.Campaign.StageName(nch, nst))
             local rw = ns.Campaign.FirstClearRewards(nch, nst, kind)
             if rw then
                 local parts = {}

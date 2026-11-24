@@ -22,30 +22,29 @@ local function act(fn, ...)
     UI.RefreshPanel()
 end
 
+local ROWS, ROW_H = 7, 50
+local MEDAL_ICON = "Interface\\Icons\\INV_Misc_Ribbon_01"
+
 UI.RegisterPanel("medals", {
     title = "훈장", order = 13,
     build = function(p)
         p.cat = 1
-        p.tabs = {}
-        for i, name in ipairs(D.MedalCategories) do
-            local b = W.Button(p, name, 80, 20, function() p.cat = i; p.page = 0; UI.RefreshPanel() end)
-            b:SetPoint("TOPLEFT", (i - 1) * 84, 0)
-            p.tabs[i] = b
-        end
-        p.claimAll = W.Button(p, "모두 받기", 90, 20, function() act(ns.Medals.ClaimAll, ns.Hero.Active()) end)
-        p.claimAll:SetPoint("TOPLEFT", #D.MedalCategories * 84 + 8, 0)
-        p.summary = W.Text(p, 12, W.COLORS.gold, "LEFT")
-        p.summary:SetPoint("LEFT", p.claimAll, "RIGHT", 10, 0)
+        p.tabs = W.Tabs(p, D.MedalCategories, 132, 36, function(i) p.cat = i; p.page = 0; UI.RefreshPanel() end, true)
+        p.tabs:SetPoint("TOPLEFT", 0, 0)
+        local sum = W.InfoCard(p, 132, 196, { plain = true })
+        sum:SetPoint("BOTTOMLEFT", 0, 0)
+        p.sumBox = sum
+        p.summary = W.Text(sum, 11, W.COLORS.white, "CENTER")
+        p.summary:SetPoint("TOP", 0, -14)
+        p.summary:SetWidth(116)
+        p.summary:SetJustifyV("TOP")
+        p.claimAll = W.Button(sum, "모두 받기", 112, 28, function() act(ns.Medals.ClaimAll, ns.Hero.Active()) end, "green")
+        p.claimAll:SetPoint("BOTTOM", 0, 10)
         p.lines = {}
-        for i = 1, 9 do
-            local r = CreateFrame("Frame", nil, p)
-            r:SetSize(930, 22)
-            r:SetPoint("TOPLEFT", 0, -24 - (i - 1) * 24)
-            r.text = W.Text(r, 12, W.COLORS.white, "LEFT")
-            r.text:SetPoint("LEFT", 4, 0)
-            r.text:SetWidth(760)
-            r.btn = W.Button(r, "수령", 90, 20)
-            r.btn:SetPoint("RIGHT", -4, 0)
+        for i = 1, ROWS do
+            local r = W.RowCard(p, 820, ROW_H)
+            r:SetPoint("TOPLEFT", 142, -(i - 1) * (ROW_H + 4))
+            r:EnableMouse(true)
             W.Tooltip(r, function(tt)
                 local d = r.def
                 if not d then return end
@@ -56,10 +55,13 @@ UI.RegisterPanel("medals", {
             p.lines[i] = r
         end
         p.page = 0
-        p.prev = W.Button(p, "<", 30, 20, function() p.page = math.max(0, p.page - 1); UI.RefreshPanel() end)
-        p.prev:SetPoint("TOPRIGHT", -36, 0)
-        p.next = W.Button(p, ">", 30, 20, function() p.page = p.page + 1; UI.RefreshPanel() end)
-        p.next:SetPoint("TOPRIGHT", 0, 0)
+        p.pageText = W.Text(p, 12, W.COLORS.white, "CENTER")
+        p.pageText:SetPoint("BOTTOMRIGHT", -46, 9)
+        p.pageText:SetWidth(60)
+        p.prev = W.Button(p, "<", 34, 28, function() p.page = math.max(0, p.page - 1); UI.RefreshPanel() end, "cyan")
+        p.prev:SetPoint("RIGHT", p.pageText, "LEFT", -4, 0)
+        p.next = W.Button(p, ">", 34, 28, function() p.page = p.page + 1; UI.RefreshPanel() end, "cyan")
+        p.next:SetPoint("LEFT", p.pageText, "RIGHT", 4, 0)
     end,
     refresh = function(p, hero)
         local M = ns.Medals
@@ -69,9 +71,13 @@ UI.RegisterPanel("medals", {
         local owned, total = 0, #D.Medals
         for _, d in ipairs(D.Medals) do if s.claimed[d.id] then owned = owned + 1 end end
         local eq = M.Equipped(hero)
-        p.summary:SetText(string.format("보유 %d/%d · 주 스탯 +%d/%s · 착용: %s", owned, total, t.MainStat,
-            U.Comma(D.MedalMainStatCap), eq and eq.name or "없음"))
-        for i, b in ipairs(p.tabs) do b:SetEnabled(i ~= p.cat) end
+        p.summary:SetText(string.format("|cffffd100보유 훈장|r\n%d / %d\n\n|cffffd100주 스탯|r\n+%d / %s\n\n|cffffd100착용|r\n%s", owned, total,
+            t.MainStat, U.Comma(D.MedalMainStatCap), eq and eq.name or "없음"))
+        for i, b in ipairs(p.tabs.buttons) do
+            local any = false
+            for _, d in ipairs(D.Medals) do if d.cat == i and s.achieved[d.id] and not s.claimed[d.id] then any = true end end
+            b.dot:SetShown(any)
+        end
         local rows = {}
         for _, d in ipairs(D.Medals) do
             if d.cat == p.cat then rows[#rows + 1] = d end
@@ -81,6 +87,9 @@ UI.RegisterPanel("medals", {
         if p.page >= pages then p.page = pages - 1 end
         p.prev:SetShown(pages > 1)
         p.next:SetShown(pages > 1)
+        p.prev:SetEnabled(p.page > 0)
+        p.next:SetEnabled(p.page < pages - 1)
+        p.pageText:SetText(pages > 1 and string.format("%d / %d", p.page + 1, pages) or "")
         for i, line in ipairs(p.lines) do
             local d = rows[p.page * per + i]
             line.def = d
@@ -88,22 +97,23 @@ UI.RegisterPanel("medals", {
                 line:Show()
                 local cur, need = M.Progress(hero, d)
                 local got, done = s.claimed[d.id], s.achieved[d.id]
-                local color = got and "|cff40ff40" or (done and "|cffffd100" or "|cffa0a0a0")
-                local prog = (done or got) and "달성" or string.format("%s/%s", U.Comma(math.min(cur, need)), U.Comma(need))
-                line.text:SetText(string.format("%s%s|r  %s  (%s)  |cff80c0ff%s|r", color, d.name, d.text, prog, effText(d.eff)))
+                local row = { icon = MEDAL_ICON, grade = got and 4 or nil,
+                    title = (got and "|cff40ff40" or (done and "|cffffd100" or "|cffffffff")) .. d.name .. "|r  |cffa0a0a0" .. d.text .. "|r",
+                    cur = (not (done or got)) and cur or nil, goal = (not (done or got)) and need or nil,
+                    sub = (done or got) and "|cff9be05a달성|r" or nil,
+                    right = "|cff80c0ff" .. effText(d.eff) .. "|r" }
                 if not got then
-                    line.btn:SetText(done and "수령" or "진행 중")
-                    line.btn:SetEnabled(done and true or false)
-                    line.btn:SetScript("OnClick", function() act(M.Claim, hero, d.id) end)
+                    row.btn, row.enabled = done and "수령" or "진행 중", done and true or false
+                    row.fn = function() act(M.Claim, hero, d.id) end
                 elseif s.equipped == d.id then
-                    line.btn:SetText("해제")
-                    line.btn:SetEnabled(true)
-                    line.btn:SetScript("OnClick", function() act(M.Equip, hero, nil) end)
+                    row.btn, row.enabled, row.dot = "해제", true, false
+                    row.fn = function() act(M.Equip, hero, nil) end
                 else
-                    line.btn:SetText("착용")
-                    line.btn:SetEnabled(true)
-                    line.btn:SetScript("OnClick", function() act(M.Equip, hero, d.id) end)
+                    row.btn, row.enabled, row.dot = "착용", true, false
+                    row.fn = function() act(M.Equip, hero, d.id) end
                 end
+                line:Set(row)
+                line.icon.icon:SetDesaturated(not got)
             else
                 line:Hide()
             end

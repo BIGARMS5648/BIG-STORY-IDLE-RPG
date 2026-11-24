@@ -535,11 +535,14 @@ function W.InfoCard(parent, w, h, opts)
 end
 
 -- tab strip (sub menus / grade filters): selected tab gold, others gray
-function W.Tabs(parent, labels, w, h, onSelect)
+function W.Tabs(parent, labels, w, h, onSelect, vertical)
     local tabs = { buttons = {} }
     for i, text in ipairs(labels) do
         local b = W.Button(parent, text, w, h or 24, function() tabs:Select(i); if onSelect then onSelect(i) end end, "gray")
-        if i > 1 then b:SetPoint("LEFT", tabs.buttons[i - 1], "RIGHT", 4, 0) end
+        if i > 1 then
+            if vertical then b:SetPoint("TOP", tabs.buttons[i - 1], "BOTTOM", 0, -6)
+            else b:SetPoint("LEFT", tabs.buttons[i - 1], "RIGHT", 4, 0) end
+        end
         b.dot = W.Dot(b)
         tabs.buttons[i] = b
     end
@@ -585,6 +588,83 @@ function W.Toggle(parent, w, h, onChange)
     end)
     b:SetValue(true)
     return b
+end
+
+-- list row card (missions, requests, shop, medals, dungeons): icon, title, progress bar, rewards, button.
+-- row:Set({ icon, title, sub, cur, goal, rewards = { key = n }, right, btn, enabled, fn, claimed, header, grade })
+function W.RowCard(parent, w, h)
+    local r = CreateFrame("Frame", nil, parent, BACKDROP_TEMPLATE)
+    r:SetSize(w, h)
+    backdrop(r, { 0.1, 0.08, 0.07, 0.95 }, { 0.42, 0.33, 0.22, 1 }, 10)
+    r.icon = W.Icon(r, h - 12)
+    r.icon:SetPoint("LEFT", 6, 0)
+    r.icon:EnableMouse(false)
+    r.title = W.Text(r, 13, W.COLORS.white, "LEFT")
+    r.title:SetPoint("TOPLEFT", r.icon, "TOPRIGHT", 10, -3)
+    r.title:SetWidth(w * 0.46)
+    r.sub = W.Text(r, 11, W.COLORS.gray, "LEFT")
+    r.sub:SetPoint("BOTTOMLEFT", r.icon, "BOTTOMRIGHT", 10, 3)
+    r.sub:SetWidth(w * 0.46)
+    r.bar = W.Bar(r, math.floor(w * 0.3), 9, 0.3, 0.8, 0.2)
+    r.bar:SetPoint("BOTTOMLEFT", r.icon, "BOTTOMRIGHT", 10, 3)
+    r.barText = W.Text(r, 10, W.COLORS.white, "LEFT")
+    r.barText:SetPoint("LEFT", r.bar, "RIGHT", 8, 0)
+    r.rewards = W.Text(r, 12, W.COLORS.white, "RIGHT")
+    r.rewards:SetPoint("RIGHT", -112, 0)
+    r.rewards:SetWidth(w * 0.3)
+    r.btn = W.Button(r, "받기", 92, math.min(28, h - 14))
+    r.btn:SetPoint("RIGHT", -10, 0)
+    r.check = W.Text(r, 13, W.COLORS.green, "CENTER")
+    r.check:SetPoint("CENTER", r.btn, "CENTER")
+    r.dot = W.Dot(r.btn)
+    function r:Set(d)
+        self.data = d
+        if d.icon then self.icon:Show(); self.icon.icon:SetTexture(d.icon) else self.icon:Hide() end
+        W.SetBorderGrade(self.icon, d.grade)
+        self.title:SetText(d.title or "")
+        if d.goal and d.goal > 0 then
+            self.bar:Show(); self.barText:Show(); self.sub:Hide()
+            self.bar:SetValue(math.min(1, (d.cur or 0) / d.goal))
+            self.bar.text:SetText("")
+            self.barText:SetText(string.format("%s / %s", ns.U.Comma(math.min(d.cur or 0, d.goal)), ns.U.Comma(d.goal)))
+        else
+            self.bar:Hide(); self.barText:Hide()
+            self.sub:SetShown(d.sub ~= nil)
+            self.sub:SetText(d.sub or "")
+        end
+        local parts = {}
+        if d.rewards then
+            local keys = {}
+            for k in pairs(d.rewards) do keys[#keys + 1] = k end
+            table.sort(keys)
+            for _, k in ipairs(keys) do parts[#parts + 1] = (W.Money(k, d.rewards[k])) end
+        end
+        if d.right then parts[#parts + 1] = d.right end
+        self.rewards:SetText(table.concat(parts, "  "))
+        if d.claimed then
+            self.btn:Hide()
+            self.check:SetText("완료")
+            self.check:Show()
+            self:SetAlpha(0.6)
+        else
+            self.check:Hide()
+            self:SetAlpha(1)
+            if d.btn and d.btn ~= "" then
+                self.btn:Show()
+                self.btn:SetText(d.btn)
+                self.btn:SetEnabled(d.enabled and true or false)
+                self.btn:SetScript("OnClick", d.fn)
+                self.dot:SetShown(d.enabled and d.dot ~= false or false)
+            else
+                self.btn:Hide()
+            end
+        end
+        if self.SetBackdropBorderColor then
+            if d.header then self:SetBackdropBorderColor(1, 0.8, 0.3, 1); self:SetBackdropColor(0.2, 0.14, 0.06, 0.95)
+            else self:SetBackdropBorderColor(0.42, 0.33, 0.22, 1); self:SetBackdropColor(0.1, 0.08, 0.07, 0.95) end
+        end
+    end
+    return r
 end
 
 -- currency counter capsule (icon + have / need) used under detail cards
