@@ -24,6 +24,9 @@ local THICK = 30          -- platform body thickness (px)
 local TOP = 12            -- surface strip (px)
 local MAX_PLATFORMS = 18
 local MAX_EFFECTS = 14
+local MAX_PROPS = 9        -- per layer (behind the platforms / on the platforms)
+-- scenery prop frame size by kind (Data/MapThemes.lua props)
+local PROP_SIZE = { tree = { 190, 240 }, bush = { 84, 66 }, rock = { 86, 62 }, post = { 56, 112 }, small = { 64, 58 } }
 local WHITE = "Interface\\Buttons\\WHITE8X8"
 
 local function safe(fn, ...) if fn then local ok, r = pcall(fn, ...); if ok then return r end end end
@@ -53,7 +56,29 @@ function BM.Generate(ch, st, mode)
         last = level
         x = x + w + (style == "raid" and rng:Int(2500, 5000) or rng:Int(700, 2600))
     end
-    return { theme = theme, platforms = list, len = MAP_LEN }
+    -- scenery: zone doodads on the ground (behind the platforms) and small ones on the platforms
+    local props = {}
+    local plist = theme.props or {}
+    if #plist > 0 then
+        local gx = rng:Int(300, 1500)
+        while gx < MAP_LEN - 500 do
+            local pick = plist[rng:Int(1, #plist)]
+            props[#props + 1] = { x = gx, level = 0, id = pick[1], kind = pick[2], back = true, face = rng:Int(-6, 6) / 10 }
+            gx = gx + rng:Int(2400, 5600)
+        end
+        local small = {}
+        for _, pr in ipairs(plist) do if pr[2] ~= "tree" then small[#small + 1] = pr end end
+        if #small > 0 then
+            for _, pl in ipairs(list) do
+                for _ = 1, rng:Int(0, 2) do
+                    local pick = small[rng:Int(1, #small)]
+                    props[#props + 1] = { x = rng:Int(pl.x0 + 250, math.max(pl.x0 + 251, pl.x1 - 250)), level = pl.level,
+                        id = pick[1], kind = pick[2], back = false, face = rng:Int(-6, 6) / 10 }
+                end
+            end
+        end
+    end
+    return { theme = theme, platforms = list, props = props, len = MAP_LEN }
 end
 
 ---------------------------------------------------------------------------
@@ -119,10 +144,26 @@ end
 
 function BM.Create(view, groundY, mmPerPixel)
     BM.view, BM.groundY, BM.mm = view, groundY, mmPerPixel
+    -- layers: ground props (1) < platforms (2) < platform props (3) < creatures (BattleView: +5)
+    local function propLayer(level)
+        local f = CreateFrame("Frame", nil, view)
+        f:SetAllPoints()
+        f:SetFrameLevel(view:GetFrameLevel() + level)
+        f.pool = {}
+        for i = 1, MAX_PROPS do
+            local m = CreateFrame("PlayerModel", nil, f)
+            m:SetSize(80, 80)
+            m:Hide()
+            f.pool[i] = m
+        end
+        return f
+    end
+    BM.backProps = propLayer(1)
     local layer = CreateFrame("Frame", nil, view)
     layer:SetAllPoints()
-    layer:SetFrameLevel(view:GetFrameLevel() + 1)
+    layer:SetFrameLevel(view:GetFrameLevel() + 2)
     BM.layer = layer
+    BM.frontProps = propLayer(3)
     -- ground strip
     local g = newPlatform(layer)
     g:SetPoint("BOTTOMLEFT", view, "BOTTOMLEFT", 0, 0)
@@ -156,6 +197,9 @@ function BM.SetStage(ch, st, mode)
     local w = BM.view and BM.view:GetWidth() or 1100
     paint(BM.ground, theme, w, BM.groundY)
     for _, p in ipairs(BM.pool) do p.painted = nil; p:Hide() end
+    for _, L in ipairs({ BM.backProps, BM.frontProps }) do
+        for _, f in ipairs(L.pool) do f:Hide(); f.propId = nil end
+    end
     BM.ResetHero()
 end
 
@@ -190,7 +234,44 @@ function BM.Update(b, heroX, anchorPx)
         end
     end
     for i = used + 1, MAX_PLATFORMS do BM.pool[i]:Hide() end
+    BM.UpdateProps(heroX, anchorPx, viewL, viewR)
     BM.UpdateEffects(b and b.time)
+end
+
+-- scenery props in view (model frames reused; a frame only reloads its model when the prop changes)
+function BM.UpdateProps(heroX, anchorPx, viewL, viewR)
+    local map = BM.map
+    local on = not (ns.db and ns.db.settings and ns.db.settings.showProps == false)
+    local usedB, usedF = 0, 0
+    if on and map and map.props then
+        local k0 = math.floor(viewL / map.len)
+        for k = k0, k0 + 2 do
+            for _, pr in ipairs(map.props) do
+                local x = k * map.len + pr.x
+                local size = PROP_SIZE[pr.kind] or PROP_SIZE.small
+                local half = size[1] * BM.mm / 2
+                if x + half > viewL and x - half < viewR then
+                    local L = pr.back and BM.backProps or BM.frontProps
+                    local n
+                    if pr.back then usedB = usedB + 1; n = usedB else usedF = usedF + 1; n = usedF end
+                    local f = L.pool[n]
+                    if f then
+                        if f.propId ~= pr.id then
+                            f.propId = pr.id
+                            safe(f.SetModel, f, pr.id)
+                            safe(f.SetFacing, f, pr.face or 0)
+                        end
+                        f:ClearAllPoints()
+                        f:SetSize(size[1], size[2])
+                        f:SetPoint("BOTTOM", BM.view, "BOTTOMLEFT", screenX(x, heroX, anchorPx), BM.groundY + LEVEL_PX[pr.level] - 8)
+                        f:Show()
+                    end
+                end
+            end
+        end
+    end
+    for i = usedB + 1, MAX_PROPS do BM.backProps.pool[i]:Hide() end
+    for i = usedF + 1, MAX_PROPS do BM.frontProps.pool[i]:Hide() end
 end
 
 -- pixels above the ground for a creature (platform it stands on), sticky until it walks off

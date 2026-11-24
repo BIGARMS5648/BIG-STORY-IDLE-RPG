@@ -23,6 +23,33 @@ CHAPTER_FOLDER = {
     41: "zulgurub", 42: "burningstepps", 43: "duskwallow", 44: "burningstepps", 45: "silithis", 46: "silithis",
     47: "plaguelandseast",
 }
+# scenery props: the zone doodad folder each chapter borrows (original-era files only: FileDataID < 210000)
+PROP_ZONE = {
+    1: "azeroth/elwynn", 2: "kalimdor/durotar", 3: "kalimdor/winterspring", 4: "azeroth/duskwood", 5: "azeroth/westfall",
+    6: "kalimdor/barrens", 7: "kalimdor/darkshore", 8: "azeroth/duskwood", 9: "azeroth/redridge", 10: "kalimdor/stonetalon",
+    11: "azeroth/duskwood", 12: "kalimdor/ashenvale", 13: "azeroth/swamposorrow", 14: "kalimdor/winterspring",
+    15: "kalimdor/thousandneedles", 16: "azeroth/redridge", 17: "azeroth/stranglethorn", 18: "kalimdor/desolace",
+    19: "azeroth/swamposorrow", 20: "kalimdor/thousandneedles", 21: "kalimdor/tanaris", 22: "kalimdor/feralas",
+    23: "kalimdor/feralas", 24: "kalimdor/ungoro", 25: "azeroth/burningsteppes", 26: "kalimdor/winterspring",
+    27: "kalimdor/felwood", 28: "kalimdor/silithus", 29: "azeroth/westfall", 30: "kalimdor/wailingcaverns",
+    31: "azeroth/duskwood", 32: "kalimdor/thousandneedles", 33: "kalimdor/tanaris", 34: "kalimdor/mauradon",
+    35: "azeroth/swamposorrow", 36: "azeroth/burningsteppes", 37: "azeroth/burningsteppes", 38: "kalimdor/diremaul",
+    39: "azeroth/karazahn", 40: "azeroth/duskwood", 41: "azeroth/zulgurub", 42: "azeroth/burningsteppes",
+    43: "azeroth/burningsteppes", 44: "azeroth/burningsteppes", 45: "kalimdor/silithus", 46: "kalimdor/silithus",
+    47: "azeroth/karazahn",
+}
+# prop kinds by file-name keyword (first match wins); size class decides the frame size in BattleMap
+PROP_KINDS = [
+    ("tree", "tree"), ("palm", "tree"), ("bush", "bush"), ("fern", "bush"), ("plant", "bush"), ("flower", "bush"),
+    ("mushroom", "bush"), ("shroom", "bush"), ("grass", "bush"), ("cactus", "bush"), ("weed", "bush"), ("vine", "bush"),
+    ("rock", "rock"), ("boulder", "rock"), ("stone", "rock"), ("crystal", "rock"),
+    ("lamp", "post"), ("torch", "post"), ("brazier", "post"), ("sign", "post"), ("banner", "post"), ("fence", "post"),
+    ("totem", "post"), ("lantern", "post"),
+    ("crate", "small"), ("barrel", "small"), ("stump", "small"), ("log", "small"), ("skull", "small"), ("bone", "small"),
+    ("campfire", "small"), ("pumpkin", "small"), ("hay", "small"), ("sack", "small"),
+]
+PROP_BAD = re.compile(r"(lowpoly|_lod|bridge|house|building|tower|wall|gate|ship|catapult|ballista|statue|arch|dock|mine|waterfall|"
+                      r"cliff|mountain|large|huge|giant|ruin|pillar|column|portal|tent|hut|zeppelin|ramp|stairs|aquaduct|lavafall|ladder|nest)", re.I)
 SURFACE_KEYS = ["grass", "snow", "sand", "moss", "leaf", "needles", "ferns", "ash", "creep", "mud", "dirt", "crop", "cobble", "brick", "rock"]
 DUNGEON_SURFACE = ["brick", "cobble", "road", "rock", "dirt", "sand"]
 BODY_KEYS = ["rock", "cliff", "stone", "brick", "dirt"]
@@ -166,7 +193,7 @@ CLASS_DEFAULT = {
 
 def main():
     listfile, addon = sys.argv[1], sys.argv[2]
-    tiles, spells = {}, {}
+    tiles, spells, props = {}, {}, {}
     with open(listfile, encoding="utf-8", errors="ignore") as f:
         for line in f:
             line = line.strip()
@@ -177,9 +204,12 @@ def main():
                 fid = int(fid)
             except ValueError:
                 continue
+            low = path.lower()
+            m = re.match(r"world/(azeroth|kalimdor)/([^/]+)/passivedoodads/.+\.m2$", low)
+            if m and fid < 210000:
+                props.setdefault(m.group(1) + "/" + m.group(2), []).append((fid, low.rsplit("/", 1)[1][:-3]))
             if fid >= 200000:
                 continue
-            low = path.lower()
             if low.startswith("tileset/") and low.endswith(".blp"):
                 parts = low.split("/")
                 if len(parts) == 3:
@@ -207,10 +237,23 @@ def main():
         bf, bk, bn = pick(BODY_KEYS, sf)
         sc = COLORS.get(sk or "dirt", COLORS["dirt"])
         bc = COLORS.get(bk or "rock", COLORS["rock"])
+        # props: up to 2 files per kind, 10 in total, by kind priority
+        chosen, per_kind = [], {}
+        for fid, name in sorted(props.get(PROP_ZONE[ch], [])):
+            if PROP_BAD.search(name):
+                continue
+            kind = next((k for kw, k in PROP_KINDS if kw in name), None)
+            if not kind or per_kind.get(kind, 0) >= (3 if kind in ("tree", "bush") else 2):
+                continue
+            per_kind[kind] = per_kind.get(kind, 0) + 1
+            chosen.append((fid, kind, name))
+        prio = {"tree": 0, "bush": 1, "rock": 2, "small": 3, "post": 4}
+        chosen = sorted(chosen, key=lambda c: (prio[c[1]], c[0]))[:10]
+        ptxt = ", ".join('{ %d, "%s" }' % (fid, kind) for fid, kind, _ in chosen)
         out.append('    [%d] = { folder = "%s", style = "%s", surface = %s, body = %s, top = { %.2f, %.2f, %.2f }, '
-                   'bodyColor = { %.2f, %.2f, %.2f } }, -- %s / %s'
+                   'bodyColor = { %.2f, %.2f, %.2f },\n        props = { %s } }, -- %s / %s; props: %s'
                    % (ch, folder, style, sf or "nil", bf or "nil", sc[0], sc[1], sc[2], bc[0] * 0.8, bc[1] * 0.8, bc[2] * 0.8,
-                      sn, bn))
+                      ptxt, sn, bn, " ".join(n for _, _, n in chosen)))
     out.append("}")
     with open(addon + "/Data/MapThemes.lua", "w", encoding="utf-8") as f:
         f.write("\n".join(out) + "\n")

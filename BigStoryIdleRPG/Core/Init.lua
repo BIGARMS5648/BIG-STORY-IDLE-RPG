@@ -65,7 +65,7 @@ local DEFAULT_SETTINGS = {
     debug = false,
     scale = 1.0,
     showDamageText = true,
-    showEffects = true,
+    showEffects = true, showProps = true,
     autoOpen = false,
     arenaChannel = "BigStoryArena",
     arenaUseGuild = true,

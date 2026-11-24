@@ -267,6 +267,12 @@ def main():
             d = ImageDraw.Draw(lay)
             cx, w2 = (x0 + x1) / 2, (x1 - x0)
             hh = y1 - y0
+            if row[5].startswith("file"):
+                # scenery / effect model: a soft blob in place of the doodad
+                d.ellipse([x0 + w2 * 0.1, y0 + hh * 0.1, x1 - w2 * 0.1, y1 - 2], fill=(90, 140, 80, 120), outline=(160, 210, 140, 160))
+                d.text((x0 + 2, y1 - 12), row[5], font=font(9), fill=(255, 255, 255, 150))
+                cv.put(lay)
+                continue
             col = (210, 210, 225, 170)
             d.ellipse([cx - w2 * 0.12, y0 + hh * 0.12, cx + w2 * 0.12, y0 + hh * 0.3], fill=col)
             d.rounded_rectangle([cx - w2 * 0.2, y0 + hh * 0.3, cx + w2 * 0.2, y0 + hh * 0.7], radius=6, fill=col)

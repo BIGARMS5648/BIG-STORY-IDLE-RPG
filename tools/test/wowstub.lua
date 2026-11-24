@@ -102,6 +102,7 @@ function frameMT.GetScale(self) return self._scale or 1 end
 function frameMT.SetDisplayInfo(self, id) self._model = "display " .. tostring(id) end
 function frameMT.SetCreature(self, id) self._model = "npc " .. tostring(id) end
 function frameMT.SetUnit(self, u) self._model = "unit " .. tostring(u) end
+function frameMT.SetModel(self, id) self._model = "file " .. tostring(id) end
 function frameMT.SetCustomRace(self, r, s) self._model = "race " .. tostring(r) end
 function frameMT.GetParent(self) return self._parent end
 function frameMT.SetEnabled(self, v) self._enabled = v and true or false end
