@@ -4,7 +4,7 @@
 ALLOWED="pairs ipairs type tostring tonumber math string table select next unpack pcall error assert
 setmetatable getmetatable rawget rawset print _G coroutine xpcall loadstring bit date time os debug tinsert tremove wipe
 CreateFrame C_Item C_Spell C_Timer C_ChatInfo UnitName UnitSex UnitRace UnitClass GetTime GetItemIcon
-Minimap IsShiftKeyDown GameTooltip DEFAULT_CHAT_FRAME UIErrorsFrame SlashCmdList SendAddonMessage
+Minimap DAMAGE_TEXT_FONT IsShiftKeyDown GameTooltip DEFAULT_CHAT_FRAME UIErrorsFrame SlashCmdList SendAddonMessage
 RegisterAddonMessagePrefix JoinTemporaryChannel JoinChannelByName IsInRaid IsInGuild IsInGroup GetSpellInfo
 GetServerTime GetRealmName GetNumRaidMembers GetNumPartyMembers GetChannelName ChatFrame_RemoveChannel
 BackdropTemplateMixin UISpecialFrames UIParent StaticPopup_Show StaticPopupDialogs RAID_CLASS_COLORS

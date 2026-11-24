@@ -19,7 +19,7 @@ local BM = {}
 ns.BattleMap = BM
 
 local MAP_LEN = 36000
-local LEVEL_PX = { [0] = 0, 150, 250, 250 }
+local LEVEL_PX = { [0] = 0, 125, 215, 215 }
 local THICK = 30          -- platform body thickness (px)
 local TOP = 12            -- surface strip (px)
 local MAX_PLATFORMS = 18

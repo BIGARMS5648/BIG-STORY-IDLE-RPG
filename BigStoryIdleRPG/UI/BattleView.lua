@@ -46,7 +46,7 @@ function BV.Create(parent)
 
     -- hero model (player character wearing addon gear)
     local hero = CreateFrame("DressUpModel", nil, v)
-    hero:SetSize(150, 196)
+    hero:SetSize(136, 178)
     hero:SetPoint("BOTTOM", v, "BOTTOMLEFT", 0, GROUND_Y - 20)
     BV.heroModel = hero
     BV.SetupHeroModel()
@@ -85,10 +85,15 @@ function BV.Create(parent)
     v.bossName:SetPoint("BOTTOM", v.bossBar, "TOP", 0, 2)
 
     -- floating combat text pool
+    -- (on its own layer above the models and spell effects)
+    local tl = CreateFrame("Frame", nil, v)
+    tl:SetAllPoints()
+    tl:SetFrameLevel(v:GetFrameLevel() + 40)
+    v.textLayer = tl
     v.texts = {}
     v.textIndex = 0
-    for i = 1, 40 do
-        local t = W.Text(v, 14, W.COLORS.white, "CENTER")
+    for i = 1, 48 do
+        local t = W.Text(tl, 14, W.COLORS.white, "CENTER")
         t:Hide()
         v.texts[i] = t
     end
@@ -269,20 +274,53 @@ end
 ---------------------------------------------------------------------------
 -- Floating combat text
 ---------------------------------------------------------------------------
-function BV.FloatText(x, y, text, r, g, b, size)
+-- damage numbers use the client's combat text font (K_Damage on the Korean client)
+local function damageFont(t)
+    return DAMAGE_TEXT_FONT or t.baseFont or t:GetFont()
+end
+
+function BV.FloatText(x, y, text, r, g, b, size, opts)
     local v = BV.frame
     if not v or not v:IsVisible() then return end
     v.textIndex = v.textIndex % #v.texts + 1
     local t = v.texts[v.textIndex]
-    local font = t:GetFont()
-    t:SetFont(font, size or 14, "OUTLINE")
+    t.baseFont = t.baseFont or t:GetFont()
+    local big = opts and opts.damage
+    t.font = big and damageFont(t) or t.baseFont
+    t.size = size or 14
+    t.flags = big and "THICKOUTLINE" or "OUTLINE"
+    -- pop: start larger and settle to the final size
+    t.pop = big and 0.09 or nil
+    t:SetFont(t.font, big and math.floor(t.size * 1.35) or t.size, t.flags)
     t:SetText(text)
     t:SetTextColor(r, g, b)
+    if t.SetShadowOffset then t:SetShadowOffset(big and 2 or 1, big and -2 or -1) end
     t:ClearAllPoints()
-    t:SetPoint("CENTER", v, "BOTTOMLEFT", x + math.random(-12, 12), y)
-    t.x, t.y, t.life = x, y, 1.0
+    local jx = big and 0 or math.random(-12, 12)
+    t:SetPoint("CENTER", v, "BOTTOMLEFT", x + jx, y)
+    t.x, t.y = x + jx, y
+    t.life, t.hold = big and 1.1 or 1.0, big and 0.55 or 0
+    t.rise = big and 26 or 40
     t:SetAlpha(1)
     t:Show()
+end
+
+-- 메이플 키우기-style damage: numbers of consecutive hits on one target stack upward
+function BV.DamageText(b, tgt, amount, crit)
+    local now = GetTime and GetTime() or 0
+    local st = tgt.dmgStack
+    if not st or now - st.t > 0.45 then st = { t = now, n = 0 }; tgt.dmgStack = st
+    else st.n = (st.n + 1) % 7; st.t = now end
+    local x = screenX(tgt, b)
+    local base = GROUND_Y + (tgt.isHero and 150 or (tgt.isBoss and 190 or 118)) + (tgt.mapY or 0)
+    local y = base + st.n * 24
+    if tgt.isHero then
+        BV.FloatText(x, y, U.FormatNumber(amount), 0.75, 0.35, 1, 18, { damage = true })
+    elseif crit then
+        BV.FloatText(x, y, U.FormatNumber(amount), 1, 0.3, 0.38, 24, { damage = true })
+    else
+        BV.FloatText(x, y, U.FormatNumber(amount), 1, 0.72, 0.18, 21, { damage = true })
+    end
 end
 
 function screenX(c, b)
@@ -299,15 +337,7 @@ function BV.HookGame()
     local H = ns.Game.uiHooks
     H.onDamage = function(b, att, tgt, amount, crit, info)
         if not (ns.db.settings.showDamageText and BV.frame and BV.frame:IsVisible()) then return end
-        local x = screenX(tgt, b)
-        local y = GROUND_Y + (tgt.isHero and 150 or 120) + (tgt.mapY or 0)
-        if tgt.isHero then
-            BV.FloatText(x, y, "-" .. U.FormatNumber(amount), 1, 0.25, 0.25, 13)
-        elseif crit then
-            BV.FloatText(x, y + 10, U.FormatNumber(amount), 1, 0.55, 0.1, 18)
-        else
-            BV.FloatText(x, y, U.FormatNumber(amount), 1, 0.95, 0.5, 14)
-        end
+        BV.DamageText(b, tgt, amount, crit)
         if tgt.viewModel and not tgt.isBoss then safe(tgt.viewModel.SetAnimation, tgt.viewModel, ANIM.hit) end
     end
     H.onMiss = function(b, att, tgt)
@@ -458,10 +488,15 @@ function BV.OnUpdate(elapsed)
     for _, t in ipairs(v.texts) do
         if t:IsShown() then
             t.life = t.life - elapsed
-            t.y = t.y + elapsed * 40
+            if t.pop then
+                t.pop = t.pop - elapsed
+                if t.pop <= 0 then t.pop = nil; t:SetFont(t.font, t.size, t.flags) end
+            end
+            t.hold = (t.hold or 0) - elapsed
+            if t.hold <= 0 then t.y = t.y + elapsed * (t.rise or 40) end
             t:ClearAllPoints()
             t:SetPoint("CENTER", v, "BOTTOMLEFT", t.x, t.y)
-            t:SetAlpha(math.max(0, math.min(1, t.life * 1.5)))
+            t:SetAlpha(math.max(0, math.min(1, t.life * 2.2)))
             if t.life <= 0 then t:Hide() end
         end
     end
