@@ -1,0 +1,2588 @@
+{
+ "meta": {
+  "topic": "Arena (아레나), World Arena (월드 아레나), Colosseum (콜로세움), friendly duel (친선전), guild contests (길드 대항전 / 길드 보스 대전)",
+  "game": "메이플 키우기 (KR) / MapleStory : Idle RPG (global); both run the same patch schedule since the Nov 2025 launch",
+  "compiled": "2026-11-24",
+  "conventions": "Every value has 'src' = list of SOURCES keys. 'conf': official | community | inference. Percent stats are per-mille internally (1000 = 100%), per NXKR_PN_0702.",
+  "companion_files": "research-income.md/json (spec dir) already holds the arena shop limits and tier coin tables; this file repeats the tier table for completeness."
+ },
+ "sources": {
+  "NXKR_PN_1114": {
+   "region": "KR",
+   "official": true,
+   "date": "2025-11-14",
+   "title": "11/14(금) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3224718",
+   "api": "https://forum.nexon.com/api/v1/thread/3224718?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3224718.json (+ .txt)"
+  },
+  "NXKR_PN_1127": {
+   "region": "KR",
+   "official": true,
+   "date": "2025-11-27",
+   "title": "11/27(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3274197",
+   "api": "https://forum.nexon.com/api/v1/thread/3274197?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3274197.json (+ .txt)"
+  },
+  "NXKR_PN_1218": {
+   "region": "KR",
+   "official": true,
+   "date": "2025-12-18",
+   "title": "(추가) 12/18(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3309519",
+   "api": "https://forum.nexon.com/api/v1/thread/3309519?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3309519.json (+ .txt)"
+  },
+  "NXKR_PN_0129": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-01-29",
+   "title": "(추가) 1/29(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3360461",
+   "api": "https://forum.nexon.com/api/v1/thread/3360461?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3360461.json (+ .txt)"
+  },
+  "NXKR_PN_0319": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-03-19",
+   "title": "(추가) 3/19(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3403618",
+   "api": "https://forum.nexon.com/api/v1/thread/3403618?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3403618.json (+ .txt)"
+  },
+  "NXKR_PN_0409": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-04-09",
+   "title": "4/9(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3419376",
+   "api": "https://forum.nexon.com/api/v1/thread/3419376?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3419376.json (+ .txt)"
+  },
+  "NXKR_PN_0430": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-04-30",
+   "title": "(추가) 4/30(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3435722",
+   "api": "https://forum.nexon.com/api/v1/thread/3435722?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3435722.json (+ .txt)"
+  },
+  "NXKR_PN_0521": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-05-21",
+   "title": "5/21(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3448688",
+   "api": "https://forum.nexon.com/api/v1/thread/3448688?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3448688.json (+ .txt)"
+  },
+  "NXKR_PN_0611": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-06-11",
+   "title": "(추가) 6/11(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3473998",
+   "api": "https://forum.nexon.com/api/v1/thread/3473998?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3473998.json (+ .txt)"
+  },
+  "NXKR_PN_0702": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-07-02",
+   "title": "(추가) 7/2(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3490212",
+   "api": "https://forum.nexon.com/api/v1/thread/3490212?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3490212.json (+ .txt)"
+  },
+  "NXKR_PN_0723": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-07-23",
+   "title": "7/23(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3506485",
+   "api": "https://forum.nexon.com/api/v1/thread/3506485?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3506485.json (+ .txt)"
+  },
+  "NXKR_PN_0813": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-08-13",
+   "title": "(추가) 8/13(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3521991",
+   "api": "https://forum.nexon.com/api/v1/thread/3521991?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3521991.json (+ .txt)"
+  },
+  "NXKR_PN_0903": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-09-03",
+   "title": "9/3(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3535860",
+   "api": "https://forum.nexon.com/api/v1/thread/3535860?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3535860.json (+ .txt)"
+  },
+  "NXKR_PN_0922": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-09-22",
+   "title": "9/22(화) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3550026",
+   "api": "https://forum.nexon.com/api/v1/thread/3550026?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3550026.json (+ .txt)"
+  },
+  "NXKR_PN_1015": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-10-15",
+   "title": "10/15(목) 패치노트",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3563013",
+   "api": "https://forum.nexon.com/api/v1/thread/3563013?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3563013.json (+ .txt)"
+  },
+  "NXKR_PV_0120": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-01-20",
+   "title": "1월 29일(목) 업데이트 미리보기",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3352910",
+   "api": "https://forum.nexon.com/api/v1/thread/3352910?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3352910.json (+ .txt)"
+  },
+  "NXKR_PV_0625": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-06-25",
+   "title": "7월 2일(목) 업데이트 미리보기",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3484302",
+   "api": "https://forum.nexon.com/api/v1/thread/3484302?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3484302.json (+ .txt)"
+  },
+  "NXKR_PV_0827": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-08-27",
+   "title": "(추가) 9월 3일(목) 업데이트 미리보기",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3533653",
+   "api": "https://forum.nexon.com/api/v1/thread/3533653?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3533653.json (+ .txt)"
+  },
+  "NXKR_NT_1112": {
+   "region": "KR",
+   "official": true,
+   "date": "2025-11-12",
+   "title": "11/12(수) 무중단 패치 안내",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3221083",
+   "api": "https://forum.nexon.com/api/v1/thread/3221083?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3221083.json (+ .txt)"
+  },
+  "NXKR_NT_1127B": {
+   "region": "KR",
+   "official": true,
+   "date": "2025-11-27",
+   "title": "11/27(목) 무중단 패치 안내 (14:30 ~ 15:41)",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3275274",
+   "api": "https://forum.nexon.com/api/v1/thread/3275274?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3275274.json (+ .txt)"
+  },
+  "NXKR_NT_0430": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-04-30",
+   "title": "아레나 기록 초기화 오류 및 사과 보상 안내",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3436063",
+   "api": "https://forum.nexon.com/api/v1/thread/3436063?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3436063.json (+ .txt)"
+  },
+  "NXKR_NT_0622": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-06-22",
+   "title": "아레나/콜로세움 수치 적용 오류 및 사과 보상 안내",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3480968",
+   "api": "https://forum.nexon.com/api/v1/thread/3480968?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3480968.json (+ .txt)"
+  },
+  "NXKR_NT_0623": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-06-23",
+   "title": "아레나/콜로세움 수치 적용 오류 관련 개별 보상 지급 안내",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3481663",
+   "api": "https://forum.nexon.com/api/v1/thread/3481663?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3481663.json (+ .txt)"
+  },
+  "NXKR_NT_0625": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-06-25",
+   "title": "아레나/콜로세움 수치 적용 오류 수정 및 계산식 변경 안내",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3483504",
+   "api": "https://forum.nexon.com/api/v1/thread/3483504?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3483504.json (+ .txt)"
+  },
+  "NXKR_NT_0702B": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-07-02",
+   "title": "7/2(목) 무중단 패치 안내",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3490934",
+   "api": "https://forum.nexon.com/api/v1/thread/3490934?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3490934.json (+ .txt)"
+  },
+  "NXKR_NT_0804": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-08-04",
+   "title": "월드 아레나 비정상 플레이 조치 안내",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3516303",
+   "api": "https://forum.nexon.com/api/v1/thread/3516303?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3516303.json (+ .txt)"
+  },
+  "NXKR_NT_0916": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-09-16",
+   "title": "9/22(화) 서버 통합 규모 조정 및 보상 개선 안내",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3546003",
+   "api": "https://forum.nexon.com/api/v1/thread/3546003?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3546003.json (+ .txt)"
+  },
+  "NXKR_FAQ_RANK": {
+   "region": "KR",
+   "official": true,
+   "date": "2025-11-06",
+   "title": "랭킹 정산 보상이 도착하지 않았어요",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6730&thread=3210575",
+   "api": "https://forum.nexon.com/api/v1/thread/3210575?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3210575.json (+ .txt)"
+  },
+  "NXKR_FAQ_SPEED": {
+   "region": "KR",
+   "official": true,
+   "date": "2026-11-03",
+   "title": "전투 시 조금 더 빠르게 플레이하고 싶어요.",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6730&thread=3574941",
+   "api": "https://forum.nexon.com/api/v1/thread/3574941?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr/t3574941.json (+ .txt)"
+  },
+  "NXKR_FREE_1113": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-11-13",
+   "title": "아레나 점수는 언제 개편할까",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=7612&thread=3581109",
+   "api": "https://forum.nexon.com/api/v1/thread/3581109?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr-free/t3581109.json",
+   "note": "player post on the official KR free board"
+  },
+  "NXKR_FREE_1005": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-10-05",
+   "title": "아레나 (disconnect while entering = loss)",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=7612&thread=3558555",
+   "api": "https://forum.nexon.com/api/v1/thread/3558555?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr-free/t3558555.json",
+   "note": "player post on the official KR free board"
+  },
+  "NXKR_FREE_0806": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-08-06",
+   "title": "콜로세움 매칭답변",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=7612&thread=3518120",
+   "api": "https://forum.nexon.com/api/v1/thread/3518120?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr-free/t3518120.json",
+   "note": "player post on the official KR free board"
+  },
+  "NXKR_FREE_0803": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-08-03",
+   "title": "콜로세움 기준",
+   "url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=7612&thread=3515753",
+   "api": "https://forum.nexon.com/api/v1/thread/3515753?alias=maplestoryidle-kr",
+   "raw": "web/research/arena/nexon-kr-free/t3515753.json",
+   "note": "player post on the official KR free board"
+  },
+  "NXGL_PN_0922": {
+   "region": "global",
+   "official": true,
+   "date": "2026-09-22",
+   "title": "September 22 Patch Notes",
+   "url": "https://forum.nexon.com/maplestoryidle/board_view?board=6675&thread=3550175",
+   "api": "https://forum.nexon.com/api/v1/thread/3550175?alias=maplestoryidle",
+   "raw": "web/research/arena/nexon-global/t3550175.json (+ .txt)"
+  },
+  "NXGL_PN_0430": {
+   "region": "global",
+   "official": true,
+   "date": "2026-04-30",
+   "title": "4/30 (Thu) Patch Note",
+   "url": "https://forum.nexon.com/maplestoryidle/board_view?board=6675&thread=3435578",
+   "api": "https://forum.nexon.com/api/v1/thread/3435578?alias=maplestoryidle",
+   "raw": "web/research/arena/nexon-global/t3435578.json (+ .txt)"
+  },
+  "NXGL_PN_0129": {
+   "region": "global",
+   "official": true,
+   "date": "2026-01-29",
+   "title": "January 29 Patch Notes",
+   "url": "https://forum.nexon.com/maplestoryidle/board_view?board=6675&thread=3360937",
+   "api": "https://forum.nexon.com/api/v1/thread/3360937?alias=maplestoryidle",
+   "raw": "web/research/arena/nexon-global/t3360937.json (+ .txt)"
+  },
+  "NXGL_NT_0430": {
+   "region": "global",
+   "official": true,
+   "date": "2026-04-30",
+   "title": "[Notice] Arena Record Reset Error and Apology Compensation",
+   "url": "https://forum.nexon.com/maplestoryidle/board_view?board=6653&thread=3435648",
+   "api": "https://forum.nexon.com/api/v1/thread/3435648?alias=maplestoryidle",
+   "raw": "web/research/arena/nexon-global/t3435648.json (+ .txt)"
+  },
+  "NXGL_NT_1110": {
+   "region": "global",
+   "official": true,
+   "date": "2025-11-10",
+   "title": "[Notice] Bera & Luna Server Compensation for World Boss and Arena Settlement Error",
+   "url": "https://forum.nexon.com/maplestoryidle/board_view?board=6653&thread=3218711",
+   "api": "https://forum.nexon.com/api/v1/thread/3218711?alias=maplestoryidle",
+   "raw": "web/research/arena/nexon-global/t3218711.json (+ .txt)"
+  },
+  "NXGL_FAQ": {
+   "region": "global",
+   "official": true,
+   "date": "2026-07-23 (FAQ version)",
+   "title": "FAQ",
+   "url": "https://forum.nexon.com/maplestoryidle/board_view?board=6679&thread=3209008",
+   "api": "https://forum.nexon.com/api/v1/thread/3209008?alias=maplestoryidle",
+   "raw": "web/research/arena/nexon-global/t3209008.json (+ .txt)"
+  },
+  "WIKI_ARENA": {
+   "region": "global",
+   "official": false,
+   "date": "rev 2026-07-02",
+   "title": "Arena",
+   "url": "https://idle.maplestorywiki.net/w/Arena",
+   "raw": "web/idlewiki/wikitext.json ['Arena']; web/research/arena/wiki-arena-colosseum-live.json"
+  },
+  "WIKI_COLO": {
+   "region": "global",
+   "official": false,
+   "date": "rev 2026-08-11",
+   "title": "Colosseum",
+   "url": "https://idle.maplestorywiki.net/w/Colosseum",
+   "raw": "web/idlewiki/wikitext.json ['Colosseum']"
+  },
+  "WIKI_GUILDWAR": {
+   "region": "global",
+   "official": false,
+   "date": "wiki dump 2026-11-24",
+   "title": "Guild War",
+   "url": "https://idle.maplestorywiki.net/w/Guild_War",
+   "raw": "web/idlewiki/wikitext.json ['Guild War']"
+  },
+  "WIKI_BOOSTERS": {
+   "region": "global",
+   "official": false,
+   "date": "wiki dump 2026-11-24",
+   "title": "Boosters",
+   "url": "https://idle.maplestorywiki.net/w/Boosters",
+   "raw": "web/idlewiki/wikitext.json ['Boosters']"
+  },
+  "WIKI_ARTIFACTS": {
+   "region": "global",
+   "official": false,
+   "date": "wiki dump 2026-11-24",
+   "title": "Artifacts",
+   "url": "https://idle.maplestorywiki.net/w/Artifacts",
+   "raw": "web/idlewiki/wikitext.json ['Artifacts']"
+  },
+  "WIKI_MEDALS": {
+   "region": "global",
+   "official": false,
+   "date": "wiki dump 2026-11-24",
+   "title": "Medals",
+   "url": "https://idle.maplestorywiki.net/w/Medals",
+   "raw": "web/idlewiki/wikitext.json ['Medals']"
+  },
+  "WIKI_UNLOCKS": {
+   "region": "global",
+   "official": false,
+   "date": "wiki dump 2026-11-24",
+   "title": "Chapter Unlocks / Guide Quest / Systems",
+   "url": "https://idle.maplestorywiki.net/w/Guide_Quest",
+   "raw": "web/idlewiki/wikitext.json ['Guide Quest','Chapter Unlocks','Systems']"
+  },
+  "WIKI_CHARSTATS": {
+   "region": "global",
+   "official": false,
+   "date": "wiki dump 2026-11-24",
+   "title": "Character Stats",
+   "url": "https://idle.maplestorywiki.net/w/Character_Stats",
+   "raw": "web/idlewiki/wikitext.json ['Character Stats']"
+  },
+  "MSI_ARENA": {
+   "region": "global",
+   "official": false,
+   "date": "checked 2026-07-02",
+   "title": "Arena and Colosseum Guide",
+   "url": "https://maplestoryidle.info/guides/arena-colosseum/",
+   "raw": "web/research/arena/info-arena-colosseum.html"
+  },
+  "MSI_WA": {
+   "region": "global",
+   "official": false,
+   "date": "2026-07-02",
+   "title": "World Arena Info",
+   "url": "https://maplestoryidle.info/guides/world-arena-info/",
+   "raw": "web/research/arena/info-world-arena-info.html"
+  },
+  "MSI_COMP": {
+   "region": "global",
+   "official": false,
+   "date": "n/a",
+   "title": "Companion Setup and Priority Guide",
+   "url": "https://maplestoryidle.info/guides/companion-setup-priority/",
+   "raw": "web/research/arena/info-companion-setup-priority.html"
+  },
+  "IDX_DATA": {
+   "region": "KR client data (clientVersion 1.18.0)",
+   "official": false,
+   "date": "n/a",
+   "title": "mapleidleindex calculator data (game-table extract)",
+   "url": "https://mapleidleindex.com/calculator/data/loadout-peak-data.js ; https://mapleidleindex.com/calcv4/artifact-preset-data.js ; https://mapleidleindex.com/calculator/data/content-simulator-data.js",
+   "raw": "web/js/calculator/data/*.js, web/js/calcv4/artifact-preset-data.js"
+  },
+  "IV114": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-02",
+   "title": "일일·주간 숙제 체크 리스트",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/114",
+   "raw": "web/research/arena/inven/inven-114.html"
+  },
+  "IV136": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-02",
+   "title": "스타포스 주문서는 아레나에서 - 매일 돌아야 이득",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/136",
+   "raw": "web/research/arena/inven/inven-136.html"
+  },
+  "IV161": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-03",
+   "title": "아레나 부스트 (~9/13)",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/161",
+   "raw": "web/research/arena/inven/inven-161.html"
+  },
+  "IV257": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-03",
+   "title": "아레나 코인 10만개 의상",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/257",
+   "raw": "web/research/arena/inven/inven-257.html"
+  },
+  "IV285": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-04",
+   "title": "아레나 코인 사용처와 구매 우선순위",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/285",
+   "raw": "web/research/arena/inven/inven-285.html"
+  },
+  "IV314": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-07",
+   "title": "무과금 유물 획득량/루트 정리",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/314",
+   "raw": "web/research/arena/inven/inven-314.html"
+  },
+  "IV398": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-10",
+   "title": "콘텐츠/장비 슬롯 해금 순서 정리",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/398",
+   "raw": "web/research/arena/inven/inven-398.html"
+  },
+  "IV586": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-18",
+   "title": "여정의 기운은 풀매수 해야할까?",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/586",
+   "raw": "web/research/arena/inven/inven-586.html"
+  },
+  "IV610": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-22",
+   "title": "[진행중] 아레나 보상 3배 이벤트 (~10/5)",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/610",
+   "raw": "web/research/arena/inven/inven-610.html"
+  },
+  "IV644": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-10-02",
+   "title": "역대 콜로 올빙고유저의 콜로세움팁",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/644",
+   "raw": "web/research/arena/inven/inven-644.html"
+  },
+  "IV647": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-10-03",
+   "title": "각 콘텐츠별 유물 세팅 추천/정리",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/647",
+   "raw": "web/research/arena/inven/inven-647.html"
+  },
+  "IV655": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-10-06",
+   "title": "콜로세움 스킬 뭐 막음? 직업별 스킬 금지 후보 정리",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/655",
+   "raw": "web/research/arena/inven/inven-655.html"
+  },
+  "IV723": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-10-23",
+   "title": "상대 동료 때문에 진다면? 아레나 적 동료별 대응법",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/723",
+   "raw": "web/research/arena/inven/inven-723.html"
+  },
+  "IV809": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-11-20",
+   "title": "초보자를 위한 PvP 세팅 가이드",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/809",
+   "raw": "web/research/arena/inven/inven-809.html"
+  },
+  "DC35341": {
+   "region": "KR",
+   "official": false,
+   "date": "2025-11-17",
+   "title": "아레나는 지더라도 입장권 풀 매수해서 때려라.",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=35341",
+   "raw": "web/research/arena/dc/dc-35341.html"
+  },
+  "DC40865": {
+   "region": "KR",
+   "official": false,
+   "date": "2025-11-19",
+   "title": "아레나 초 미세팁(시간절약)",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=40865",
+   "raw": "web/research/arena/dc/dc-40865.html"
+  },
+  "DC90543": {
+   "region": "KR",
+   "official": false,
+   "date": "2025-12-11",
+   "title": "아레나점수 높은애들은 초기화되면 몇점되냐?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=90543",
+   "raw": "web/research/arena/dc/dc-90543.html"
+  },
+  "DC142351": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-01-08",
+   "title": "아레나 티켓은 따로 사는 방법 없음?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=142351",
+   "raw": "web/research/arena/dc/dc-142351.html"
+  },
+  "DC146987": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-01-12",
+   "title": "아레나 2등 찍먹 성공",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=146987",
+   "raw": "web/research/arena/dc/dc-146987.html"
+  },
+  "DC148153": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-01-12",
+   "title": "아레나 승급보상 2번 다 날아갔는데 이거 어떡함?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=148153",
+   "raw": "web/research/arena/dc/dc-148153.html"
+  },
+  "DC150494": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-01-14",
+   "title": "무소과금 아레나 팁) 공격할 때 빼곤 프리셋 비워두셈",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=150494",
+   "raw": "web/research/arena/dc/dc-150494.html"
+  },
+  "DC151167": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-01-14",
+   "title": "아레나 막히면 져셔 티어내리고 다시 올려서 코인 먹고 가능하네",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=151167",
+   "raw": "web/research/arena/dc/dc-151167.html"
+  },
+  "DC199808": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-01-30",
+   "title": "콜로세움 보상 지리네",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=199808",
+   "raw": "web/research/arena/dc/dc-199808.html"
+  },
+  "DC200278": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-01-30",
+   "title": "콜로세움 점수 시스템",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=200278",
+   "raw": "web/research/arena/dc/dc-200278.html"
+  },
+  "DC210296": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-02-03",
+   "title": "아레나 입장권 최대치 표기는 왜 안해둠",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=210296",
+   "raw": "web/research/arena/dc/dc-210296.html"
+  },
+  "DC230233": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-02-14",
+   "title": "콜로세움 보상 80개",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=230233",
+   "raw": "web/research/arena/dc/dc-230233.html"
+  },
+  "DC262988": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-03-10",
+   "title": "다들 아레나 티켓 몇번 리필해서 씀?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=262988",
+   "raw": "web/research/arena/dc/dc-262988.html"
+  },
+  "DC276285": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-03-24",
+   "title": "콜로세움 빙고 보상 왜 너프당함?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=276285",
+   "raw": "web/research/arena/dc/dc-276285.html"
+  },
+  "DC276959": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-03-25",
+   "title": "월로가 콜로세움에서 진짜 좋음?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=276959",
+   "raw": "web/research/arena/dc/dc-276959.html"
+  },
+  "DC286679": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-04-07",
+   "title": "콜로 회피셋 상대로 레동 비숍 들고가니까 이기네..",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=286679",
+   "raw": "web/research/arena/dc/dc-286679.html"
+  },
+  "DC295702": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-04-15",
+   "title": "아레나 6000은 될거같은데",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=295702",
+   "raw": "web/research/arena/dc/dc-295702.html"
+  },
+  "DC327440": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-05-11",
+   "title": "아레나 방어할때 궁금한거있어",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=327440",
+   "raw": "web/research/arena/dc/dc-327440.html"
+  },
+  "DC331367": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-05-18",
+   "title": "아레나 점수 lp 질문점",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=331367",
+   "raw": "web/research/arena/dc/dc-331367.html"
+  },
+  "DC351074": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-06-14",
+   "title": "아레나 투력차이 심하면 점수 덜 줌?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=351074",
+   "raw": "web/research/arena/dc/dc-351074.html"
+  },
+  "DC373144": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-07-04",
+   "title": "밑에 아레나 코인에 대해서 궁금쓰",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=373144",
+   "raw": "web/research/arena/dc/dc-373144.html"
+  },
+  "DC375080": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-07-07",
+   "title": "월드 아레나 티켓 제한 없구나",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=375080",
+   "raw": "web/research/arena/dc/dc-375080.html"
+  },
+  "DC374766": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-07-07",
+   "title": "월드 아레나 티켓 레다로 무현 구매 가능한거",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=374766",
+   "raw": "web/research/arena/dc/dc-374766.html"
+  },
+  "DC402379": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-08-28",
+   "title": "아레나 점수 기준이 뭐에여?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=402379",
+   "raw": "web/research/arena/dc/dc-402379.html"
+  },
+  "DC419871": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-29",
+   "title": "콜로 올빙고 보상 새삼 좆구리네",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=419871",
+   "raw": "web/research/arena/dc/dc-419871.html"
+  },
+  "DC111613": {
+   "region": "KR",
+   "official": false,
+   "date": "2025-12-22",
+   "title": "아레나 점수 주는거 왜 각자 다 다른거임?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=111613",
+   "raw": "web/research/arena/dc/dc-111613.html"
+  },
+  "DC328970": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-05-14",
+   "title": "아레나 티켓 20장까지 누적되는거임?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=328970",
+   "raw": "web/research/arena/dc/dc-328970.html"
+  },
+  "IV263": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-09-03",
+   "title": "중요) 메키 유저라면 월요일날 까먹으면 안되는 컨텐츠",
+   "url": "https://www.inven.co.kr/board/mapleidle/6554/263",
+   "raw": "web/research/arena/inven/inven-263.html"
+  },
+  "DC421871": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-10-04",
+   "title": "매일 레다주고 아레나 티켓 삼?",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=421871",
+   "raw": "web/research/arena/dc/dc-421871.html"
+  },
+  "DC425800": {
+   "region": "KR",
+   "official": false,
+   "date": "2026-10-13",
+   "title": "콜로세움 점수정리",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=425800",
+   "raw": "web/research/arena/dc/dc-425800.html"
+  }
+ },
+ "arena": {
+  "unlock": [
+   {
+    "value": "Guide Quest 247",
+    "conf": "official-event-text",
+    "src": [
+     "IV610",
+     "IV161",
+     "IV398",
+     "WIKI_UNLOCKS"
+    ]
+   },
+   {
+    "value": "Chapter 8-3 (older global wiki 'Chapter Unlocks' row)",
+    "conf": "community",
+    "src": [
+     "WIKI_UNLOCKS"
+    ]
+   }
+  ],
+  "format": {
+   "mode": "Asynchronous 1v1 vs another player's character. Attacker plays live (manual or auto); the defender is the AI-controlled snapshot of the opponent's arena-defense preset.",
+   "items": [
+    {
+     "rule": "Attack and defense each use their own preset number (11/27/2025); replaced on 12/18 by per-content 'dungeon presets' (skill, companion, ability, artifact, equipment presets per content).",
+     "conf": "official",
+     "src": [
+      "NXKR_PN_1127",
+      "NXKR_PN_1218"
+     ]
+    },
+    {
+     "rule": "Defender = stored snapshot. Players report defense fights using an older setup than their current one.",
+     "conf": "community",
+     "src": [
+      "DC327440"
+     ]
+    },
+    {
+     "rule": "The PvP damage-reduction term uses stats taken before the fight; buffs/active skills/on-start effects in the fight do not change it.",
+     "conf": "official",
+     "src": [
+      "NXKR_NT_0625",
+      "NXKR_PN_0702"
+     ]
+    },
+    {
+     "rule": "Attacker can play manually (move/jump, skill timing) or Full Auto; replays are recorded and shareable.",
+     "conf": "community+official",
+     "src": [
+      "MSI_ARENA",
+      "IV723",
+      "NXKR_PN_1218"
+     ]
+    },
+    {
+     "rule": "Quick battle (빠른 전투): available when attacker CP >= 5x defender CP. Uses the same auto-battle logic on the current attack/defense presets; not a guaranteed win. Same ticket use, rewards, ranking, record and replay.",
+     "conf": "official",
+     "src": [
+      "NXKR_PN_0903"
+     ]
+    },
+    {
+     "rule": "Battle speed x1 / x1.5 / x2 (remembered between fights).",
+     "conf": "official",
+     "src": [
+      "NXKR_PN_0903",
+      "NXKR_FAQ_SPEED"
+     ]
+    },
+    {
+     "rule": "Leaving right after start counts as a normal loss. Disconnecting while entering also counts as a loss.",
+     "conf": "community",
+     "src": [
+      "DC40865",
+      "NXKR_FREE_1005"
+     ]
+    },
+    {
+     "rule": "Win = reduce the opponent to 0 HP. Running out of time is a loss for the attacker (reported for Colosseum).",
+     "conf": "community",
+     "src": [
+      "DC286679"
+     ]
+    },
+    {
+     "rule": "Time limit: NOT FOUND. A community model assumed about 15 s per Arena fight and 30 s per Colosseum fight (typical length, not a cap). After 4/30, Arena fights at high CP got longer; at low CP after unlock, shorter.",
+     "conf": "community",
+     "src": [
+      "DC276959",
+      "NXKR_PN_0430"
+     ]
+    },
+    {
+     "rule": "Companions fight: the main companion is summoned in battle (auto-summon On/Off is stored per dungeon preset since 7/2). Defender companions act too (Dark Knight basic-attack immunity + heal, Hero shield/stun).",
+     "conf": "official+community",
+     "src": [
+      "NXKR_PN_0702",
+      "IV723",
+      "IV809"
+     ]
+    },
+    {
+     "rule": "Potions work but their effect is reduced in Arena/Colosseum.",
+     "conf": "community wiki",
+     "src": [
+      "WIKI_ARENA",
+      "WIKI_COLO"
+     ]
+    },
+    {
+     "rule": "Boss Monster Damage and Normal Monster Damage do not apply (players are neither). From 10/15 the PvP CP formula also excludes them and basic-attack target count.",
+     "conf": "official+community",
+     "src": [
+      "NXKR_PN_1015",
+      "WIKI_CHARSTATS",
+      "MSI_COMP",
+      "IV809"
+     ]
+    },
+    {
+     "rule": "Accuracy vs Evasion decides MISS; Critical Resistance lowers the attacker's crit rate; Debuff Tolerance matters. PvP CP weights Accuracy, Evasion, Damage Taken Decrease, Crit Resist, Debuff Tolerance higher than PvE CP (10/15).",
+     "conf": "official+community",
+     "src": [
+      "NXKR_PN_1015",
+      "IV809"
+     ]
+    },
+    {
+     "rule": "Arena-only effects exist: artifact Soul Pouch (영혼의 주머니) '[Arena] Final Damage +20/24/28/32/36/40%' (also World Arena). Two passive skills (ids 808360, 808470, names unknown) give Final Damage +20% outside Arena and +40% in Arena.",
+     "conf": "community wiki + client data",
+     "src": [
+      "WIKI_ARTIFACTS",
+      "IDX_DATA",
+      "NXKR_PN_0702"
+     ]
+    },
+    {
+     "rule": "Friendly duel (결투장 친선전): from a player's profile, unranked, no ticket; can be refused in settings; records/replays kept since 12/18.",
+     "conf": "official",
+     "src": [
+      "NXKR_PN_1127",
+      "NXKR_PN_1218"
+     ]
+    }
+   ]
+  },
+  "damage_formula": {
+   "conf": "official",
+   "src": [
+    "NXKR_NT_0625",
+    "NXKR_PN_0702"
+   ],
+   "applies_from": "2026-07-02 (Arena, Colosseum, World Arena)",
+   "per_mille_note": "All % stats are per-mille internally: multiplier = (1000 + stat)/1000; e.g. Damage Taken Decrease 30% -> 300 -> (1000+300) in the (100% + DTD%) term.",
+   "who": "In the base-damage part, offensive stats come from the attacker and defensive stats from the target. In the PvP reduction divisor, BOTH offensive and defensive stats are the TARGET's, taken before the fight.",
+   "formula_kr_verbatim": [
+    "피해 = √( 공격력",
+    " × 5,000 ÷ ( 6,000 + 방어력 × (100% − 방어 관통력%) )",
+    " × 받는 피해 증가% × (100% − 받는 피해 감소%)",
+    " × (100% − 던전용 받는 피해 감소%)",
+    " × 데미지% × 데미지 증폭%",
+    " × (기본 공격 데미지% 또는 스킬 데미지%) × 스탯 비례 데미지%",
+    " × 마스터리 피해량 증가%",
+    " × 던전용 피해량 증가%",
+    " × 크리티컬 발생 시 크리티컬 데미지% × (최소 데미지 배율% ~ 최대 데미지 배율%)",
+    " × 상태이상의 적에게 상태이상 데미지% × 최종 데미지% )",
+    " × 스킬 계수%",
+    " × 결투장 보정으로 레벨에 의한 피해량 감소% x 2",
+    " × [콘텐츠 전용 상수 : 아레나 7,206,000,000 / 콜로세움 4,323,600,000 / 월드 아레나 5,764,800,000]",
+    " ÷ ((( 공격력 × 방어 관통력% × 데미지% × 데미지 증폭%",
+    "   × ( [기본 공격 데미지 + 스킬 데미지] ÷ 2 )%",
+    "   × 스탯 비례 데미지% × ( 크리티컬 데미지 × 크리티컬 확률의 비중(최대 100%) )%",
+    "   × ( 최소 데미지 배율 + 최대 데미지 배율 ) ÷ 2",
+    "   × 최종 데미지% + 1,000,000,000)^0.23",
+    "  × (최대 HP * 100,000,000) ^0.12",
+    "  × (( 방어력 + 6,000 ) * 1,000,000,000,000)^0.14",
+    "  × ( ( 100% + 받는 피해 감소% ) x 1,000,000 )^0.5)",
+    "  ÷ 10,000,000)",
+    " ÷ 1,000,000"
+   ],
+   "content_constant": {
+    "Arena": 7206000000,
+    "Colosseum": 4323600000,
+    "WorldArena": 5764800000,
+    "note": "World Arena constant = 0.8 x Arena constant (WA deals/receives 80% of Arena damage)."
+   },
+   "level_penalty": {
+    "note": "'결투장 보정으로 레벨에 의한 피해량 감소% x 2'. Per +1 character level, final damage is multiplied relative to the previous level by:",
+    "Arena_and_WorldArena": [
+     {
+      "levels": "31-60",
+      "per_level_pct": -0.5
+     },
+     {
+      "levels": "61-100",
+      "per_level_pct": -1.3
+     },
+     {
+      "levels": "101+",
+      "per_level_pct": -1.5
+     }
+    ],
+    "Colosseum": [
+     {
+      "levels": "31-60",
+      "per_level_pct": -0.5
+     },
+     {
+      "levels": "61-70",
+      "per_level_pct": -1.3
+     },
+     {
+      "levels": "71-100",
+      "per_level_pct": -1.5
+     },
+     {
+      "levels": "101+",
+      "per_level_pct": -2.5
+     }
+    ],
+    "open_question": "Whose level (attacker, target or both) and how 'x 2' combines are not stated. The global wiki says 'the damage taken by the character also decreases proportionally to the character level' (target)."
+   },
+   "history": [
+    {
+     "period": "launch -> 2026-01-29 (Colosseum) / 2026-04-30 (Arena)",
+     "note": "sqrt-based reduction (base damage was square-rooted); the same sqrt is also used in Boss Raid, Party Quest, Guild Training per NXKR_NT_0622.",
+     "src": [
+      "NXKR_NT_0622"
+     ]
+    },
+    {
+     "period": "2026-01-29 (Colosseum) / 2026-04-30 (Arena) -> 2026-07-02",
+     "formula_tail_kr": "... x 결투장 레벨 보정 x [콘텐츠 전용 상수: 아레나 10,000 / 콜로세움 6,000] x 최대 HP ÷ √(공격력 × 방어 관통력% × 데미지% × 데미지 증폭% × ((기본 공격 데미지 + 스킬 데미지)÷2)% × 스탯 비례 데미지% × (크리티컬 데미지 × 크리티컬 확률의 비중)% × (최소+최대 데미지 배율)÷2 × 최종 데미지%) ÷ 1,000,000",
+     "bug": "Max HP multiplied the damage taken, so HP gave no survival; offensive stats reduced incoming damage. Compensations were paid.",
+     "src": [
+      "NXKR_NT_0625",
+      "NXKR_NT_0622",
+      "NXKR_NT_0623"
+     ]
+    }
+   ]
+  },
+  "tickets": {
+   "daily_refill": {
+    "value": 5,
+    "time": "00:00 server time (KST for KR)",
+    "conf": "community",
+    "src": [
+     "WIKI_ARENA",
+     "IV114",
+     "DC328970"
+    ]
+   },
+   "cap": {
+    "value": 20,
+    "note": "natural refill stops at 20; the cap is not shown in the UI",
+    "conf": "community",
+    "src": [
+     "WIKI_ARENA",
+     "IV114",
+     "DC210296"
+    ]
+   },
+   "red_diamond_purchase": {
+    "value": "When at 0 tickets, tickets can be bought with 레드 다이아; community: 15 tickets per day for 1,000 RD in total (= 7,000 RD per week). Posts talk of up to 5 refills per day.",
+    "per_refill_price": "NOT FOUND (a 5 x 3-ticket ladder summing to 1,000 is plausible but unconfirmed)",
+    "daily_limit": "official: a maximum number of extra charges exists ('아레나 추가 충전 최대 횟수', bug fix 9/22)",
+    "conf": "community + official (existence of cap)",
+    "src": [
+     "DC35341",
+     "DC142351",
+     "DC262988",
+     "DC373144",
+     "DC421871",
+     "NXKR_PN_0922"
+    ]
+   },
+   "consumed": "1 ticket per attack, regardless of result (also for quick battle).",
+   "consumed_src": [
+    "WIKI_ARENA",
+    "NXKR_PN_0903"
+   ],
+   "compensation_example": "3 arena tickets were mailed as compensation on 2025-11-27 (NXKR_NT_1127B)."
+  },
+  "opponent_list": {
+   "refresh": {
+    "free": 3,
+    "free_regen": "1 per 10 minutes",
+    "paid": "150 레드 다이아 per refresh after free ones",
+    "conf": "community wiki (global)",
+    "src": [
+     "WIKI_ARENA"
+    ]
+   },
+   "selection": "Opponents with similar ranking score appear ('추천 상대'). Dropping your score through lost defenses makes weaker opponents show up.",
+   "selection_conf": "community (World Arena rule is official: '유사한 랭킹 점수를 가진 상대방')",
+   "selection_src": [
+    "NXKR_NT_1112",
+    "DC150494",
+    "NXKR_PN_0702"
+   ],
+   "list_size": "NOT FOUND"
+  },
+  "score": {
+   "attack_win": {
+    "value": "about +20 base, scaled by CP ratio: +31 or +42 seen vs the same opponent; doubling own arena CP halved the gain",
+    "conf": "community",
+    "src": [
+     "DC402379",
+     "DC331367",
+     "DC351074"
+    ]
+   },
+   "attack_loss": {
+    "value": "NOT FOUND (a 7/2 bug turned some wins into losses; players then saw points drop)",
+    "src": [
+     "NXKR_NT_0702B"
+    ]
+   },
+   "defense_win": {
+    "value": 5,
+    "conf": "community (player on official board, 2026-11-13)",
+    "src": [
+     "NXKR_FREE_1113"
+    ]
+   },
+   "defense_loss": {
+    "value": -9,
+    "conf": "community (same post)",
+    "src": [
+     "NXKR_FREE_1113"
+    ]
+   },
+   "start_and_reset": {
+    "value": "Ranking points reset at every weekly settlement (Monday 00:00; a player confirms a reset at Monday midnight 2025-12-22). Start value NOT FOUND for Arena (World Arena and Colosseum start at 1,000).",
+    "conf": "official (reset)",
+    "src": [
+     "NXKR_PN_0430",
+     "NXGL_PN_0430",
+     "NXKR_NT_0430",
+     "NXGL_NT_0430",
+     "DC90543",
+     "DC111613"
+    ]
+   },
+   "observed_top_scores": {
+    "value": "server #1 around 5,870-6,000 at week end; #2 about 80 behind #1 on one server",
+    "conf": "community",
+    "src": [
+     "DC295702",
+     "DC146987"
+    ]
+   },
+   "inference": "If start = 1,000 and a win is about +20, ~245 wins/week (35 tickets/day x 7) gives ~5,900, matching the observed top scores. INFERENCE ONLY."
+  },
+  "tiers": {
+   "ladder_high_to_low": [
+    {
+     "kr": "챔피언1",
+     "en": "Champion 1"
+    },
+    {
+     "kr": "챔피언2",
+     "en": "Champion 2"
+    },
+    {
+     "kr": "챔피언3",
+     "en": "Champion 3"
+    },
+    {
+     "kr": "챌린저1",
+     "en": "Challenger 1"
+    },
+    {
+     "kr": "챌린저2",
+     "en": "Challenger 2"
+    },
+    {
+     "kr": "챌린저3",
+     "en": "Challenger 3"
+    },
+    {
+     "kr": "챌린저4",
+     "en": "Challenger 4"
+    },
+    {
+     "kr": "챌린저5",
+     "en": "Challenger 5"
+    },
+    {
+     "kr": "그랜드마스터1",
+     "en": "Grand Master 1"
+    },
+    {
+     "kr": "그랜드마스터2",
+     "en": "Grand Master 2"
+    },
+    {
+     "kr": "그랜드마스터3",
+     "en": "Grand Master 3"
+    },
+    {
+     "kr": "그랜드마스터4",
+     "en": "Grand Master 4"
+    },
+    {
+     "kr": "그랜드마스터5",
+     "en": "Grand Master 5"
+    },
+    {
+     "kr": "마스터1",
+     "en": "Master 1"
+    },
+    {
+     "kr": "마스터2",
+     "en": "Master 2"
+    },
+    {
+     "kr": "마스터3",
+     "en": "Master 3"
+    },
+    {
+     "kr": "마스터4",
+     "en": "Master 4"
+    },
+    {
+     "kr": "마스터5",
+     "en": "Master 5"
+    },
+    {
+     "kr": "다이아몬드1",
+     "en": "Diamond 1"
+    },
+    {
+     "kr": "플래티넘1",
+     "en": "Platinum 1"
+    },
+    {
+     "kr": "골드1",
+     "en": "Gold 1"
+    },
+    {
+     "kr": "실버1",
+     "en": "Silver 1"
+    },
+    {
+     "kr": "브론즈1",
+     "en": "Bronze 1"
+    }
+   ],
+   "note_divisions": "Only 'Diamond/Platinum/Gold/Silver/Bronze 1' appear in reward tables; whether 2-5 divisions exist below Master is NOT FOUND.",
+   "assignment": "Reward tier is decided at settlement by position on the server ranking: a player at ranking #1 was shown as 챔피언1 (DC111613), and players talk of cut-offs at rank 1,000 / 2,000 (DC150494). World Arena publishes rank ranges for the same tier names (see world_arena.individual_rewards); Arena's own ranges are NOT FOUND.",
+   "assignment_conf": "community + analogy",
+   "assignment_src": [
+    "DC111613",
+    "DC150494",
+    "NXKR_PN_0702"
+   ],
+   "max_tier_tracking": "A 'highest tier reached' value exists: 아레나 랭커 유물 핫딜 unlocks at '아레나 최고 티어 그랜드마스터5 이상'; newbie missions require reaching 아레나 플래티넘 / 다이아몬드 / 마스터.",
+   "max_tier_src": [
+    "WIKI_UNLOCKS"
+   ],
+   "promotion_reward": "Community mentions '아레나 승급보상' worth arena coins (one player lost 2 of them = 4,000 coins). Amounts NOT FOUND.",
+   "promotion_src": [
+    "DC148153",
+    "DC151167"
+   ]
+  },
+  "settlement": {
+   "daily": "00:00 every day",
+   "weekly": "00:00 every Monday",
+   "tz": "server time (KR: KST UTC+9; global: Skania UTC+9, Aria/Aquila UTC+8, Luna UTC+1, Bera UTC-8)",
+   "delivery": "mailbox",
+   "src": [
+    "NXKR_FAQ_RANK",
+    "NXGL_FAQ"
+   ],
+   "note": "Daily reward needs at least one arena battle that day (community)",
+   "note_src": [
+    "IV263"
+   ]
+  },
+  "per_battle_coins": {
+   "win": 30,
+   "loss": 20,
+   "conf": "community",
+   "src": [
+    "DC35341",
+    "DC150494"
+   ],
+   "note": "Not re-checked after the 9/22 reward increase."
+  },
+  "tier_rewards": {
+   "src": [
+    "NXKR_PN_0922",
+    "NXGL_PN_0922"
+   ],
+   "conf": "official",
+   "table": [
+    {
+     "tier_kr": "챔피언1",
+     "tier_en": "Champion 1",
+     "daily_arena_coin": {
+      "before_0922": 1500,
+      "after_0922": 2000
+     },
+     "weekly_arena_coin": {
+      "before_0922": 3000,
+      "after_0922": 4000
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 50,
+      "after_0922": 60
+     }
+    },
+    {
+     "tier_kr": "챔피언2",
+     "tier_en": "Champion 2",
+     "daily_arena_coin": {
+      "before_0922": 1400,
+      "after_0922": 1900
+     },
+     "weekly_arena_coin": {
+      "before_0922": 2800,
+      "after_0922": 3800
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 46,
+      "after_0922": 56
+     }
+    },
+    {
+     "tier_kr": "챔피언3",
+     "tier_en": "Champion 3",
+     "daily_arena_coin": {
+      "before_0922": 1300,
+      "after_0922": 1800
+     },
+     "weekly_arena_coin": {
+      "before_0922": 2600,
+      "after_0922": 3600
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 42,
+      "after_0922": 52
+     }
+    },
+    {
+     "tier_kr": "챌린저1",
+     "tier_en": "Challenger 1",
+     "daily_arena_coin": {
+      "before_0922": 1200,
+      "after_0922": 1700
+     },
+     "weekly_arena_coin": {
+      "before_0922": 2400,
+      "after_0922": 3400
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 38,
+      "after_0922": 48
+     }
+    },
+    {
+     "tier_kr": "챌린저2",
+     "tier_en": "Challenger 2",
+     "daily_arena_coin": {
+      "before_0922": 1100,
+      "after_0922": 1600
+     },
+     "weekly_arena_coin": {
+      "before_0922": 2200,
+      "after_0922": 3200
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 34,
+      "after_0922": 44
+     }
+    },
+    {
+     "tier_kr": "챌린저3",
+     "tier_en": "Challenger 3",
+     "daily_arena_coin": {
+      "before_0922": 1000,
+      "after_0922": 1500
+     },
+     "weekly_arena_coin": {
+      "before_0922": 2000,
+      "after_0922": 3000
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 30,
+      "after_0922": 40
+     }
+    },
+    {
+     "tier_kr": "챌린저4",
+     "tier_en": "Challenger 4",
+     "daily_arena_coin": {
+      "before_0922": 950,
+      "after_0922": 1400
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1900,
+      "after_0922": 2800
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 26,
+      "after_0922": 36
+     }
+    },
+    {
+     "tier_kr": "챌린저5",
+     "tier_en": "Challenger 5",
+     "daily_arena_coin": {
+      "before_0922": 900,
+      "after_0922": 1300
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1800,
+      "after_0922": 2600
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 24,
+      "after_0922": 34
+     }
+    },
+    {
+     "tier_kr": "그랜드마스터1",
+     "tier_en": "Grand Master 1",
+     "daily_arena_coin": {
+      "before_0922": 850,
+      "after_0922": 1250
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1700,
+      "after_0922": 2500
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 22,
+      "after_0922": 32
+     }
+    },
+    {
+     "tier_kr": "그랜드마스터2",
+     "tier_en": "Grand Master 2",
+     "daily_arena_coin": {
+      "before_0922": 800,
+      "after_0922": 1200
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1600,
+      "after_0922": 2400
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 20,
+      "after_0922": 30
+     }
+    },
+    {
+     "tier_kr": "그랜드마스터3",
+     "tier_en": "Grand Master 3",
+     "daily_arena_coin": {
+      "before_0922": 760,
+      "after_0922": 1150
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1520,
+      "after_0922": 2300
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 18,
+      "after_0922": 28
+     }
+    },
+    {
+     "tier_kr": "그랜드마스터4",
+     "tier_en": "Grand Master 4",
+     "daily_arena_coin": {
+      "before_0922": 720,
+      "after_0922": 1100
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1440,
+      "after_0922": 2200
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 16,
+      "after_0922": 26
+     }
+    },
+    {
+     "tier_kr": "그랜드마스터5",
+     "tier_en": "Grand Master 5",
+     "daily_arena_coin": {
+      "before_0922": 680,
+      "after_0922": 1050
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1360,
+      "after_0922": 2100
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 14,
+      "after_0922": 24
+     }
+    },
+    {
+     "tier_kr": "마스터1",
+     "tier_en": "Master 1",
+     "daily_arena_coin": {
+      "before_0922": 650,
+      "after_0922": 1000
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1300,
+      "after_0922": 2000
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 12,
+      "after_0922": 22
+     }
+    },
+    {
+     "tier_kr": "마스터2",
+     "tier_en": "Master 2",
+     "daily_arena_coin": {
+      "before_0922": 620,
+      "after_0922": 970
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1240,
+      "after_0922": 1940
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 10,
+      "after_0922": 20
+     }
+    },
+    {
+     "tier_kr": "마스터3",
+     "tier_en": "Master 3",
+     "daily_arena_coin": {
+      "before_0922": 590,
+      "after_0922": 940
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1180,
+      "after_0922": 1880
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 8,
+      "after_0922": 18
+     }
+    },
+    {
+     "tier_kr": "마스터4",
+     "tier_en": "Master 4",
+     "daily_arena_coin": {
+      "before_0922": 560,
+      "after_0922": 910
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1120,
+      "after_0922": 1820
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 6,
+      "after_0922": 16
+     }
+    },
+    {
+     "tier_kr": "마스터5",
+     "tier_en": "Master 5",
+     "daily_arena_coin": {
+      "before_0922": 530,
+      "after_0922": 880
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1060,
+      "after_0922": 1760
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 6,
+      "after_0922": 14
+     }
+    },
+    {
+     "tier_kr": "다이아몬드1",
+     "tier_en": "Diamond 1",
+     "daily_arena_coin": {
+      "before_0922": 500,
+      "after_0922": 850
+     },
+     "weekly_arena_coin": {
+      "before_0922": 1000,
+      "after_0922": 1700
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 4,
+      "after_0922": 12
+     }
+    },
+    {
+     "tier_kr": "플래티넘1",
+     "tier_en": "Platinum 1",
+     "daily_arena_coin": {
+      "before_0922": 400,
+      "after_0922": 800
+     },
+     "weekly_arena_coin": {
+      "before_0922": 800,
+      "after_0922": 1600
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 4,
+      "after_0922": 10
+     }
+    },
+    {
+     "tier_kr": "골드1",
+     "tier_en": "Gold 1",
+     "daily_arena_coin": {
+      "before_0922": 300,
+      "after_0922": 700
+     },
+     "weekly_arena_coin": {
+      "before_0922": 600,
+      "after_0922": 1400
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 2,
+      "after_0922": 8
+     }
+    },
+    {
+     "tier_kr": "실버1",
+     "tier_en": "Silver 1",
+     "daily_arena_coin": {
+      "before_0922": 200,
+      "after_0922": 600
+     },
+     "weekly_arena_coin": {
+      "before_0922": 400,
+      "after_0922": 1200
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 2,
+      "after_0922": 6
+     }
+    },
+    {
+     "tier_kr": "브론즈1",
+     "tier_en": "Bronze 1",
+     "daily_arena_coin": {
+      "before_0922": 100,
+      "after_0922": 500
+     },
+     "weekly_arena_coin": {
+      "before_0922": 200,
+      "after_0922": 1000
+     },
+     "weekly_starforce_scroll": {
+      "before_0922": 2,
+      "after_0922": 4
+     }
+    }
+   ],
+   "weekly_benefit_buff": {
+    "kr_names": [
+     "전문가",
+     "장인",
+     "달인",
+     "명인",
+     "패왕"
+    ],
+    "global": [
+     {
+      "name": "Arena Expert Benefit",
+      "meso_drop_pct": 8,
+      "exp_pct": 0
+     },
+     {
+      "name": "Arena Professional Benefit",
+      "meso_drop_pct": 16,
+      "exp_pct": 0
+     },
+     {
+      "name": "Arena Ace Benefit",
+      "meso_drop_pct": 19,
+      "exp_pct": 5,
+      "conflict": "wiki 'Effect' column says +50% EXP"
+     },
+     {
+      "name": "Arena Lord Benefit",
+      "meso_drop_pct": 22,
+      "exp_pct": 10,
+      "conflict": "wiki 'Effect' column says +100% EXP"
+     },
+     {
+      "name": "Arena Overlord Benefit",
+      "meso_drop_pct": 25,
+      "exp_pct": 15,
+      "conflict": "wiki 'Effect' column says +150% EXP"
+     }
+    ],
+    "duration": "until next weekly settlement",
+    "tier_mapping": "NOT FOUND",
+    "unchanged_on_0922": true,
+    "src": [
+     "WIKI_BOOSTERS",
+     "NXKR_PN_0922"
+    ]
+   },
+   "events": [
+    {
+     "name": "아레나 부스트",
+     "period": "2026-06-22 settlement -> 2026-07-05 settlement",
+     "effect": "daily/weekly reward currency increased (multiplier not stated)",
+     "src": [
+      "NXKR_PN_0611"
+     ]
+    },
+    {
+     "name": "아레나 보상 부스트 x2",
+     "period": "2026-08-31 settlement -> 2026-09-13 settlement",
+     "effect": "daily+weekly x2 (benefit buff excluded)",
+     "src": [
+      "IV161",
+      "NXKR_PN_0813"
+     ]
+    },
+    {
+     "name": "아레나 보상 3배",
+     "period": "2026-09-22 settlement -> 2026-10-05 settlement",
+     "effect": "daily+weekly x3 (benefit buff excluded)",
+     "src": [
+      "NXKR_PN_0922",
+      "IV610"
+     ]
+    }
+   ]
+  },
+  "medals": [
+   {
+    "name_global": "Still Cute",
+    "req": "100 arena wins",
+    "effect": "Main Stat +30",
+    "src": [
+     "WIKI_MEDALS"
+    ]
+   },
+   {
+    "name_global": "Powered Up",
+    "req": "500 arena wins",
+    "effect": "Main Stat +30",
+    "src": [
+     "WIKI_MEDALS"
+    ]
+   },
+   {
+    "name_global": "Overwhelming Presence",
+    "req": "1,000 arena wins",
+    "effect": "Main Stat +30",
+    "src": [
+     "WIKI_MEDALS"
+    ]
+   },
+   {
+    "name_kr": "무적의 나",
+    "name_global": "Invincible",
+    "req": "아레나 공격에서 누적 2,000회 승리",
+    "effect": "주 스탯 +30",
+    "src": [
+     "NXKR_PN_0922",
+     "NXGL_PN_0922"
+    ]
+   },
+   {
+    "name_kr": "전설의 나",
+    "name_global": "Legendary",
+    "req": "아레나 공격에서 누적 3,000회 승리",
+    "effect": "주 스탯 +30",
+    "src": [
+     "NXKR_PN_0922",
+     "NXGL_PN_0922"
+    ]
+   }
+  ],
+  "shop": {
+   "see": "research-income.md §5.2 (do not duplicate). Summary below.",
+   "items": [
+    {
+     "item": "스타포스 강화 주문서 x1 (weekly discount)",
+     "price_arena_coin": 150,
+     "limit": "25/week (15 -> 25 on 2025-11-27)",
+     "src": [
+      "NXKR_PN_1127",
+      "MSI_ARENA",
+      "DC35341"
+     ]
+    },
+    {
+     "item": "스타포스 강화 주문서 x1 (regular, after weekly)",
+     "price_arena_coin": "500? (asked in a question post, unconfirmed)",
+     "limit": "?",
+     "src": [
+      "DC373144"
+     ]
+    },
+    {
+     "item": "유물 상자 (Artifact Chest)",
+     "price_arena_coin": 500,
+     "limit": "10/week",
+     "src": [
+      "MSI_ARENA",
+      "IV114",
+      "IV314"
+     ]
+    },
+    {
+     "item": "여정의 기운",
+     "price_arena_coin": "?",
+     "limit": "5/week",
+     "src": [
+      "NXKR_PN_0903",
+      "IV586"
+     ]
+    },
+    {
+     "item": "유물 강화석",
+     "price_arena_coin": "?",
+     "limit": "?",
+     "src": [
+      "IV136",
+      "IV285",
+      "IV114"
+     ]
+    },
+    {
+     "item": "주문의 흔적",
+     "price_arena_coin": "?",
+     "limit": "?",
+     "src": [
+      "IV114",
+      "IV285"
+     ]
+    },
+    {
+     "item": "메소",
+     "price_arena_coin": "?",
+     "limit": "?",
+     "src": [
+      "IV114",
+      "IV285"
+     ]
+    },
+    {
+     "item": "특별 의상 (Special Outfit (Arena), e.g. weapon 'Longsword of Valor')",
+     "price_arena_coin": "100,000 for one outfit (title of a player post)",
+     "limit": "one-time",
+     "src": [
+      "IV257",
+      "IV114"
+     ]
+    }
+   ],
+   "weekly_core_cost": {
+    "value": 8750,
+    "note": "10 chests x 500 + 25 scrolls x 150",
+    "src": [
+     "MSI_ARENA",
+     "DC373144"
+    ]
+   },
+   "reset": "weekly limits reset Monday 00:00",
+   "reset_src": [
+    "NXGL_FAQ"
+   ]
+  }
+ },
+ "world_arena": {
+  "status": "Ran 3 rounds in July 2026 (KR and global). No later rounds found up to 2026-11-24.",
+  "unlock": {
+   "value": "Chapter 16 boss clear; can join a running round if cleared mid-round; guild not required",
+   "src": [
+    "NXKR_PN_0702"
+   ]
+  },
+  "scope": "All servers of the same region (동일 지역 내 서버 전체).",
+  "schedule": [
+   {
+    "round": 1,
+    "start": "2026-07-07 12:00",
+    "end": "2026-07-11 22:00"
+   },
+   {
+    "round": 2,
+    "start": "2026-07-14 12:00",
+    "end": "2026-07-18 22:00"
+   },
+   {
+    "round": 3,
+    "start": "2026-07-21 12:00",
+    "end": "2026-07-25 22:00"
+   }
+  ],
+  "schedule_src": [
+   "NXKR_PN_0702",
+   "NXKR_PV_0625"
+  ],
+  "length_days": 5,
+  "tickets": {
+   "daily": 10,
+   "time": "00:00",
+   "cap": "daily refill never exceeds 10",
+   "buy": "3 tickets per purchase with 레드 다이아; price rises 100 -> 500 by daily purchase count, then stays 500",
+   "buy_steps": "NOT FOUND (likely 100/200/300/400/500, unconfirmed)",
+   "buy_limit": "no daily limit (community)",
+   "src": [
+    "NXKR_PN_0702",
+    "DC374766",
+    "DC375080"
+   ]
+  },
+  "matching": "Opponents with similar ranking score; list can be refreshed (cost NOT FOUND). Pick 1 opponent.",
+  "matching_src": [
+   "NXKR_PN_0702"
+  ],
+  "artifact_block": "Before the fight, choose 1 of the defender's equipped artifacts whose special effect is disabled.",
+  "soul_pouch_applies": true,
+  "combat_mods": {
+   "damage": "same formula, constant 5,764,800,000 = 80% of Arena dealt and received",
+   "heal_and_shield": "x0.5",
+   "potion": "potion effect reduced; final recovery ends up equal to Arena/Colosseum (verbatim: '물약의 효과가 감소되어 적용됩니다. 회복 효과 감소의 결과로 아레나/콜로세움과 최종 회복량은 동일합니다.')",
+   "immunity": "damage immunity and basic-attack-damage immunity durations x0.5",
+   "src": [
+    "NXKR_PN_0702"
+   ]
+  },
+  "score": {
+   "start": 1000,
+   "change": "Gain/loss scaled by the DEFENDER's World Arena preset CP at match time; higher defender CP -> bigger swings for both attack and defense.",
+   "below_1000": "a loss (attack or defense) that would go to/below 1,000 costs a fixed 10 points",
+   "defense_cap": "max 5 defense-success scores from the same opponent per round",
+   "top5": "Each day the 5 highest-CP opponents you beat are recorded (re-beat at higher CP updates the entry); confirmed at 00:00; scores from TOP5 wins get a multiplier.",
+   "top5_multipliers": [
+    {
+     "day": "1-2",
+     "top1": 100,
+     "top2": 80,
+     "top3": 60,
+     "top4": 50,
+     "top5": 40
+    },
+    {
+     "day": "3",
+     "top1": 150,
+     "top2": 120,
+     "top3": 100,
+     "top4": 75,
+     "top5": 50
+    },
+    {
+     "day": "4",
+     "top1": 250,
+     "top2": 200,
+     "top3": 120,
+     "top4": 100,
+     "top5": 75
+    },
+    {
+     "day": "5",
+     "top1": 600,
+     "top2": 450,
+     "top3": 300,
+     "top4": 225,
+     "top5": 150
+    }
+   ],
+   "base_win_points": "NOT FOUND",
+   "src": [
+    "NXKR_PN_0702",
+    "MSI_WA"
+   ]
+  },
+  "guild": "Guild score = sum of members' scores; joining after the round starts: can play but score not added and no guild reward; leaving mid-round removes you from guild score and reward. Rewards need >= 1 attack or defense.",
+  "guild_src": [
+   "NXKR_PN_0702"
+  ],
+  "individual_rewards": {
+   "currency": "미라클 큐브 (global: Regular Potential Cube)",
+   "table": [
+    {
+     "tier_kr": "챔피언1",
+     "rank_from": 1,
+     "rank_to": 1,
+     "miracle_cube": 300,
+     "extra": "월드 아레나 의자: 골드 [7일 기간제, 경험치 획득량 +10%]"
+    },
+    {
+     "tier_kr": "챔피언2",
+     "rank_from": 2,
+     "rank_to": 2,
+     "miracle_cube": 270,
+     "extra": "월드 아레나 의자: 실버 [7일, EXP +10%]"
+    },
+    {
+     "tier_kr": "챔피언3",
+     "rank_from": 3,
+     "rank_to": 3,
+     "miracle_cube": 250,
+     "extra": "월드 아레나 의자: 브론즈 [7일, EXP +10%]"
+    },
+    {
+     "tier_kr": "그랜드마스터1",
+     "rank_from": 4,
+     "rank_to": 10,
+     "miracle_cube": 230,
+     "extra": null
+    },
+    {
+     "tier_kr": "그랜드마스터2",
+     "rank_from": 11,
+     "rank_to": 30,
+     "miracle_cube": 215,
+     "extra": null
+    },
+    {
+     "tier_kr": "그랜드마스터3",
+     "rank_from": 31,
+     "rank_to": 100,
+     "miracle_cube": 200,
+     "extra": null
+    },
+    {
+     "tier_kr": "그랜드마스터4",
+     "rank_from": 101,
+     "rank_to": 500,
+     "miracle_cube": 180,
+     "extra": null
+    },
+    {
+     "tier_kr": "그랜드마스터5",
+     "rank_from": 501,
+     "rank_to": 1000,
+     "miracle_cube": 160,
+     "extra": null
+    },
+    {
+     "tier_kr": "마스터1",
+     "rank_from": 1001,
+     "rank_to": 2000,
+     "miracle_cube": 140,
+     "extra": null
+    },
+    {
+     "tier_kr": "마스터2",
+     "rank_from": 2001,
+     "rank_to": 3000,
+     "miracle_cube": 120,
+     "extra": null
+    },
+    {
+     "tier_kr": "마스터3",
+     "rank_from": 3001,
+     "rank_to": 4000,
+     "miracle_cube": 110,
+     "extra": null
+    },
+    {
+     "tier_kr": "마스터4",
+     "rank_from": 4001,
+     "rank_to": 5000,
+     "miracle_cube": 100,
+     "extra": null
+    },
+    {
+     "tier_kr": "마스터5",
+     "rank_from": 5001,
+     "rank_to": 10000,
+     "miracle_cube": 80,
+     "extra": null
+    },
+    {
+     "tier_kr": "다이아몬드1",
+     "rank_from": 10001,
+     "rank_to": 30000,
+     "miracle_cube": 65,
+     "extra": null
+    },
+    {
+     "tier_kr": "플래티넘1",
+     "rank_from": 30001,
+     "rank_to": 50000,
+     "miracle_cube": 50,
+     "extra": null
+    },
+    {
+     "tier_kr": "골드1",
+     "rank_from": 50001,
+     "rank_to": 75000,
+     "miracle_cube": 40,
+     "extra": null
+    },
+    {
+     "tier_kr": "실버1",
+     "rank_from": 75001,
+     "rank_to": 100000,
+     "miracle_cube": 30,
+     "extra": null
+    },
+    {
+     "tier_kr": "브론즈1",
+     "rank_from": 100001,
+     "rank_to": null,
+     "miracle_cube": 10,
+     "extra": null
+    }
+   ],
+   "src": [
+    "NXKR_PN_0702"
+   ]
+  },
+  "guild_rewards": {
+   "currency": "에디셔널 큐브 (global: Bonus Potential Cube)",
+   "table": [
+    {
+     "tier_kr": "챔피언1",
+     "guild_rank_from": 1,
+     "guild_rank_to": 1,
+     "additional_cube": 100,
+     "guild_exp_booster_7d_pct": 25
+    },
+    {
+     "tier_kr": "챔피언2",
+     "guild_rank_from": 2,
+     "guild_rank_to": 2,
+     "additional_cube": 90,
+     "guild_exp_booster_7d_pct": 20
+    },
+    {
+     "tier_kr": "챔피언3",
+     "guild_rank_from": 3,
+     "guild_rank_to": 3,
+     "additional_cube": 80,
+     "guild_exp_booster_7d_pct": 15
+    },
+    {
+     "tier_kr": "그랜드마스터1",
+     "guild_rank_from": 4,
+     "guild_rank_to": 10,
+     "additional_cube": 75,
+     "guild_exp_booster_7d_pct": 12
+    },
+    {
+     "tier_kr": "그랜드마스터2",
+     "guild_rank_from": 11,
+     "guild_rank_to": 30,
+     "additional_cube": 70,
+     "guild_exp_booster_7d_pct": 10
+    },
+    {
+     "tier_kr": "그랜드마스터3",
+     "guild_rank_from": 31,
+     "guild_rank_to": 50,
+     "additional_cube": 60,
+     "guild_exp_booster_7d_pct": 10
+    },
+    {
+     "tier_kr": "그랜드마스터4",
+     "guild_rank_from": 51,
+     "guild_rank_to": 100,
+     "additional_cube": 50,
+     "guild_exp_booster_7d_pct": 10
+    },
+    {
+     "tier_kr": "그랜드마스터5",
+     "guild_rank_from": 101,
+     "guild_rank_to": 300,
+     "additional_cube": 40,
+     "guild_exp_booster_7d_pct": 8
+    },
+    {
+     "tier_kr": "마스터1",
+     "guild_rank_from": 301,
+     "guild_rank_to": 500,
+     "additional_cube": 35,
+     "guild_exp_booster_7d_pct": 8
+    },
+    {
+     "tier_kr": "마스터2",
+     "guild_rank_from": 501,
+     "guild_rank_to": 750,
+     "additional_cube": 30,
+     "guild_exp_booster_7d_pct": 6
+    },
+    {
+     "tier_kr": "마스터3",
+     "guild_rank_from": 751,
+     "guild_rank_to": 1000,
+     "additional_cube": 27,
+     "guild_exp_booster_7d_pct": 6
+    },
+    {
+     "tier_kr": "마스터4",
+     "guild_rank_from": 1001,
+     "guild_rank_to": 2000,
+     "additional_cube": 24,
+     "guild_exp_booster_7d_pct": 4
+    },
+    {
+     "tier_kr": "마스터5",
+     "guild_rank_from": 2001,
+     "guild_rank_to": 3000,
+     "additional_cube": 21,
+     "guild_exp_booster_7d_pct": 4
+    },
+    {
+     "tier_kr": "다이아몬드1",
+     "guild_rank_from": 3001,
+     "guild_rank_to": 4000,
+     "additional_cube": 18,
+     "guild_exp_booster_7d_pct": 4
+    },
+    {
+     "tier_kr": "플래티넘1",
+     "guild_rank_from": 4001,
+     "guild_rank_to": 5000,
+     "additional_cube": 15,
+     "guild_exp_booster_7d_pct": 4
+    },
+    {
+     "tier_kr": "골드1",
+     "guild_rank_from": 5001,
+     "guild_rank_to": 7500,
+     "additional_cube": 12,
+     "guild_exp_booster_7d_pct": 4
+    },
+    {
+     "tier_kr": "실버1",
+     "guild_rank_from": 7501,
+     "guild_rank_to": 10000,
+     "additional_cube": 10,
+     "guild_exp_booster_7d_pct": 4
+    },
+    {
+     "tier_kr": "브론즈1",
+     "guild_rank_from": 10001,
+     "guild_rank_to": null,
+     "additional_cube": 5,
+     "guild_exp_booster_7d_pct": null
+    }
+   ],
+   "booster_note": "7-day '월드 아레나 길드 랭킹 통합 N위 혜택' EXP booster; 브론즈1 gets none",
+   "src": [
+    "NXKR_PN_0702"
+   ]
+  },
+  "chair": "World Arena chairs (rank 1-3): 7-day, owned effect EXP +10%; giving fame to a seated player grants the giver EXP +10% for 30 min once per day.",
+  "chair_src": [
+   "NXKR_PN_0702"
+  ],
+  "abuse_rules": "Throwing fights to guildmates (no attack skills/artifacts) to feed TOP5 was punished (24 accounts, 3-day ban, cubes taken back).",
+  "abuse_src": [
+   "NXKR_NT_0804"
+  ]
+ },
+ "colosseum": {
+  "type": "Event content, 3 rounds per batch; group of 25 players from all servers of the region with similar strength; each fights the other 24 one-on-one.",
+  "src_main": [
+   "NXKR_PN_0129",
+   "NXKR_PV_0120",
+   "NXGL_PN_0129"
+  ],
+  "unlock": "Arena must be unlocked when matching runs; if Arena unlocks mid-round you join from the next round.",
+  "matching": "By personal highest CP across presets (community; devs said no plan to change). 5/21: 'similar strength' criterion changed so deliberately low ranking CP no longer helps.",
+  "matching_src": [
+   "IV644",
+   "NXKR_FREE_0806",
+   "NXKR_FREE_0803",
+   "NXKR_PN_0521"
+  ],
+  "skill_ban": "Before attacking, ban 1 skill from a fixed list of the opponent's skills (list can include passives).",
+  "skill_ban_src": [
+   "NXKR_PN_0129",
+   "IV655"
+  ],
+  "bingo": "Beating an opponent activates their cell on a bingo board; losing a defense deactivates the cell. First defense loss on a neutral cell costs no points. Completed-line rewards are paid instantly, once per line, and kept even if cells are later lost.",
+  "bingo_src": [
+   "NXKR_PN_0129"
+  ],
+  "score": {
+   "community_breakdown_2026_10": {
+    "base": 1000,
+    "per_active_cell": 100,
+    "daily_bonus_per_active_cell_at_0000": 10,
+    "attack_loss": -1,
+    "defense_win": 1,
+    "note": "24 cells x 100 + 1000 = 3,400 for a full board",
+    "src": [
+     "DC425800",
+     "DC200278"
+    ]
+   },
+   "daily_bonus_history": [
+    {
+     "from": "2026-03-24 round",
+     "value": "+3 per beaten opponent at 00:00",
+     "src": [
+      "NXKR_PN_0319"
+     ]
+    },
+    {
+     "from": "2026-05-26 round",
+     "value": "+10 per beaten opponent at 00:00; none on the last day",
+     "src": [
+      "NXKR_PN_0521",
+      "NXKR_PN_0723",
+      "NXKR_PN_0922"
+     ]
+    }
+   ]
+  },
+  "time_and_damage": "Colosseum constant 4,323,600,000 (60% of Arena); stronger per-level penalty above 70. 4/30: damage at high CP raised (shorter fights).",
+  "time_src": [
+   "NXKR_PN_0702",
+   "NXKR_PN_0430"
+  ],
+  "schedule_kr": [
+   [
+    "2026-01-30 12:00",
+    "2026-02-07 21:59"
+   ],
+   [
+    "2026-02-10 12:00",
+    "2026-02-14 21:59"
+   ],
+   [
+    "2026-02-17 12:00",
+    "2026-02-21 21:59"
+   ],
+   [
+    "2026-03-24 12:00",
+    "2026-03-28 21:59"
+   ],
+   [
+    "2026-03-31 12:00",
+    "2026-04-04 21:59"
+   ],
+   [
+    "2026-04-07 12:00",
+    "2026-04-11 21:59"
+   ],
+   [
+    "2026-05-26 12:00",
+    "2026-05-30 21:59"
+   ],
+   [
+    "2026-06-02 12:00",
+    "2026-06-06 21:59"
+   ],
+   [
+    "2026-06-09 12:00",
+    "2026-06-13 21:59"
+   ],
+   [
+    "2026-07-28 12:00",
+    "2026-08-01 21:59"
+   ],
+   [
+    "2026-08-04 12:00",
+    "2026-08-08 21:59"
+   ],
+   [
+    "2026-08-11 12:00",
+    "2026-08-15 21:59"
+   ],
+   [
+    "2026-09-29 12:00",
+    "2026-10-03 21:59"
+   ],
+   [
+    "2026-10-06 12:00",
+    "2026-10-10 21:59"
+   ],
+   [
+    "2026-10-13 12:00",
+    "2026-10-17 21:59"
+   ]
+  ],
+  "schedule_src": [
+   "NXKR_PN_0129",
+   "NXKR_PN_0319",
+   "NXKR_PN_0521",
+   "NXKR_PN_0723",
+   "NXKR_PN_0922"
+  ],
+  "rank_rewards_global_wiki": {
+   "currency": "스타포스 강화 주문서",
+   "table": [
+    {
+     "rank": 1,
+     "sf": 80
+    },
+    {
+     "rank": 2,
+     "sf": 70
+    },
+    {
+     "rank": 3,
+     "sf": 60
+    },
+    {
+     "rank": 4,
+     "sf": 56
+    },
+    {
+     "rank": 5,
+     "sf": 52
+    },
+    {
+     "rank": 6,
+     "sf": 48
+    },
+    {
+     "rank": 7,
+     "sf": 44
+    },
+    {
+     "rank": 8,
+     "sf": 40
+    },
+    {
+     "rank": 9,
+     "sf": 38
+    },
+    {
+     "rank": 10,
+     "sf": 36
+    },
+    {
+     "rank": 11,
+     "sf": 34
+    },
+    {
+     "rank": 12,
+     "sf": 32
+    },
+    {
+     "rank": 13,
+     "sf": 30
+    },
+    {
+     "rank": "14-15 (wiki 'Top 15')",
+     "sf": 27
+    },
+    {
+     "rank": "16-17",
+     "sf": 24
+    },
+    {
+     "rank": "18-19",
+     "sf": 21
+    },
+    {
+     "rank": "20-21",
+     "sf": 18
+    },
+    {
+     "rank": "22-23",
+     "sf": 15
+    },
+    {
+     "rank": "participation",
+     "sf": 12
+    }
+   ],
+   "kr_check": "KR player got 80 for a round (DC230233), matching rank 1.",
+   "condition": "paid only with a participation record",
+   "src": [
+    "WIKI_COLO",
+    "DC230233",
+    "NXKR_PN_0129"
+   ]
+  },
+  "bingo_rewards_global_wiki": {
+   "lines_1_to_4": "+5 스타포스 강화 주문서 each",
+   "line_5": "350,000 메소",
+   "line_6": "400,000 메소",
+   "line_7": "450,000 메소",
+   "line_8": "500,000 메소",
+   "history": "Community says line rewards were cut on the 2026-03-24 round (previously 7 SF per line?); 'all bingo = 20 SF' in 2026-09.",
+   "src": [
+    "WIKI_COLO",
+    "DC276285",
+    "DC419871"
+   ]
+  },
+  "medals": [
+   {
+    "name_global": "Let's Go Bingo",
+    "req": "complete 8 lines"
+   },
+   {
+    "name_global": "Conqueror",
+    "req": "fill the entire board"
+   }
+  ],
+  "medals_src": [
+   "WIKI_MEDALS"
+  ],
+  "board_shape": "NOT FOUND (25 players; up to 8 line rewards)",
+  "tickets": "NOT FOUND (community suggests unlimited attacks; '빠른 도전')"
+ },
+ "guild_contests_not_pvp": {
+  "길드 대항전 (Guild War, global 'Guild War: Dragon Warlord')": {
+   "pvp": false,
+   "summary": "5 guilds of similar strength per group; members fight a BOSS for score; weekly Thu 12:00 -> next Mon 22:00 (KR). Until 5/21 rank->points; from 9/3 top-29 point values raised.",
+   "rewards_kr_1127": [
+    {
+     "rank": 1,
+     "buff": "EXP +16%, 메소 +13%",
+     "miracle_cube": 15
+    },
+    {
+     "rank": 2,
+     "buff": "EXP +13%, 메소 +13%",
+     "miracle_cube": 10
+    },
+    {
+     "rank": 3,
+     "buff": "EXP +10%, 메소 +10%",
+     "miracle_cube": 7
+    },
+    {
+     "rank": 4,
+     "buff": "EXP +7%",
+     "miracle_cube": 5
+    },
+    {
+     "rank": 5,
+     "buff": "EXP +5%",
+     "miracle_cube": 3
+    }
+   ],
+   "rewards_global_wiki_conflict": "wiki says rank 1 = +16% EXP and +16% Meso, 7 days; KR note says +13% meso, buff until next Monday 21:59",
+   "src": [
+    "NXKR_PN_1127",
+    "WIKI_GUILDWAR",
+    "NXKR_PN_0903"
+   ]
+  },
+  "길드 보스 대전": {
+   "pvp": false,
+   "summary": "Guild vs guild 1:1 matched; from 5/21 the guild with higher total boss damage wins. Seasons of 3 rounds (Fri 12:00 -> Wed 21:59).",
+   "src": [
+    "NXKR_PN_0521",
+    "NXKR_PN_0813"
+   ]
+  }
+ },
+ "unknowns": [
+  "Arena fight time limit and arena map size",
+  "Arena starting score, attack-loss points, exact CP scaling formula for points",
+  "Arena tier rank ranges (and whether tiers below Master have divisions 2-5)",
+  "Mapping of 전문가/장인/달인/명인/패왕 benefit buffs to tiers",
+  "Arena promotion (승급) reward amounts",
+  "Per-refill red diamond price for arena tickets",
+  "Prices of 여정의 기운, 유물 강화석, 주문의 흔적, 메소, and regular (non-weekly) star force scrolls in the arena shop",
+  "World Arena base points per win and list-refresh cost",
+  "Colosseum board layout and line definition, attack limits, and whether rank rewards differ by group strength"
+ ]
+}

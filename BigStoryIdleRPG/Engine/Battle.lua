@@ -500,6 +500,81 @@ end
 
 -- Returns damage, isCrit, isMiss
 -- line = { pct = number (display % of the line, e.g. 430.3), isBase = bool, localStats = {StatType=raw}, attr = "Ice" }
+---------------------------------------------------------------------------
+-- PvP damage (Arena / Colosseum / World Arena, official formula since 2026-07-02,
+-- research/spec/research-arena.md 2.2). Player-vs-player hits only.
+---------------------------------------------------------------------------
+Battle.PVP_CONST = { Arena = 7206000000, Colosseum = 4323600000, WorldArena = 5764800000 }
+-- level correction bands: damage change per level above 30 (Arena / World Arena)
+Battle.PVP_LEVEL_BANDS = { { 31, 60, 0.005 }, { 61, 100, 0.013 }, { 101, 9999, 0.015 } }
+Battle.PVP_LEVEL_BANDS_COLOSSEUM = { { 31, 60, 0.005 }, { 61, 70, 0.013 }, { 71, 100, 0.015 }, { 101, 9999, 0.025 } }
+
+function Battle:PvpLevelFactor(level)
+    local bands = (self.dungeonType == "Colosseum") and Battle.PVP_LEVEL_BANDS_COLOSSEUM or Battle.PVP_LEVEL_BANDS
+    local f = 1
+    for _, b in ipairs(bands) do
+        for _ = b[1], math.min(level, b[2]) do f = f * (1 - b[3]) end
+    end
+    return f
+end
+
+-- the PvP reduction divisor uses the target's own stats taken before the fight
+function Battle:PvpDivisor(c)
+    if c.pvpDivisor then return c.pvpDivisor end
+    local function s(k) return c:Stat(k) end
+    local function f(k) return 1 + s(k) / 1000 end
+    local critW = 1 + math.max(0, s("CriticalPower")) / 1000 * U.clamp(s("CriticalChance") / 1000, 0, 1)
+    local offense = math.max(0, s("Attack")) * f("PiercePower") * f("AttackPower") * f("AttackPower2")
+        * (1 + (s("BaseAttackPower") + s("SkillPower")) / 2000) * f("MainDamagePower") * critW
+        * ((s("MinDamageRatio") + s("MaxDamageRatio")) / 2000) * f("FinalDamage")
+    local A = (offense + 1e9) ^ 0.23
+    local B = (math.max(1, s("MaxHp")) * 1e8) ^ 0.12
+    local C = ((math.max(0, s("Defence")) + 6000) * 1e12) ^ 0.14
+    local Dd = ((1 + math.min(950, s("Toughness")) / 1000) * 1e6) ^ 0.5
+    c.pvpDivisor = A * B * C * Dd / 1e7
+    return c.pvpDivisor
+end
+
+function Battle:ComputePvpHit(att, tgt, line)
+    local function pf2(v) return math.max(0, 1 + v / 1000) end
+    local def = math.max(0, tgt:Stat("Defence"))
+    local pierce = math.min(999, math.max(0, att:Stat("PiercePower")))
+    local base = math.max(0, att:Stat("Attack")) * 5000 / (6000 + def * (1000 - pierce) / 1000)
+    base = base * pf2(tgt:Stat("Weakness")) * (1 - math.min(950, tgt:Stat("Toughness")) / 1000)
+    base = base * pf2(att:Stat("AttackPower")) * pf2(att:Stat("AttackPower2"))
+    base = base * (line.isBase and pf2(att:Stat("BaseAttackPower")) or pf2(att:Stat("SkillPower")))
+    base = base * pf2(att:Stat("MainDamagePower"))
+    local crit = false
+    local cr = att:Stat("CriticalChance") - tgt:Stat("CriticalResist")
+    if cr > 0 and self.rng:Float() * 1000 < cr then
+        crit = true
+        base = base * (1 + math.max(0, att:Stat("CriticalPower")) / 1000)
+    end
+    local minR, maxR = trunc(att:Stat("MinDamageRatio")), trunc(att:Stat("MaxDamageRatio"))
+    if minR > maxR then minR = maxR end
+    base = base * (minR + (maxR - minR) * self.rng:Float()) / 1000
+    if tgt:IsCC() then base = base * pf2(att:Stat("AttackPowerInCc")) end
+    base = base * pf2(att:Stat("FinalDamage")) * pf2(att:Stat("FinalDamage2")) * pf2(att:Stat("FinalDamage3"))
+    local const = Battle.PVP_CONST[self.dungeonType] or Battle.PVP_CONST.Arena
+    -- PROVISIONAL: "레벨에 의한 피해량 감소% x 2" - the attacker's level band factor, times 2 as written
+    local dmg = math.sqrt(base) * ((line.pct or 100) / 100) * self:PvpLevelFactor(att.level or 1) * 2 * const
+        / self:PvpDivisor(tgt) / 1e6
+    if line.extraMult then dmg = dmg * line.extraMult end
+    if dmg < 1 then dmg = 1 end
+    return math.floor(dmg), crit
+end
+
+-- divisor from the profile's own stats only (no passives, buffs or on-start effects)
+function Battle:SetPvpBaseline(c, def)
+    local base = Creature.New(self, { name = def.name, side = def.side, level = def.level, job = def.job, stats = def.stats })
+    c.pvpDivisor = self:PvpDivisor(base)
+end
+
+function Battle:IsPvp(att, tgt)
+    return Battle.PVP_CONST[self.dungeonType] and (att.isHero or att.isSupporter or att.owner)
+        and (tgt.isHero or tgt.isSupporter) and att.side ~= tgt.side
+end
+
 function Battle:ComputeHit(att, tgt, line, ctx)
     -- hit / avoid
     local gap = (tgt:Stat("AvoidChance") or 0) - (att:Stat("HitChance") or 0)
@@ -507,6 +582,10 @@ function Battle:ComputeHit(att, tgt, line, ctx)
         if gap > 100 then gap = 100 end
         local miss = D.Combat.missPermilleByGap[gap] or 700
         if self.rng:Float() * 1000 < miss then return 0, false, true end
+    end
+    if self:IsPvp(att, tgt) then
+        local dmg, crit = self:ComputePvpHit(att, tgt, line)
+        return dmg, crit, false
     end
     local atk = att:Stat("Attack")
     if atk <= 0 then atk = 0 end

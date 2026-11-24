@@ -32,12 +32,26 @@ A.REFRESH_REGEN_SEC = 600
 A.REFRESH_COST_DIA = 150
 A.SNAPSHOT_TTL = 3600           -- re-request profiles older than 1 h
 A.HELLO_INTERVAL = 300
--- PROVISIONAL (arena battle rules not published yet; research pending)
-A.TIME_LIMIT_MS = 60000
-A.START_SCORE = 1000
-A.WIN_SCORE = 20
+-- research/spec/research-arena.md
+A.START_SCORE = 1000            -- World Arena / Colosseum start; matches observed arena week-end scores
+A.WIN_SCORE = 20                -- about +20, scaled by CP (doubling own CP halves the gain)
+A.DEFENSE_WIN_SCORE = 5
+A.DEFENSE_LOSS_SCORE = -9
+A.WIN_COINS, A.LOSS_COINS = 30, 20
+A.QUICK_BATTLE_CP = 5           -- quick battle needs 5x the opponent's CP
+A.WIN_MEDALS = { 100, 500, 1000, 2000, 3000 }   -- Main Stat +30 each
+-- PROVISIONAL: not published
+A.TIME_LIMIT_MS = 60000         -- typical fight ~15 s; time-over is the attacker's loss
 A.LOSS_SCORE = -10
-A.DEFENSE_LOSS_SCORE = -5
+A.POTION_PVP_RATIO = 0.5
+-- PROVISIONAL tier -> weekly benefit (which tier gives which buff is not published)
+A.BUFFS = {
+    { minTier = 6, name = "전문가 혜택", gold = 80, exp = 0 },
+    { minTier = 11, name = "장인 혜택", gold = 160, exp = 0 },
+    { minTier = 16, name = "달인 혜택", gold = 190, exp = 50 },
+    { minTier = 21, name = "명인 혜택", gold = 220, exp = 100 },
+    { minTier = 23, name = "패왕 혜택", gold = 250, exp = 150 },
+}
 
 -- lowest -> highest (index 1 = 브론즈1)
 A.TIERS = {
@@ -95,8 +109,10 @@ Hero.RegisterSystem("arena", {
         ar.tickets = math.min(A.TICKET_CAP, (ar.tickets or 0) + A.TICKETS_PER_DAY)
         local idx = A.Tier(hero)
         local row = A.TIERS[idx]
-        if row then Hero.Add(hero, "arenaCoin", row.daily, "arenaDaily") end
-        ar.lastDaily = { tier = idx, coins = row and row.daily }
+        -- the daily settlement pays only if at least one battle was played that day
+        if row and ar.playedToday then Hero.Add(hero, "arenaCoin", row.daily, "arenaDaily") end
+        ar.lastDaily = { tier = idx, coins = ar.playedToday and row and row.daily or 0 }
+        ar.playedToday = false
     end,
     weekly = function(hero)
         local ar = hero.arena
@@ -108,6 +124,10 @@ Hero.RegisterSystem("arena", {
         end
         ar.lastWeekly = { tier = idx, coins = row and row.weekly, sf = row and row.sf }
         ar.bought = {}
+        -- weekly benefit until the next settlement, then ranking points reset
+        ar.buff = nil
+        for _, bf in ipairs(A.BUFFS) do if idx >= bf.minTier then ar.buff = bf end end
+        ar.score = A.START_SCORE
     end,
 })
 
@@ -234,6 +254,13 @@ function Ctl:Update(b, dt)
         def.arenaSex = snap.sex
         local c = b:AddCreature(def)
         self.enemy = c
+        b:SetPvpBaseline(c, def)
+        b:SetPvpBaseline(b.heroCreature, Hero.CreatureDef(self.myProfile, 1, 0))
+        -- both sides' main companions join
+        if ns.Supporters then
+            ns.Supporters.Setup(b, hero, self.myProfile, {})
+            ns.Supporters.Setup(b, nil, snap.profile, {}, c)
+        end
     end
     local hero, enemy = b.heroCreature, self.enemy
     if not hero.alive then b:End("fail") return end
@@ -246,8 +273,7 @@ function Ctl:OnEnd(b, reason)
     if reason == "clear" then won = true
     elseif reason == "fail" then won = false
     else
-        -- PROVISIONAL timeout rule: higher remaining HP ratio wins
-        won = (b.heroCreature:HpRatioM() > self.enemy:HpRatioM())
+        won = false   -- time-over counts as the attacker's loss
     end
     A.Finish(hero, self.opponent, won, self.seed)
 end
@@ -264,7 +290,13 @@ local function pvpStats(stats)
 end
 A.PvpStats = pvpStats
 
-function A.Challenge(hero, name)
+function A.CanQuick(hero, name)
+    local p = db().peers[name]
+    local my = ns.Game.profile and Hero.CombatPower(ns.Game.profile) or 0
+    return p and (p.cp or 0) > 0 and my >= (p.cp or 0) * A.QUICK_BATTLE_CP
+end
+
+function A.Challenge(hero, name, quick)
     local ar = hero.arena
     if (ar.tickets or 0) <= 0 then return false, "결투장 입장권이 없습니다." end
     local snap = db().snapshots[name]
@@ -278,16 +310,30 @@ function A.Challenge(hero, name)
     profile.stats = pvpStats(profile.stats)
     snap.profile.stats = pvpStats(snap.profile.stats)
     local ctl = setmetatable({ hero = hero, opponent = name, snapshot = snap, seed = seed, kind = "arena",
-        title = "결투장: " .. name, timeLimit = A.TIME_LIMIT_MS,
+        title = "결투장: " .. name, timeLimit = A.TIME_LIMIT_MS, myProfile = profile,
         background = "Interface\\Glues\\LoadingScreens\\LoadScreenWarsongGulch" }, Ctl)
-    ns.Game.StartContent(ctl, { seed = seed, profile = profile, dungeonType = "Arena", timeLimitMs = A.TIME_LIMIT_MS,
+    ar.playedToday = true
+    local b = ns.Game.StartContent(ctl, { seed = seed, profile = profile, dungeonType = "Arena", timeLimitMs = A.TIME_LIMIT_MS,
         noSupporters = true })
+    if quick and A.CanQuick(hero, name) then
+        -- 빠른 전투: same auto-battle, resolved instantly
+        while not b.ended and b.time < A.TIME_LIMIT_MS + 1000 do b:Step() end
+    end
     return true
+end
+
+function A.WinScore(hero, opponent)
+    local p = db().peers[opponent]
+    local my = ns.Game.profile and Hero.CombatPower(ns.Game.profile) or 0
+    local opp = p and p.cp or my
+    if my <= 0 or opp <= 0 then return A.WIN_SCORE end
+    return math.max(1, math.floor(A.WIN_SCORE * U.clamp(opp / my, 0.25, 4) + 0.5))
 end
 
 function A.Finish(hero, opponent, won, seed)
     local ar = hero.arena
-    local delta = won and A.WIN_SCORE or A.LOSS_SCORE
+    local delta = won and A.WinScore(hero, opponent) or A.LOSS_SCORE
+    Hero.Add(hero, "arenaCoin", won and A.WIN_COINS or A.LOSS_COINS, "arenaBattle")
     ar.score = math.max(0, ar.score + delta)
     ar.best = math.max(ar.best or 0, ar.score)
     if won then ar.wins = ar.wins + 1 else ar.losses = ar.losses + 1 end
@@ -392,7 +438,7 @@ local function onResult(sender, data)
     local ar = hero.arena
     -- the attacker's win is our defense loss
     local defWon = not data.won
-    local delta = defWon and 0 or A.DEFENSE_LOSS_SCORE
+    local delta = defWon and A.DEFENSE_WIN_SCORE or A.DEFENSE_LOSS_SCORE
     ar.score = math.max(0, ar.score + delta)
     if defWon then ar.defWins = (ar.defWins or 0) + 1 else ar.defLosses = (ar.defLosses or 0) + 1 end
     table.insert(ar.log, 1, { at = U.Now(), kind = "defense", opp = sender, won = defWon, delta = delta, score = ar.score })
@@ -423,4 +469,17 @@ end)
 ns.RegisterSlash("arena", "결투장 상대 찾기(정보 다시 알리기)", function()
     A.SayHello()
     ns.Print("결투장: 주변 애드온 사용자에게 정보를 알렸습니다. 알려진 상대 %d명", #A.Peers())
+end)
+
+-- win medals (Main Stat +30 each) and the weekly benefit buff
+Hero.RegisterStatProvider("arena", function(hero, acc)
+    local ar = hero.arena
+    if not ar then return end
+    local n = 0
+    for _, need in ipairs(A.WIN_MEDALS) do if (ar.wins or 0) >= need then n = n + 1 end end
+    if n > 0 then acc:Add("MainStat", 30 * n) end
+    if ar.buff then
+        acc:Add("BonusGoldPercent", ar.buff.gold or 0)
+        acc:Add("BonusExpPercent", ar.buff.exp or 0)
+    end
 end)

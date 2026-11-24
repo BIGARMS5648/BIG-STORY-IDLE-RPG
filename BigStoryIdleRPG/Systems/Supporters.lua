@@ -55,8 +55,8 @@ local function copyStats(stats, attackScale)
     return out
 end
 
-function S.Spawn(b, hero, profile, info)
-    local heroC = b.heroCreature
+function S.Spawn(b, hero, profile, info, ownerC)
+    local heroC = ownerC or b.heroCreature
     if not (heroC and heroC.alive) then return end
     local set, job = supporterSkillSet(info.jobKey, info.jobStep or 0, profile.level)
     if not set then return end
@@ -67,8 +67,8 @@ function S.Spawn(b, hero, profile, info)
     stats.ratios.Attack = 0
     stats.adds.Str, stats.adds.Dex, stats.adds.Int, stats.adds.Luk, stats.adds.MainStat = 0, 0, 0, 0, 0
     local c = b:AddCreature({
-        name = info.name, side = 1, isSupporter = true, level = profile.level, job = job,
-        stats = stats, skillSet = set, x = heroC.x - 300, facing = heroC.facing, radiusMm = 250,
+        name = info.name, side = heroC.side, isSupporter = true, level = profile.level, job = job,
+        stats = stats, skillSet = set, x = heroC.x - 300 * heroC.facing, facing = heroC.facing, radiusMm = 250,
         model = ns.Skin and ns.Skin.CompanionModel and ns.Skin.CompanionModel(info) or nil,
         companion = info,
     })
@@ -85,7 +85,7 @@ function S.Spawn(b, hero, profile, info)
     return c
 end
 
-function S.Setup(b, hero, profile, opts)
+function S.Setup(b, hero, profile, opts, ownerC)
     local list = profile.companions
     if not list or #list == 0 then return end
     local cfg = D.Combat.supporter
@@ -93,8 +93,9 @@ function S.Setup(b, hero, profile, opts)
     local first = (cfg.initialCoolTimeMs or 60000) * ratio / 1000
     local function cycle()
         if b.ended then return end
-        local heroC = b.heroCreature
-        for _, info in ipairs(list) do S.Spawn(b, hero, profile, info) end
+        local heroC = ownerC or b.heroCreature
+        if not (heroC and heroC.alive) then return end
+        for _, info in ipairs(list) do S.Spawn(b, hero, profile, info, ownerC) end
         local cd = (cfg.coolTimeMs or 90000)
         if heroC then cd = cd * (1 - math.min(999, heroC:Stat("SupporterCoolTimeReduceRatio")) / 1000) end
         b:Schedule(math.max(1000, cd), cycle)
