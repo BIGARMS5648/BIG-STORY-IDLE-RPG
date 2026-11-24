@@ -272,7 +272,10 @@ end
 
 ns.On("LOGIN", function()
     UI.CreateMinimapButton()
-    if ns.db.settings.autoOpen then UI.Toggle() end
+    -- first run (no character yet): open the window so the job selection is visible
+    local first = not ns.Hero.Active()
+    if ns.db.settings.autoOpen or first then UI.Toggle() end
+    ns.Print("|cffffd100빅 스토리 키우기|r 준비 완료 — |cff40ff40/bsi|r 또는 미니맵 버튼으로 창을 엽니다. (/bsi help: 명령어)")
 end)
 
 ns.RegisterSlash("minimap", "미니맵 버튼 표시/숨김", function()

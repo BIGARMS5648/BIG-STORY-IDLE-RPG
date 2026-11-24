@@ -3,6 +3,7 @@
 set -e
 for f in $(find BigStoryIdleRPG -name '*.lua'); do luac5.1 -p "$f"; done
 echo "syntax ok"
+sh tools/test/check_globals.sh
 lua5.1 tools/test/test_expr.lua | tail -1
 lua5.1 tools/test/test_skills_lv140.lua | tail -1
 lua5.1 tools/test/test_battle.lua | tail -1

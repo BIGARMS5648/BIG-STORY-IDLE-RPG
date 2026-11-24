@@ -240,6 +240,8 @@ end
 ---------------------------------------------------------------------------
 -- Character models for creatures that are "people" (arena opponent, companions)
 ---------------------------------------------------------------------------
+local screenX   -- defined below (used by UpdatePeople before its definition)
+
 local RACE_IDS = { Human = 1, Orc = 2, Dwarf = 3, NightElf = 4, Scourge = 5, Tauren = 6, Gnome = 7, Troll = 8 }
 local CLASS_RACES = {
     WARRIOR = { 1, 2, 3, 4, 6, 8 }, PALADIN = { 1, 3 }, HUNTER = { 2, 3, 4, 6, 8 }, ROGUE = { 1, 2, 3, 4, 5, 7, 8 },
@@ -321,7 +323,7 @@ function BV.FloatText(x, y, text, r, g, b, size)
     t:Show()
 end
 
-local function screenX(c, b)
+function screenX(c, b)
     local v = BV.frame
     local hero = b.heroCreature
     local anchor = v:GetWidth() * HERO_SCREEN_X

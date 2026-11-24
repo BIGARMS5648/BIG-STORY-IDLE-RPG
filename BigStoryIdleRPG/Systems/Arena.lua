@@ -327,7 +327,7 @@ function Ctl:Update(b, dt)
         b:SetPvpBaseline(b.heroCreature, Hero.CreatureDef(self.myProfile, 1, 0))
         -- both sides' main companions join
         if ns.Supporters then
-            ns.Supporters.Setup(b, hero, self.myProfile, {})
+            ns.Supporters.Setup(b, self.hero, self.myProfile, {})
             ns.Supporters.Setup(b, nil, snap.profile, {}, c)
         end
     end
