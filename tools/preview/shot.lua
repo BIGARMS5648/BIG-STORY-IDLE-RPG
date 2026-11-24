@@ -36,6 +36,16 @@ for i = 1, 260 do
     ns.BattleView.OnUpdate(0.1)
     if i % 50 == 0 then Stub.RunTimers() end
 end
+-- BSI_ON_PLATFORM=1: keep fighting until the hero stands on a platform (jump preview)
+if os.getenv("BSI_ON_PLATFORM") then
+    for i = 1, 3000 do
+        local J = ns.BattleMap.jump
+        if J and J.grounded and J.y > 0 and i > 3 then break end
+        if Stub.ticker then Stub.ticker() end
+        ns.BattleView.OnUpdate(0.05)
+        if i % 100 == 0 then Stub.RunTimers() end
+    end
+end
 if panel ~= "main" then ns.UI.ShowPanel(panel) end
 ns.UI.RefreshPanel()
 if ns.UI.RefreshHeroBar then ns.UI.RefreshHeroBar() end

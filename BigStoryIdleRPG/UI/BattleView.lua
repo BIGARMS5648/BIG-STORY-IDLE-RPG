@@ -14,7 +14,8 @@ local MAX_MONSTER_MODELS = 14
 
 -- WoW animation ids
 local ANIM = { stand = 0, death = 1, walk = 4, run = 5, hit = 9, attack1H = 17, attack2H = 18,
-    unarmed = 16, spellDirected = 53, spellOmni = 54, bow = 46, rifle = 49, ready = 26, dead = 6 }
+    unarmed = 16, spellDirected = 53, spellOmni = 54, bow = 46, rifle = 49, ready = 26, dead = 6,
+    jumpStart = 37, jump = 38, jumpEnd = 39, fall = 40 }
 
 local FACE_RIGHT = math.rad(70)
 local FACE_LEFT = math.rad(-70)
@@ -40,15 +41,12 @@ function BV.Create(parent)
     v.bgArt:SetAllPoints()
     v.bgArt:SetTexCoord(0, 1, 0.12, 0.82)
     v.bgArt:SetAlpha(0.85)
-    v.ground = v:CreateTexture(nil, "BORDER")
-    v.ground:SetPoint("BOTTOMLEFT")
-    v.ground:SetPoint("BOTTOMRIGHT")
-    v.ground:SetHeight(GROUND_Y)
-    v.ground:SetColorTexture(0, 0, 0, 0.45)
+    -- platforms + ground (UI/BattleMap.lua)
+    if ns.BattleMap then ns.BattleMap.Create(v, GROUND_Y, MM_PER_PIXEL) end
 
     -- hero model (player character wearing addon gear)
     local hero = CreateFrame("DressUpModel", nil, v)
-    hero:SetSize(170, 220)
+    hero:SetSize(150, 196)
     hero:SetPoint("BOTTOM", v, "BOTTOMLEFT", 0, GROUND_Y - 20)
     BV.heroModel = hero
     BV.SetupHeroModel()
@@ -57,7 +55,7 @@ function BV.Create(parent)
     BV.mobs = {}
     for i = 1, MAX_MONSTER_MODELS do
         local m = CreateFrame("PlayerModel", nil, v)
-        m:SetSize(120, 150)
+        m:SetSize(110, 132)
         m:Hide()
         m.hp = W.Bar(m, 70, 5, 0.85, 0.15, 0.15)
         m.hp:SetPoint("BOTTOM", m, "TOP", 0, -18)
@@ -298,7 +296,7 @@ function BV.HookGame()
     H.onDamage = function(b, att, tgt, amount, crit, info)
         if not (ns.db.settings.showDamageText and BV.frame and BV.frame:IsVisible()) then return end
         local x = screenX(tgt, b)
-        local y = GROUND_Y + (tgt.isHero and 150 or 120)
+        local y = GROUND_Y + (tgt.isHero and 150 or 120) + (tgt.mapY or 0)
         if tgt.isHero then
             BV.FloatText(x, y, "-" .. U.FormatNumber(amount), 1, 0.25, 0.25, 13)
         elseif crit then
@@ -310,7 +308,7 @@ function BV.HookGame()
     end
     H.onMiss = function(b, att, tgt)
         if not (BV.frame and BV.frame:IsVisible()) then return end
-        BV.FloatText(screenX(tgt, b), GROUND_Y + 120, "MISS", 0.7, 0.7, 0.7, 12)
+        BV.FloatText(screenX(tgt, b), GROUND_Y + 120 + (tgt.mapY or 0), "MISS", 0.7, 0.7, 0.7, 12)
     end
     H.onDeath = function(b, c)
         c.deathAt = b.time
@@ -327,7 +325,20 @@ function BV.HookGame()
             BV.heroAnimUntil = GetTime and (GetTime() + 0.6) or 0
             if not isBasic then
                 local name = ns.Skin and ns.Skin.SkillName and ns.Skin.SkillName(sid) or ""
-                BV.FloatText(screenX(c, b), GROUND_Y + 200, name, 0.6, 0.85, 1, 13)
+                BV.FloatText(screenX(c, b), GROUND_Y + 200 + (c.mapY or 0), name, 0.6, 0.85, 1, 13)
+                -- real spell effect on the nearest enemy in front
+                local best, bd
+                for _, t in ipairs(b.creatures) do
+                    if t.alive and t.side ~= c.side then
+                        local d = math.abs(t.x - c.x)
+                        if not bd or d < bd then best, bd = t, d end
+                    end
+                end
+                if best and ns.BattleMap then
+                    local hx = screenX(c, b)
+                    ns.BattleMap.CastEffect(b, c, sid, screenX(best, b), GROUND_Y + 70 + (best.mapY or 0),
+                        hx + (c.facing or 1) * 30, GROUND_Y + 90 + (c.mapY or 0))
+                end
             end
         end
     end
@@ -344,6 +355,15 @@ ns.On("BATTLE_STARTED", function(b, mode)
     if not BV.frame then return end
     for _, m in ipairs(BV.mobs) do m:Hide(); m.owner = nil end
     local hero = ns.Hero.Active()
+    if hero and ns.BattleMap then
+        local ctl = b.opts and b.opts.controller
+        local ch, st = hero.campaign.chapter, hero.campaign.stage
+        if ctl and ctl.ch then ch, st = ctl.ch, ctl.st or st end
+        if mode ~= "hunt" and mode ~= "challenge" and mode ~= "boss" then
+            st = U.HashString and (U.HashString(tostring(ctl and (ctl.modeKey or ctl.kind) or mode)) % 20 + 1) or 1
+        end
+        ns.BattleMap.SetStage(ch, st, mode)
+    end
     if hero and ns.Skin and ns.Skin.Background then
         local tex = ns.Skin.Background(hero, mode, b)
         if tex then BV.frame.bgArt:SetTexture(tex); BV.frame.bgArt:Show() else BV.frame.bgArt:Hide() end
@@ -362,15 +382,27 @@ function BV.OnUpdate(elapsed)
     local hero = b.heroCreature
     local width = v:GetWidth()
 
+    -- map (platforms scroll with the hero) and a slow parallax on the zone art
+    if hero and ns.BattleMap then ns.BattleMap.Update(b, hero.x, width * HERO_SCREEN_X) end
+    if hero and v.bgArt:IsShown() then
+        local px = (hero.x / 600000) % 0.2
+        v.bgArt:SetTexCoord(px, px + 0.8, 0.1, 0.8)
+    end
     -- hero
     if hero then
         local hx = width * HERO_SCREEN_X
+        local hy, air = 0, "ground"
+        if ns.BattleMap then hy, air = ns.BattleMap.UpdateHero(b, hero, elapsed) end
         BV.heroModel:ClearAllPoints()
-        BV.heroModel:SetPoint("BOTTOM", v, "BOTTOMLEFT", hx, GROUND_Y - 20)
+        BV.heroModel:SetPoint("BOTTOM", v, "BOTTOMLEFT", hx, GROUND_Y - 20 + hy)
         local now = GetTime and GetTime() or 0
+        if air ~= "ground" then BV.landedAt = now end
         if hero.alive and (not BV.heroAnimUntil or now > BV.heroAnimUntil) then
             local moving = hero.lastX and math.abs(hero.x - hero.lastX) > 1
             local anim = moving and ANIM.run or ANIM.ready
+            if air == "up" then anim = ANIM.jump
+            elseif air == "down" then anim = ANIM.fall
+            elseif BV.landedAt and now - BV.landedAt < 0.15 then anim = ANIM.jumpEnd end
             if BV.heroAnim ~= anim then
                 safe(BV.heroModel.SetAnimation, BV.heroModel, anim)
                 BV.heroAnim = anim
@@ -395,7 +427,8 @@ function BV.OnUpdate(elapsed)
             else
                 setCreatureModel(m, c)
                 m:ClearAllPoints()
-                m:SetPoint("BOTTOM", v, "BOTTOMLEFT", x, GROUND_Y - 18)
+                local yOff = ns.BattleMap and ns.BattleMap.OffsetFor(c) or 0
+                m:SetPoint("BOTTOM", v, "BOTTOMLEFT", x, GROUND_Y - 18 + yOff)
                 if not m:IsShown() then
                     m:Show()
                     safe(m.SetAnimation, m, ANIM.stand)
@@ -403,7 +436,7 @@ function BV.OnUpdate(elapsed)
                 safe(m.SetFacing, m, c.facing > 0 and FACE_RIGHT or FACE_LEFT)
                 m.hp:SetValue(c.hp / math.max(1, c:Stat("MaxHp")))
                 m.hp:SetShown(c.alive and not c.isBoss)
-                if c.isBoss then m:SetSize(190, 230) else m:SetSize(120, 150) end
+                if c.isBoss then m:SetSize(190, 230) else m:SetSize(110, 132) end
             end
             if c.isBoss and c.alive then boss = c end
         end

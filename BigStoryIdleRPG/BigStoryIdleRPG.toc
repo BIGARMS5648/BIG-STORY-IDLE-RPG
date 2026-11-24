@@ -28,6 +28,8 @@ Data\GrowthRewards.lua
 Data\SkinData.lua
 Data\SkinNames.lua
 Data\UIArt.lua
+Data\MapThemes.lua
+Data\SkillEffects.lua
 Data\Income.lua
 Data\JobAdvancement.lua
 Data\Medals.lua
@@ -72,6 +74,7 @@ Systems\SpecialRequests.lua
 
 UI\Widgets.lua
 UI\Main.lua
+UI\BattleMap.lua
 UI\BattleView.lua
 UI\CorePanels.lua
 UI\MapleRankPanel.lua

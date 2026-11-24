@@ -63,7 +63,7 @@ function frameMT.SetBackdropColor(self, r, g, b, a) self._bdColor = { r, g, b, a
 function frameMT.SetBackdropBorderColor(self, r, g, b, a) self._bdBorder = { r, g, b, a or 1 } end
 function frameMT.SetColorTexture(self, r, g, b, a) self._color = { r, g, b, a or 1 }; self._file = nil end
 function frameMT.SetTexture(self, f, ...)
-    if type(f) == "number" and select("#", ...) >= 2 then self._color = { f, ... }; return end
+    if type(f) == "number" and select("#", ...) >= 2 and type((...)) == "number" then self._color = { f, ... }; return end
     self._file = f; self._color = nil
 end
 function frameMT.GetTexture(self) return self._file end
