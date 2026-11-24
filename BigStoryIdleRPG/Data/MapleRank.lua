@@ -37,7 +37,8 @@ D.MapleRank = {
     -- PROVISIONAL: special stat points granted per completed rank, cost to open / level a special stat
     specialPointsPerRank = 5,
     specialCost = 1,
-    -- 특별 능력치 (screenshot; value at level n = base + (n - 1) x step)
+    -- 특별 능력치: the complete list is these 6 (screenshot, confirmed by the user);
+    -- value at level n = base + (n - 1) x step
     special = {
         { key = "AttackSpeed", label = "공격 속도", unlock = 10, max = 20, base = 30, step = 2, chain = true },
         { key = "CriticalChance", label = "크리티컬 확률", unlock = 20, max = 10, base = 50, step = 5 },

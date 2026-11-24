@@ -37,11 +37,12 @@ G.SKIN = { weapon = "weapon", exp = "exp", gear = "gear", training = "heroTraini
 -- PROVISIONAL: per-stage amounts of 무기/장비/수련장/강화(주문의 흔적) are not published anywhere
 -- (research-progression §9, research-income §10 #7). Only the reward TYPES are known. Replace this one
 -- table (or provide D.ContentGrowthRewards[key][stage] = { walletKey = n }) when real numbers appear.
+-- fallback for stages outside Data/GrowthRewards.lua (same KR formulas)
 C.GROWTH_REWARDS_PROVISIONAL = {
-    weapon = function(st) return { weaponTicket = 5 + math.floor(st / 5), weaponStone = 500 * st } end,
-    gear = function(st) return { eliteSummonPoint = 100 + 10 * st } end,
-    training = function(st) return { heroToken = 240 + 10 * st } end,  -- global 1.14 formula; KR 141-150 unpublished
-    enhance = function(st) return { spellTrace = 100 + 10 * st } end,
+    weapon = function(st) return { weaponTicket = 10 + st, weaponStone = 1700 + 300 * st } end,
+    gear = function(st) return { eliteSummonPoint = 190 + 10 * st } end,
+    training = function(st) return { heroToken = 240 + 10 * st } end,
+    enhance = function(st) return { spellTrace = 150 + 5 * st } end,
 }
 
 local function scrollBand(stage)
@@ -64,7 +65,8 @@ function G.StageReward(key, stage, rng)
         if fn then for k, v in pairs(fn(stage)) do out[k] = v end end
     end
     if key == "enhance" then
-        -- random enhancement scroll: 6 kinds, 10% in total per clear / sweep (exact table, ppm)
+        -- 의문의 주문서 (in-game: "low chance", independent, 1 when it drops): the client drop table rolls
+        -- 10% per clear / sweep, then one of 6 enhancement scrolls by the stage band (exact table, ppm)
         local band = scrollBand(stage)
         if band then
             local r = rng:Float() * 1000000
@@ -360,14 +362,22 @@ local function finish(self, b, reason)
         note = "열쇠 1개 사용"
     else
         -- key returned on clear; the first clear of a new stage pays that stage's reward
-        if first then
-            rewards = G.StageReward(self.key, self.stage, b.rng)
-            -- every 10th stage pays an extra first-clear bonus (published for 용사의 수련장)
-            local bonus = D.ContentGrowthFirstClear and D.ContentGrowthFirstClear[self.key]
-                and D.ContentGrowthFirstClear[self.key][self.stage]
-            if bonus then for k, v in pairs(bonus) do rewards[k] = (rewards[k] or 0) + v end end
-        end
+        if first then rewards = G.StageReward(self.key, self.stage, b.rng) end
         note = first and "최초 클리어 · 열쇠 반환" or "열쇠 반환"
+    end
+    if first then
+        rewards = rewards or {}
+        -- every dungeon: a first clear gives 1 entry ticket of that dungeon, and every 10th stage's
+        -- first clear also pays 5x that stage's reward
+        local fc = D.ContentGrowthFirstClear or { keys = 1, every = 10, multiplier = 5 }
+        rewards[G.WALLET[self.key]] = (rewards[G.WALLET[self.key]] or 0) + fc.keys
+        if self.stage % fc.every == 0 then
+            local base = G.StageReward(self.key, self.stage, U.NewRNG(1))
+            for k, v in pairs(base) do
+                if not k:find("^scroll") then rewards[k] = (rewards[k] or 0) + v * fc.multiplier end
+            end
+            note = note .. string.format(" · %d단계 최초 클리어 보상 x%d", self.stage, fc.multiplier)
+        end
     end
     local lines = C.Grant(hero, rewards, "growth")
     ns.Fire("GROWTH_DUNGEON_CLEARED", hero, self.key, self.stage, first)

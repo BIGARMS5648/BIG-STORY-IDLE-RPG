@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""Generate BigStoryIdleRPG/Data/GrowthRewards.lua from research/maple_idle_database/json.
-Only stages with real (non-null) values are emitted; others fall back to the
-PROVISIONAL formulas in Systems/ContentDungeons.lua.
+"""Generate BigStoryIdleRPG/Data/GrowthRewards.lua: per-stage clear rewards of the growth dungeons.
+
+Rules (KR in-game, provided by the user 2026-11-24; 용사의 수련장 also matches the global 1.14 table):
+  무기 던전      stage s: 무기 소환권 10 + s, 무기 강화석 1700 + 300 s   (s1: 11 / 2,000; s10: 20 / 4,700)
+  장비 던전      stage s: 엘리트 몬스터 소환 포인트 190 + 10 s          (s1: 200)
+  용사의 수련장  stage s: 용사의 증표 240 + 10 s                        (s1: 250)
+  강화 던전      stage s: 주문의 흔적 150 + 5 s (s1: 155) + 의문의 주문서 (low chance, independent)
+  경험치 던전    client sweep table (already exact; matches the in-game % of the Lv72 requirement)
+  All dungeons: each first clear gives 1 entry ticket of that dungeon; every 10th stage's first
+  clear also pays 5x that stage's reward (e.g. 무기 던전 40: 250 / 68,500).
 
 Usage: python3 -I tools/gen_growth_rewards.py
 """
-import json
 import os
 import sys
 
@@ -14,38 +20,24 @@ sys.path.insert(0, HERE)
 from luagen import write_lua  # noqa: E402
 
 ROOT = os.path.dirname(HERE)
-DB = os.path.join(ROOT, "research", "maple_idle_database", "json")
 OUT = os.path.join(ROOT, "BigStoryIdleRPG", "Data", "GrowthRewards.lua")
-
-# (dataset file, dungeon key, wallet key, repeat field, first-clear field)
-SETS = [
-    ("hero_training_rewards.json", "training", "heroToken", "repeat_clear_hero_tokens", "first_clear_hero_tokens"),
-    ("weapon_dungeon_rewards.json", "weapon", "weaponTicket", "repeat_clear_weapon_summon_tickets",
-     "first_clear_weapon_summon_tickets"),
-    ("equipment_dungeon_rewards.json", "gear", "eliteSummonPoint", "repeat_clear_elite_monster_summon_points",
-     "first_clear_elite_monster_summon_points"),
-    ("enhancement_dungeon_rewards.json", "enhance", "spellTrace", "repeat_clear_spell_traces", "first_clear_spell_traces"),
-]
+STAGES = 160   # cap raised to 160 on 2026-11-26 (research/maple_idle_database)
 
 
 def main():
-    rewards, first = {}, {}
-    counts = {}
-    for fname, key, wallet, rep, fc in SETS:
-        with open(os.path.join(DB, fname), encoding="utf-8") as f:
-            recs = json.load(f)["records"]
-        for r in recs:
-            st = r["stage"]
-            if r.get(rep) is not None:
-                rewards.setdefault(key, {})[st] = {wallet: r[rep]}
-                counts[key] = counts.get(key, 0) + 1
-            if r.get(fc):
-                first.setdefault(key, {})[st] = {wallet: r[fc]}
+    r = {"weapon": {}, "gear": {}, "training": {}, "enhance": {}}
+    for s in range(1, STAGES + 1):
+        r["weapon"][s] = {"weaponTicket": 10 + s, "weaponStone": 1700 + 300 * s}
+        r["gear"][s] = {"eliteSummonPoint": 190 + 10 * s}
+        r["training"][s] = {"heroToken": 240 + 10 * s}
+        r["enhance"][s] = {"spellTrace": 150 + 5 * s}
+    assert r["weapon"][10] == {"weaponTicket": 20, "weaponStone": 4700}
+    assert r["weapon"][40]["weaponTicket"] * 5 == 250 and r["weapon"][40]["weaponStone"] * 5 == 68500
     write_lua(OUT, [
-        ("D.ContentGrowthRewards", rewards, None),
-        ("D.ContentGrowthFirstClear", first, None),
-    ], note="Growth-dungeon per-stage rewards with a published source (research/maple_idle_database).")
-    print("stages with real rewards:", counts, "first-clear bonuses:", {k: len(v) for k, v in first.items()})
+        ("D.ContentGrowthRewards", r, None),
+        ("D.ContentGrowthFirstClear", {"keys": 1, "every": 10, "multiplier": 5}, None),
+    ], note="Growth-dungeon clear rewards (KR in-game rules, see tools/gen_growth_rewards.py).")
+    print("ok: %d stages x 4 dungeons" % STAGES)
 
 
 if __name__ == "__main__":

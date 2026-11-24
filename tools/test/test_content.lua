@@ -76,6 +76,17 @@ local function show(key)
     print(string.format("  %-20s %s", key, table.concat(r.lines or { "-" }, " | ")))
 end
 
+-- 10th-stage first clear pays 5x the stage reward (+1 key); 무기 던전 40: 250 / 68,500
+do
+    local G2 = C.Growth
+    local rw = G2.StageReward("weapon", 40, U.NewRNG(1))
+    check(rw.weaponTicket == 50 and rw.weaponStone == 13700, "weapon dungeon stage 40 reward 50 / 13,700")
+    check(G2.StageReward("weapon", 10, U.NewRNG(1)).weaponStone == 4700, "weapon dungeon stage 10 stones 4,700")
+    check(G2.StageReward("gear", 1, U.NewRNG(1)).eliteSummonPoint == 200, "gear dungeon stage 1 = 200")
+    check(G2.StageReward("training", 1, U.NewRNG(1)).heroToken == 250, "training stage 1 = 250")
+    check(G2.StageReward("enhance", 1, U.NewRNG(1)).spellTrace == 155, "enhance stage 1 = 155 traces")
+end
+
 -- 1. AI allies ----------------------------------------------------------------
 local allies = C.MakeAllies(hero, C.profileOverride, 7, U.NewRNG(3))
 local seen = {}
@@ -97,10 +108,11 @@ for _, key in ipairs(G.KEYS) do
     local r = last("growth_" .. key)
     check(r.ok, key .. " stage 1 clear")
     check(hero.content.growth[key].max == 1, key .. " max stage 1")
+    -- first clear of a stage gives +1 key of that dungeon (all dungeons)
     if key == "enhance" then
-        check(W(wk) == before - 1, "enhance clear uses a key")
+        check(W(wk) == before, "enhance clear uses a key, first clear gives one back")
     else
-        check(W(wk) == before, key .. " key returned on clear")
+        check(W(wk) == before + 1, key .. " key returned on clear + 1 for the first clear")
     end
     show("growth_" .. key)
 end
@@ -137,6 +149,19 @@ for _ = 1, n do
 end
 check(math.abs(got / n - 0.10) < 0.01, string.format("enhance scroll rate %.3f ~ 0.10", got / n))
 
+-- stage 40 first clear: stage reward (50 / 13,700) + 5x bonus (250 / 68,500) + 1 key
+do
+    hero.content.growth.weapon.max = 39
+    Hero.Add(hero, "weaponDungeonKey", 1)
+    local t0, s0, k0 = W("weaponTicket"), W("weaponStone"), W("weaponDungeonKey")
+    run(G.Enter(hero, "weapon", 40), 120000)
+    check(last("growth_weapon").ok, "weapon stage 40 clear")
+    check(W("weaponTicket") - t0 == 300 and W("weaponStone") - s0 == 82200,
+        "stage 40 first clear 50+250 tickets, 13,700+68,500 stones (got " .. (W("weaponTicket") - t0) .. ", "
+        .. (W("weaponStone") - s0) .. ")")
+    check(W("weaponDungeonKey") == k0 + 1, "stage 40 first clear +1 key")
+end
+
 -- 3. daily reset: +3 keys (cap 10), quick hunt counters, balrog ticket
 local function nextDay(days)
     clock = clock + 86400 * (days or 1)
@@ -144,8 +169,9 @@ local function nextDay(days)
     Stub.RunTimers()
 end
 Hero.Add(hero, "expDungeonKey", 8)
+local wk0 = W("weaponDungeonKey")
 nextDay(1)
-check(W("weaponDungeonKey") == 3, "daily +3 keys")
+check(W("weaponDungeonKey") == math.min(10, math.max(wk0, wk0 + 3)), "daily +3 keys")
 check(W("expDungeonKey") == 10, "daily keys capped at 10")
 nextDay(3)
 check(W("weaponDungeonKey") == 10, "3 missed days accumulate to cap 10")
