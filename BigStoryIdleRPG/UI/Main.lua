@@ -22,7 +22,7 @@ UI.panelOrder = {}
 
 local WIDTH, HEIGHT = 1120, 630
 UI.WIDTH, UI.HEIGHT = WIDTH, HEIGHT
-local POPUP_W, POPUP_H = 990, 500
+local POPUP_W, POPUP_H = 990, 470
 local BD = BackdropTemplateMixin and "BackdropTemplate" or nil
 
 -- icons of every menu (WoW client icons)
@@ -62,11 +62,17 @@ end
 local function iconButton(parent, key, size, label, onClick)
     local b = CreateFrame("Button", nil, parent)
     b:SetSize(size + 18, size + (label and 14 or 0))
-    b.icon = b:CreateTexture(nil, "ARTWORK")
-    b.icon:SetSize(size, size)
+    local med = W.ArtInfo("med_" .. tostring(key))
+    if med then
+        b.icon = W.Art(b, "med_" .. key, "ARTWORK")
+        b.icon:SetSize(size + 6, size + 6)
+    else
+        b.icon = b:CreateTexture(nil, "ARTWORK")
+        b.icon:SetSize(size, size)
+        b.icon:SetTexture(UI.MENU_ICONS[key] or key)
+        b.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    end
     b.icon:SetPoint("TOP")
-    b.icon:SetTexture(UI.MENU_ICONS[key] or key)
-    b.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     if label then
         b.text = W.Text(b, 11, W.COLORS.white, "CENTER")
         b.text:SetPoint("TOP", b.icon, "BOTTOM", 0, -2)
@@ -133,20 +139,26 @@ function UI.BuildHud(h)
     h.cp:SetPoint("TOPLEFT", pf, "TOPRIGHT", 8, -5)
     h.rank = W.Text(h, 12, { 0.85, 0.85, 0.9 }, "LEFT")
     h.rank:SetPoint("TOPLEFT", h.cp, "BOTTOMLEFT", 0, -6)
-    h.gold = capsule(h, 132, 22)
+    h.gold = capsule(h, 150, 30, 0)
+    if W.ArtInfo("cap_gold") then
+        h.gold.art = W.Art(h.gold, "cap_gold", "BACKGROUND")
+        h.gold.art:SetAllPoints()
+    end
     h.gold:SetPoint("TOPLEFT", pf, "BOTTOMLEFT", 0, -6)
     h.gold.text = W.Text(h.gold, 12, W.COLORS.white, "LEFT")
-    h.gold.text:SetPoint("LEFT", 6, 0)
-    h.dia = capsule(h, 112, 22)
+    h.gold.text:SetPoint("LEFT", 38, 0)
+    h.dia = capsule(h, 130, 26)
+    if W.ArtInfo("box_dark") then W.Slice(h.dia, "box_dark", 0.55) end
     h.dia:SetPoint("LEFT", h.gold, "RIGHT", 6, 0)
     h.dia.text = W.Text(h.dia, 12, W.COLORS.white, "LEFT")
     h.dia.text:SetPoint("LEFT", 6, 0)
 
     -- goal box (가이드 퀘스트 style: the next thing to do)
     local goal = CreateFrame("Button", nil, h, BD)
-    goal:SetSize(260, 52)
-    goal:SetPoint("TOPLEFT", h.gold, "BOTTOMLEFT", 0, -12)
+    goal:SetSize(270, 56)
+    goal:SetPoint("TOPLEFT", h.gold, "BOTTOMLEFT", 0, -10)
     W.Backdrop(goal, { 0, 0, 0, 0.5 }, { 0, 0, 0, 0 }, 8)
+    if W.ArtInfo("box_dark") then W.Slice(goal, "box_dark", 0.6) end
     goal.bar = goal:CreateTexture(nil, "ARTWORK")
     goal.bar:SetColorTexture(0.55, 0.85, 0.15, 1)
     goal.bar:SetPoint("TOPLEFT", 3, -5)
@@ -162,7 +174,7 @@ function UI.BuildHud(h)
     -- top centre: zone, stage bar, next stage + 도전
     h.zone = W.Text(h, 15, W.COLORS.white, "CENTER")
     h.zone:SetPoint("TOP", 0, -8)
-    h.stageBar = W.Bar(h, 300, 7, 1, 0.78, 0.15)
+    h.stageBar = W.Bar(h, 300, 10, 1, 0.78, 0.15)
     h.stageBar:SetPoint("TOP", 0, -44)
     h.stageBar.text:Hide()
     h.stageText = W.Text(h, 15, W.COLORS.white, "CENTER")
@@ -184,7 +196,7 @@ function UI.BuildHud(h)
     -- top right: menu icons + close
     local close = W.Button(h, "X", 28, 28, function() UI.frame:Hide() end, "gray")
     close:SetPoint("TOPRIGHT", -8, -8)
-    h.menuBtn = iconButton(h, "Interface\\Icons\\INV_Misc_Book_08", 32, "메뉴", function() UI.ToggleMenu() end)
+    h.menuBtn = iconButton(h, "menu", 32, "메뉴", function() UI.ToggleMenu() end)
     h.menuBtn:SetPoint("TOPRIGHT", close, "TOPLEFT", -6, 0)
     h.top = {}
     local prev = h.menuBtn
@@ -205,13 +217,16 @@ function UI.BuildHud(h)
     h.expText:SetPoint("BOTTOMLEFT", 10, 9)
 
     -- bottom centre: nav bar
-    local nav = capsule(h, 372, 60, 0.7)
-    nav:SetPoint("BOTTOM", 0, 10)
+    local nav = capsule(h, 470, 64, 0.7)
+    nav:SetPoint("BOTTOM", 0, 8)
+    if W.ArtInfo("bar_ribbon") then
+        W.Slice(nav, "bar_ribbon", 1.05)
+    end
     h.navBar = nav
     h.nav = {}
     for i, key in ipairs(UI.NAV) do
         local b = iconButton(nav, key, 28, UI.TITLES[key], function() UI.ShowPanel(key) end)
-        b:SetPoint("LEFT", 12 + (i - 1) * 72, -1)
+        b:SetPoint("LEFT", 68 + (i - 1) * 68, 2)
         h.nav[key] = b
     end
 
@@ -220,6 +235,7 @@ function UI.BuildHud(h)
     box:SetSize(254, 64)
     box:SetPoint("BOTTOM", nav, "TOP", -10, 8)
     W.Backdrop(box, { 0.1, 0.11, 0.14, 0.92 }, { 0.38, 0.41, 0.48, 1 }, 10)
+    if W.ArtInfo("frame_rivet") then W.Slice(box, "frame_rivet", 0.4) end
     box.lv = W.Text(box, 14, { 1, 0.82, 0.25 }, "LEFT")
     box.lv:SetPoint("TOPLEFT", 12, -7)
     box.name = W.Text(box, 14, W.COLORS.white, "CENTER")
@@ -249,11 +265,16 @@ function UI.BuildHud(h)
     local fa = CreateFrame("Button", nil, h)
     fa:SetSize(50, 58)
     fa:SetPoint("LEFT", box, "RIGHT", 10, 0)
-    fa.icon = fa:CreateTexture(nil, "ARTWORK")
-    fa.icon:SetSize(32, 32)
+    if W.ArtInfo("med_auto") then
+        fa.icon = W.Art(fa, "med_auto", "ARTWORK")
+        fa.icon:SetSize(38, 38)
+    else
+        fa.icon = fa:CreateTexture(nil, "ARTWORK")
+        fa.icon:SetSize(32, 32)
+        fa.icon:SetTexture("Interface\\Icons\\Ability_Rogue_Sprint")
+        fa.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    end
     fa.icon:SetPoint("TOP")
-    fa.icon:SetTexture("Interface\\Icons\\Ability_Rogue_Sprint")
-    fa.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     fa.text = W.Text(fa, 11, W.COLORS.white, "CENTER")
     fa.text:SetPoint("TOP", fa.icon, "BOTTOM", 0, -1)
     fa.text:SetText("Full\nAuto")
@@ -271,7 +292,15 @@ function UI.BuildHud(h)
     h.fullAuto = fa
 
     -- bottom left: main companion
-    local comp = W.Icon(h, 50)
+    local comp = W.Icon(h, 54)
+    if comp.frameArt and W.ArtInfo("slot_round") then
+        W.SetArt(comp.frameArt, "slot_round")
+        comp.slotBg:Hide()
+        comp.icon:ClearAllPoints()
+        comp.icon:SetPoint("TOPLEFT", 12, -12)
+        comp.icon:SetPoint("BOTTOMRIGHT", -12, 12)
+        comp.round = true
+    end
     comp:SetPoint("BOTTOMRIGHT", nav, "BOTTOMLEFT", -16, 8)
     comp.level = W.Text(comp, 11, W.COLORS.white, "CENTER")
     comp.level:SetPoint("TOP", comp, "BOTTOM", 0, -1)
@@ -320,7 +349,7 @@ function UI.RefreshHud()
         local n = ns.Hero.Count(hr, key)
         return string.format("|T%s:16:16|t %s", ns.Data.CurrencyIcon(key), n < 1e8 and U.Comma(n) or U.FormatNumber(n))
     end
-    h.gold.text:SetText(amount("meso"))
+    h.gold.text:SetText(h.gold.art and U.Comma(ns.Hero.Count(hr, "meso")) or amount("meso"))
     h.dia.text:SetText(amount("redDia"))
 
     -- stage
@@ -399,7 +428,7 @@ function UI.RefreshHud()
     if main then
         local look = ns.Skin.Job(ns.SkillBook.JobByKey(main.job))
         h.companion.icon:SetTexture(look.icon)
-        W.SetBorderGrade(h.companion, main.grade)
+        if not h.companion.round then W.SetBorderGrade(h.companion, main.grade) end
         local rec = ns.Companions.Get(hr, hr.companions.main)
         h.companion.level:SetText("Lv." .. (rec and rec.level or 1))
         h.companion:Show()
@@ -480,7 +509,7 @@ end
 ---------------------------------------------------------------------------
 function UI.BuildHosts(f)
     local pop = W.Panel(f, POPUP_W, POPUP_H, 0.97)
-    pop:SetPoint("CENTER", 0, -6)
+    pop:SetPoint("CENTER", 0, 18)
     pop:SetFrameLevel(f:GetFrameLevel() + 60)
     pop:EnableMouse(true)
     pop:Hide()
@@ -489,6 +518,12 @@ function UI.BuildHosts(f)
     pop.header:SetPoint("TOPRIGHT", -4, -4)
     pop.header:SetHeight(40)
     W.Backdrop(pop.header, T.header, T.header, 8)
+    if W.ArtInfo("plate_red") then
+        pop.header:SetBackdrop(nil)
+        pop.plate = W.Art(pop.header, "plate_red", "ARTWORK")
+        pop.plate:SetSize(300, 58)
+        pop.plate:SetPoint("CENTER", 0, -2)
+    end
     pop.title = W.Text(pop.header, 17, W.COLORS.white, "CENTER")
     pop.title:SetPoint("CENTER")
     pop.close = W.Button(pop.header, "X", 30, 28, function() UI.ClosePanel() end, "gray")

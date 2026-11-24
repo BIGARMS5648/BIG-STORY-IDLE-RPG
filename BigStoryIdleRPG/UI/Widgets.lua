@@ -51,11 +51,124 @@ local function backdrop(f, bg, border, edge)
 end
 W.Backdrop = backdrop
 
+---------------------------------------------------------------------------
+-- UI kit art (the user's own assets, Media/UI/*.tga; Data/UIArt.lua)
+---------------------------------------------------------------------------
+local function art(name) return ns.Data.UIArt and ns.Data.UIArt[name] end
+W.ArtInfo = art
+
+-- a plain texture showing a whole piece
+function W.Art(parent, name, layer, sub)
+    local a = art(name)
+    local t = parent:CreateTexture(nil, layer or "ARTWORK", nil, sub)
+    if a then
+        t:SetTexture(a.file)
+        t:SetTexCoord(0, a.w / a.cw, 0, a.h / a.ch)
+    end
+    return t
+end
+
+function W.SetArt(t, name)
+    local a = art(name)
+    if not a then return end
+    t:SetTexture(a.file)
+    t:SetTexCoord(0, a.w / a.cw, 0, a.h / a.ch)
+end
+
+-- nine-slice frame from a piece with slice = {l, r, t, b}; top / bottom ornaments (ot / ob wide) keep
+-- their size in the middle of the edge. scale = screen pixels per texture pixel.
+function W.Slice(f, name, scale, opts)
+    local a = art(name)
+    if not a or not a.slice then return end
+    opts = opts or {}
+    scale = scale or 0.5
+    if f.slices then for _, t in ipairs(f.slices) do t:Hide() end end
+    local pieces = {}
+    f.slices = pieces
+    local W_, H_, CW, CH = a.w, a.h, a.cw, a.ch
+    local l, r, t, b = a.slice[1], a.slice[2], a.slice[3], a.slice[4]
+    local layer = opts.layer or "BACKGROUND"
+    local function piece(u0, u1, v0, v1, sub)
+        local tx = f:CreateTexture(nil, layer, nil, sub or 0)
+        tx:SetTexture(a.file)
+        tx:SetTexCoord(u0 / CW, u1 / CW, v0 / CH, v1 / CH)
+        pieces[#pieces + 1] = tx
+        return tx
+    end
+    local tl = piece(0, l, 0, t, 1); tl:SetSize(l * scale, t * scale); tl:SetPoint("TOPLEFT")
+    local tr = piece(W_ - r, W_, 0, t, 1); tr:SetSize(r * scale, t * scale); tr:SetPoint("TOPRIGHT")
+    local bl = piece(0, l, H_ - b, H_, 1); bl:SetSize(l * scale, b * scale); bl:SetPoint("BOTTOMLEFT")
+    local br = piece(W_ - r, W_, H_ - b, H_, 1); br:SetSize(r * scale, b * scale); br:SetPoint("BOTTOMRIGHT")
+    local function edge(rowTop, rowH, v0, v1, orn, anchorL, anchorR, sideV)
+        if orn and orn > 0 then
+            local mid = piece((W_ - orn) / 2, (W_ + orn) / 2, v0, v1, 1)
+            mid:SetSize(orn * scale, rowH * scale)
+            mid:SetPoint(sideV, f, sideV, 0, 0)
+            local lf = piece(l, (W_ - orn) / 2, v0, v1)
+            lf:SetPoint(sideV .. "LEFT", anchorL, sideV .. "RIGHT")
+            lf:SetPoint(sideV .. "RIGHT", mid, sideV .. "LEFT")
+            lf:SetHeight(rowH * scale)
+            local rf = piece((W_ + orn) / 2, W_ - r, v0, v1)
+            rf:SetPoint(sideV .. "LEFT", mid, sideV .. "RIGHT")
+            rf:SetPoint(sideV .. "RIGHT", anchorR, sideV .. "LEFT")
+            rf:SetHeight(rowH * scale)
+        else
+            local e = piece(l, W_ - r, v0, v1)
+            e:SetPoint(sideV .. "LEFT", anchorL, sideV .. "RIGHT")
+            e:SetPoint(sideV .. "RIGHT", anchorR, sideV .. "LEFT")
+            e:SetHeight(rowH * scale)
+        end
+    end
+    edge(true, t, 0, t, a.ot, tl, tr, "TOP")
+    edge(false, b, H_ - b, H_, a.ob, bl, br, "BOTTOM")
+    local le = piece(0, l, t, H_ - b); le:SetPoint("TOPLEFT", tl, "BOTTOMLEFT"); le:SetPoint("BOTTOMLEFT", bl, "TOPLEFT"); le:SetWidth(l * scale)
+    local re = piece(W_ - r, W_, t, H_ - b); re:SetPoint("TOPRIGHT", tr, "BOTTOMRIGHT"); re:SetPoint("BOTTOMRIGHT", br, "TOPRIGHT"); re:SetWidth(r * scale)
+    if opts.center ~= false then
+        local c = piece(l, W_ - r, t, H_ - b, -1)
+        c:SetPoint("TOPLEFT", tl, "BOTTOMRIGHT")
+        c:SetPoint("BOTTOMRIGHT", br, "TOPLEFT")
+    end
+    if f.SetBackdrop and opts.keepBackdrop ~= true then f:SetBackdrop(nil) end
+    return pieces
+end
+
+-- horizontal three-slice (buttons, bars): caps keep their width, the middle stretches
+function W.Slice3(f, name, height, layer)
+    local a = art(name)
+    if not a or not a.slice then return end
+    local s = height / a.h
+    local l, r = a.slice[1], a.slice[2]
+    f.slices = f.slices or {}
+    local function piece(u0, u1)
+        local tx = f:CreateTexture(nil, layer or "BACKGROUND")
+        tx:SetTexture(a.file)
+        tx:SetTexCoord(u0 / a.cw, u1 / a.cw, 0, a.h / a.ch)
+        f.slices[#f.slices + 1] = tx
+        return tx
+    end
+    local L = piece(0, l); L:SetSize(l * s, height); L:SetPoint("LEFT")
+    local R = piece(a.w - r, a.w); R:SetSize(r * s, height); R:SetPoint("RIGHT")
+    local M = piece(l, a.w - r); M:SetPoint("TOPLEFT", L, "TOPRIGHT"); M:SetPoint("BOTTOMRIGHT", R, "BOTTOMLEFT")
+    return { L, M, R }
+end
+
+function W.SetSlice3(pieces, name)
+    local a = art(name)
+    if not (a and pieces) then return end
+    local l, r = a.slice[1], a.slice[2]
+    local cuts = { { 0, l }, { l, a.w - r }, { a.w - r, a.w } }
+    for i, tx in ipairs(pieces) do
+        tx:SetTexture(a.file)
+        tx:SetTexCoord(cuts[i][1] / a.cw, cuts[i][2] / a.cw, 0, a.h / a.ch)
+    end
+end
+
 function W.Panel(parent, w, h, alpha)
     local f = CreateFrame("Frame", nil, parent, BACKDROP_TEMPLATE)
     if w then f:SetSize(w, h) end
     local c = W.THEME.panel
     backdrop(f, { c[1], c[2], c[3], alpha or c[4] }, W.THEME.panelBorder, 14)
+    if art("frame_big") then W.Slice(f, "frame_big", 0.42) end
     return f
 end
 
@@ -64,6 +177,7 @@ function W.Card(parent, w, h)
     local f = CreateFrame("Frame", nil, parent, BACKDROP_TEMPLATE)
     if w then f:SetSize(w, h) end
     backdrop(f, W.THEME.card, W.THEME.cardBorder, 10)
+    if art("box_row") then W.Slice(f, "box_row", 0.55) end
     return f
 end
 
@@ -88,7 +202,17 @@ local function styleFor(text)
     return "cyan"
 end
 
+local BUTTON_ART = { cyan = "btn_bronze", green = "btn_red", orange = "btn_gold", gray = "btn_gray" }
+
 local function paintButton(b)
+    if b.artPieces then
+        W.SetSlice3(b.artPieces, BUTTON_ART[b.enabledState == false and "gray" or (b.style or "cyan")] or "btn_bronze")
+        if b.label then
+            local t = b.enabledState == false and 0.7 or 1
+            b.label:SetTextColor(t, t * (b.style == "orange" and 0.92 or 1), t * (b.style == "orange" and 0.8 or 1))
+        end
+        return
+    end
     local c = b.enabledState == false and W.THEME.gray or W.THEME[b.style or "cyan"] or W.THEME.cyan
     if b.SetBackdropColor then
         b:SetBackdropColor(c[1], c[2], c[3], 1)
@@ -103,7 +227,14 @@ end
 function W.Button(parent, text, w, h, onClick, style)
     local b = CreateFrame("Button", nil, parent, BACKDROP_TEMPLATE)
     b:SetSize(w or 100, h or 24)
-    backdrop(b, W.THEME.cyan, W.THEME.cyan, 10)
+    if art("btn_bronze") and (text ~= "X") then
+        b.artPieces = W.Slice3(b, "btn_bronze", h or 24)
+    elseif text == "X" and art("btn_close") then
+        b.closeArt = W.Art(b, "btn_close", "BACKGROUND")
+        b.closeArt:SetAllPoints()
+    else
+        backdrop(b, W.THEME.cyan, W.THEME.cyan, 10)
+    end
     b.shine = b:CreateTexture(nil, "ARTWORK")
     b.shine:SetTexture(WHITE)
     b.shine:SetPoint("TOPLEFT", 3, -3)
@@ -112,6 +243,8 @@ function W.Button(parent, text, w, h, onClick, style)
     b.shine:SetVertexColor(1, 1, 1, 0.12)
     b.label = W.Text(b, math.max(10, math.min(14, math.floor((h or 24) * 0.5))), W.COLORS.white, "CENTER")
     b.label:SetPoint("CENTER", 0, 0)
+    if b.closeArt then b.label:Hide(); b.shine:Hide() end
+    if b.artPieces then b.shine:SetVertexColor(1, 1, 1, 0) end
     if b.SetFontString then b:SetFontString(b.label) end
     b.fixedStyle = style
     local origSetText, origSetEnabled = b.SetText, b.SetEnabled
@@ -128,8 +261,8 @@ function W.Button(parent, text, w, h, onClick, style)
     end
     function b:SetStyle(st) self.fixedStyle = st; self.style = st; paintButton(self) end
     b:SetText(text or "")
-    b:SetScript("OnEnter", function(self) if self.shine then self.shine:SetVertexColor(1, 1, 1, 0.22) end end)
-    b:SetScript("OnLeave", function(self) if self.shine then self.shine:SetVertexColor(1, 1, 1, 0.12) end end)
+    b:SetScript("OnEnter", function(self) if self.shine then self.shine:SetVertexColor(1, 1, 1, self.artPieces and 0.1 or 0.22) end end)
+    b:SetScript("OnLeave", function(self) if self.shine then self.shine:SetVertexColor(1, 1, 1, self.artPieces and 0 or 0.12) end end)
     if onClick then b:SetScript("OnClick", function(self, ...) onClick(self, ...) end) end
     return b
 end
@@ -162,10 +295,32 @@ function W.Icon(parent, size, texture)
     f.border:Hide()
     f.count = W.Text(f, math.max(9, math.floor(size / 3)), W.COLORS.white, "RIGHT")
     f.count:SetPoint("BOTTOMRIGHT", -3, 3)
+    if art("slot_bronze") then
+        if f.SetBackdrop then f:SetBackdrop(nil) end
+        f.slotBg = f:CreateTexture(nil, "BACKGROUND")
+        f.slotBg:SetColorTexture(0.06, 0.05, 0.05, 1)
+        f.slotBg:SetPoint("TOPLEFT", size * 0.08, -size * 0.08)
+        f.slotBg:SetPoint("BOTTOMRIGHT", -size * 0.08, size * 0.08)
+        f.icon:ClearAllPoints()
+        f.icon:SetPoint("TOPLEFT", size * 0.12, -size * 0.12)
+        f.icon:SetPoint("BOTTOMRIGHT", -size * 0.12, size * 0.12)
+        f.frameArt = W.Art(f, "slot_bronze", "OVERLAY", 1)
+        f.frameArt:SetPoint("TOPLEFT", -size * 0.04, size * 0.04)
+        f.frameArt:SetPoint("BOTTOMRIGHT", size * 0.04, -size * 0.04)
+        f.count:SetDrawLayer("OVERLAY", 2)
+    end
     return f
 end
 
+local GRADE_ART = { [1] = "slot_g1", [2] = "slot_g2", [3] = "slot_g3", [4] = "slot_g4", [5] = "slot_g5",
+    [6] = "slot_g6", [7] = "slot_g4", [8] = "slot_g8" }
+
 function W.SetBorderGrade(icon, grade)
+    if icon.frameArt then
+        W.SetArt(icon.frameArt, grade and GRADE_ART[grade] or "slot_bronze")
+        icon.border:Hide()
+        return
+    end
     if not grade then
         icon.border:Hide()
         if icon.SetBackdropBorderColor then icon:SetBackdropBorderColor(0.3, 0.33, 0.4, 1) end
@@ -188,9 +343,39 @@ function W.Bar(parent, w, h, r, g, b)
     bar.bg = bar:CreateTexture(nil, "BACKGROUND")
     bar.bg:SetAllPoints()
     bar.bg:SetColorTexture(0.03, 0.04, 0.06, 0.75)
-    bar.text = W.Text(bar, math.max(9, h - 3), W.COLORS.white, "CENTER")
-    bar.text:SetPoint("CENTER")
+    local fill = W.FillFor(r or 0.2, g or 0.8, b or 0.2)
+    if fill and art(fill) and h >= 6 then
+        local a = art(fill)
+        bar:SetStatusBarTexture(a.file)
+        local tex = bar.GetStatusBarTexture and bar:GetStatusBarTexture()
+        if tex and tex.SetTexCoord then tex:SetTexCoord(0, a.w / a.cw, 0, a.h / a.ch) end
+        bar:SetStatusBarColor(1, 1, 1)
+        if h >= 9 and art("bar_trough") then
+            bar.frame = CreateFrame("Frame", nil, bar)
+            bar.frame:SetPoint("TOPLEFT", -4, 3)
+            bar.frame:SetPoint("BOTTOMRIGHT", 4, -3)
+            bar.frame:SetFrameLevel(bar:GetFrameLevel() + 1)
+            W.Slice3(bar.frame, "bar_trough", h + 6, "OVERLAY")
+            for _, t in ipairs(bar.frame.slices) do t:SetVertexColor(1, 1, 1, 1) end
+            -- keep the trough inside visible: only the rim of the art is drawn over the fill
+            bar.bg:SetColorTexture(0.05, 0.03, 0.02, 0.9)
+        end
+    end
+    bar.text = W.Text(bar.frame or bar, math.max(9, h - 3), W.COLORS.white, "CENTER")
+    bar.text:SetPoint("CENTER", bar, "CENTER")
     return bar
+end
+
+-- nearest kit fill strip for a bar colour
+function W.FillFor(r, g, b)
+    local fills = { fill_red = { 0.85, 0.2, 0.2 }, fill_green = { 0.3, 0.8, 0.2 }, fill_blue = { 0.2, 0.45, 1 },
+        fill_cyan = { 0.2, 0.75, 0.9 }, fill_purple = { 0.6, 0.3, 0.9 }, fill_orange = { 1, 0.7, 0.15 } }
+    local best, bd
+    for k, c in pairs(fills) do
+        local d = (c[1] - r) ^ 2 + (c[2] - g) ^ 2 + (c[3] - b) ^ 2
+        if not bd or d < bd then best, bd = k, d end
+    end
+    return best
 end
 
 function W.Tooltip(frame, fn)

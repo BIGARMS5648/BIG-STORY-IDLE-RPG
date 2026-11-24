@@ -33,6 +33,32 @@ def rgba(s, alpha=1.0):
 
 
 _icons = {}
+ADDON_ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "BigStoryIdleRPG"))
+_addon = {}
+
+
+def addon_tex(path):
+    """Interface\\AddOns\\BigStoryIdleRPG\\Media\\... -> the local .tga"""
+    p = path.replace("/", "\\")
+    low = p.lower()
+    key = "\\addons\\bigstoryidlerpg\\"
+    i = low.find(key)
+    if i < 0:
+        return None
+    rel = p[i + len(key):].replace("\\", os.sep)
+    if rel in _addon:
+        return _addon[rel]
+    img = None
+    for ext in ("", ".tga", ".TGA", ".blp"):
+        fn = os.path.join(ADDON_ROOT, rel + ext)
+        if os.path.exists(fn):
+            try:
+                img = Image.open(fn).convert("RGBA")
+            except Exception:
+                img = None
+            break
+    _addon[rel] = img
+    return img
 
 
 def icon(path):
@@ -187,7 +213,7 @@ def main():
             path, vc, a, desat, tc = row[5], rgba(row[6], float(row[7])), float(row[7]), row[8] == "1", row[9] if len(row) > 9 else ""
             lay = cv.layer()
             pl = path.lower()
-            ic = icon(path) if "\\icons\\" in pl.replace("/", "\\") else None
+            ic = icon(path) if "\\icons\\" in pl.replace("/", "\\") else addon_tex(path)
             bw, bh = max(1, x1 - x0), max(1, y1 - y0)
             if ic:
                 src = ic
@@ -200,9 +226,11 @@ def main():
                 if desat:
                     src = src.convert("LA").convert("RGBA")
                 if vc[:3] != (255, 255, 255) or vc[3] < 255:
-                    tint = Image.new("RGBA", src.size, vc[:3] + (255,))
-                    src = Image.composite(Image.blend(src, tint, 0.0), src, src)
-                    src.putalpha(src.getchannel("A").point(lambda v: int(v * vc[3] / 255)))
+                    from PIL import ImageChops
+                    rgb = ImageChops.multiply(src.convert("RGB"), Image.new("RGB", src.size, vc[:3]))
+                    alpha_ch = src.getchannel("A").point(lambda v: int(v * vc[3] / 255))
+                    src = rgb.convert("RGBA")
+                    src.putalpha(alpha_ch)
                 lay.alpha_composite(src, (x0, y0))
             elif "white8x8" in pl or "ui-statusbar" in pl or "colorblind" in pl:
                 ImageDraw.Draw(lay).rectangle([x0, y0, x1 - 1, y1 - 1], fill=vc)
@@ -225,7 +253,13 @@ def main():
             d = ImageDraw.Draw(lay)
             d.rectangle([x0, y0, x1 - 1, y1 - 1], fill=(0, 0, 0, int(120 * a)))
             fw = int((x1 - x0) * frac)
-            if fw >= 1:
+            art = addon_tex(row[8]) if len(row) > 8 and row[8] else None
+            if fw >= 1 and art:
+                bb = art.getbbox()
+                src = art.crop(bb) if bb else art
+                src = src.crop((0, 0, max(1, int(src.width * frac)), src.height)).resize((fw, max(1, y1 - y0)))
+                lay.alpha_composite(src, (x0, y0))
+            elif fw >= 1:
                 d.rectangle([x0, y0, x0 + fw - 1, y1 - 1], fill=color)
             cv.put(lay)
         elif op == "model":

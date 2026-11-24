@@ -118,7 +118,8 @@ function L.Dump(path)
             if f._kind == "StatusBar" then
                 local lo, hi = f._min or 0, f._max or 1
                 local frac = hi > lo and ((f._value or 0) - lo) / (hi - lo) or 0
-                emit("bar", l, b, r, t, math.max(0, math.min(1, frac)), col(f._barColor, { 0.2, 0.8, 0.2, 1 }), a)
+                emit("bar", l, b, r, t, math.max(0, math.min(1, frac)), col(f._barColor, { 0.2, 0.8, 0.2, 1 }), a,
+                    clean(f._barTexture))
             end
             if f._model then emit("model", l, b, r, t, clean(f._model), a) end
             if (f._kind == "Button" or f._kind == "CheckButton") and f._template == "UIPanelButtonTemplate" then

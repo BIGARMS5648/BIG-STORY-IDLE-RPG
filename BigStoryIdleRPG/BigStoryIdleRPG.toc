@@ -27,6 +27,7 @@ Data\Content.lua
 Data\GrowthRewards.lua
 Data\SkinData.lua
 Data\SkinNames.lua
+Data\UIArt.lua
 Data\Income.lua
 Data\JobAdvancement.lua
 Data\Medals.lua
