@@ -121,6 +121,14 @@ local EVAL = {
     arenaWins = function(hero, c) return hero.arena and hero.arena.wins or 0, c[2] end,
     raidTop = function(hero, c) return hero.medals.raidTop[c[2]] or 0, c[3] end,
     raidParty = function(hero, c) return hero.medals.raidParty or 0, c[2] end,
+    dailyMissions = function(hero, c)
+        local p = hero.income and hero.income.progress
+        return p and p.dailyMissionClaims or 0, c[2]
+    end,
+    request = function(hero, c)
+        local r = hero.requests and hero.requests.done
+        return (r and r[c[2]]) and 1 or 0, 1
+    end,
     guildRaid = function(hero, c)
         local r = hero.relocated and hero.relocated.raidMedals
         return (r and r[c[2]]) and 1 or 0, 1
@@ -245,6 +253,7 @@ ns.On("HERO_CHANGED", function(hero, what)
     M.Check(hero)
 end)
 for _, ev in ipairs({ "JOB_ADVANCED", "ARENA_RESULT", "PARTY_QUEST_CLEARED", "GROWTH_DUNGEON_CLEARED", "STAGE_CLEARED",
-    "STARFORCE_RESULT", "POTENTIAL_ROLLED", "HERO_POWER_STAGE", "ELITE_LEVEL_UP", "COMPANION_CHANGED" }) do
+    "STARFORCE_RESULT", "POTENTIAL_ROLLED", "HERO_POWER_STAGE", "ELITE_LEVEL_UP", "COMPANION_CHANGED", "REQUEST_DONE",
+    "DAILY_MISSION_CLAIMED" }) do
     ns.On(ev, function(hero) if hero and hero.medals then M.Check(hero) end end)
 end

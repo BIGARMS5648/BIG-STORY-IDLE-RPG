@@ -8,9 +8,11 @@
 --     핑크빈 헌터 (핑크빈 어려움 5회, 보스 몬스터 데미지 10%); later 혼테일 파괴자
 --   KR notices: 오르비스 방범대 (여신의 흔적 50회), 마가티아 평화주의자 (로미오와 줄리엣 50회),
 --     핑크빈 슬레이어 (길드 레이드 핑크빈, 최종 데미지 +3%), 팀 플레이어 (길드 레이드 자쿰, 최종 데미지 +3%)
--- Not included: costume / royal hair / royal face medals (paid styles), 인기도 (fame) and pet walkway (removed
---   with friends and minigames by the user, 2026-11-25),
+-- Not included: costume / royal hair / royal face medals (paid styles),
 --   event and ranking medals.
+-- ADAPTED (friends / fame / pet walkway removed by the user, 2026-11-25): the 6 인기도 medals count claimed
+--   daily missions instead of fame points (same thresholds); 산책로 마스터 comes with the relocated
+--   펫 산책로 top gift (특별 의뢰).
 -- ADAPTED: guild raid medals are earned by the top difficulty of the boss raid (guild content was
 --   removed, see Systems/RelocatedRewards.lua); "도전 모드 MVP" raid medals count party-mode raid clears.
 -- ESTIMATE: 혼테일 파괴자 condition / effect (KR notice names it only) = 카오스 5회, 보스 몬스터 데미지 10%.
@@ -89,4 +91,12 @@ D.Medals = {
     { id = "zakumGuild", cat = 3, name = "팀 플레이어", maple = "팀 플레이어", cond = { "guildRaid", "zakum" }, text = "자쿰 최고 난이도 클리어 (구 길드 레이드)", eff = FD },
     { id = "horntailGuild", cat = 3, name = "검은용 토벌대", maple = "길드 레이드: 혼테일", cond = { "guildRaid", "horntail" }, text = "혼테일 최고 난이도 클리어 (구 길드 레이드)", eff = FD },
     { id = "pinkbeanGuild", cat = 3, name = "쑨 슬레이어", maple = "핑크빈 슬레이어", cond = { "guildRaid", "pinkbean" }, text = "핑크빈 최고 난이도 클리어 (구 길드 레이드)", eff = FD },
+    -- 기타 (구 인기도 / 펫 산책로)
+    { id = "fame50", cat = 4, name = "유명 인사", maple = "셀러브리티 (인기도 50)", cond = { "dailyMissions", 50 }, text = "일일 미션 누적 50개 완료", eff = MS },
+    { id = "fame100", cat = 4, name = "인기 스타", maple = "인기 스타 (인기도 100)", cond = { "dailyMissions", 100 }, text = "일일 미션 누적 100개 완료", eff = MS },
+    { id = "fame1000", cat = 4, name = "아제로스의 별", maple = "메이플 스타 (인기도 1,000)", cond = { "dailyMissions", 1000 }, text = "일일 미션 누적 1,000개 완료", eff = MS },
+    { id = "fame2000", cat = 4, name = "슈퍼스타", maple = "슈퍼스타 (인기도 2,000)", cond = { "dailyMissions", 2000 }, text = "일일 미션 누적 2,000개 완료", eff = MS },
+    { id = "fame5000", cat = 4, name = "월드스타", maple = "월드스타 (인기도 5,000)", cond = { "dailyMissions", 5000 }, text = "일일 미션 누적 5,000개 완료", eff = MS },
+    { id = "fame10000", cat = 4, name = "스타", maple = "스타 (인기도 10,000)", cond = { "dailyMissions", 10000 }, text = "일일 미션 누적 10,000개 완료", eff = MS },
+    { id = "walkway", cat = 4, name = "산책로 마스터", maple = "산책로 마스터", cond = { "request", "walkFrod" }, text = "산책로 꼭대기 선물 받기 (특별 의뢰)", eff = MS },
 }

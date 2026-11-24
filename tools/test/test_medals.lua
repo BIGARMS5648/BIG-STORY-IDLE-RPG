@@ -66,6 +66,21 @@ check(M.Equip(hero, nil) and M.Equipped(hero) == nil, "unequip")
 -- journey special option counter
 ns.Fire("JOURNEY_SPECIAL_OPENED", hero, 20)
 check(hero.medals.journeySpecial == 1, "journey special counter")
+-- relocated fame / pet walkway medals
+do
+    local h = Hero.New("bishop", "F")
+    Hero.SetActive(h)
+    for _ = 1, 50 do ns.Fire("DAILY_MISSION_CLAIMED", h, "kill") end
+    check(not h.medals.achieved.fame50, "event alone does not count claims")
+    h.income.progress.dailyMissionClaims = 50
+    ns.Fire("DAILY_MISSION_CLAIMED", h, "kill")
+    check(h.medals.achieved.fame50 and not h.medals.achieved.fame100, "구 인기도 medal from 50 daily missions")
+    h.campaign.maxChapter, h.campaign.maxStage = 2, 1
+    check(ns.Requests.Claim(h, "walkFrod"), "pet walkway top gift request")
+    check(h.medals.achieved.walkway, "산책로 마스터 medal from the relocated gift")
+    check(not ns.Requests.Claim(h, "walkDoofus"), "Doofus gift needs 3-4")
+    Hero.SetActive(hero)
+end
 -- panel
 ns.UI.Toggle()
 ns.UI.ShowPanel("medals")

@@ -162,7 +162,13 @@ end
 
 function I.ClaimMission(hero, id)
     local s = hero.income
-    return claimOne(hero, D.DailyMissions, s.day, s.dayClaimed, id, "dailyMission")
+    local ok, err = claimOne(hero, D.DailyMissions, s.day, s.dayClaimed, id, "dailyMission")
+    if ok then
+        -- lifetime count (구 인기도 medals)
+        s.progress.dailyMissionClaims = (s.progress.dailyMissionClaims or 0) + 1
+        ns.Fire("DAILY_MISSION_CLAIMED", hero, id)
+    end
+    return ok, err
 end
 
 function I.ClaimWeeklyMission(hero, id)

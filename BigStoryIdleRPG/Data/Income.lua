@@ -83,6 +83,9 @@ D.FreeDaily = {
     { id = "booster", text = "부스터 (경험치 +100%, 골드 +150%, 20분)", booster = { seconds = 1200, exp = 1000, gold = 1500 } },
     -- 30-minute speed-up x3 for mastery / elite level-up -> time-skip tickets
     { id = "speedup", text = "학습·강화 가속 30분 ×3", rewards = { timeSkip1m = 90 } },
+    -- former 친구 reward (friends removed, user 2026-11-25): 엘리트 몬스터 소환 포인트, daily cap 500
+    -- (send 10 / receive 20 per friend, global wiki Friends)
+    { id = "friendPoints", text = "엘리트 소환 포인트 500 (구 친구 보상)", rewards = { eliteSummonPoint = 500 } },
 }
 
 -- weekly red-diamond shop (KR 1.18.0 rows that cost red diamonds)

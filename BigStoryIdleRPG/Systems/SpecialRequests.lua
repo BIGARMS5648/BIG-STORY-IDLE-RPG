@@ -55,6 +55,7 @@ local function progress(hero, d)
         return info and info.level or 1, goal[3]
     end
     if kind == "visit" then return s.visited[goal[2]] and 1 or 0, 1 end
+    if kind == "open" then return s.opened[d.id] and 1 or 0, 1 end
     return 0, 1
 end
 
@@ -96,6 +97,7 @@ function R.Claim(hero, id)
         if item and ns.Equipment.AddItem(hero, item) then lines[#lines + 1] = ns.Equipment.ItemName(item) end
     end
     Hero.Changed(hero, "requests")
+    ns.Fire("REQUEST_DONE", hero, id)
     return true, nil, lines
 end
 

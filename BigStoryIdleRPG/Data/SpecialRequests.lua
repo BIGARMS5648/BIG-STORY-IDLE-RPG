@@ -6,8 +6,9 @@
 -- published, so those requests open from the start (GQ 147 at chapter 5).
 -- ADAPTED: "Cloy's Costume Proposal" (check costumes) and "Mrs. Ming Ming's Request 2" (check Royal
 -- Style) point at paid style shops, which are removed; they ask to look at the 장비 / 훈장 windows.
--- Not included: 펫 산책로 jump quests and minigame quests (friends, fame, minigames and the pet walkway are
--- removed from this game by the user, 2026-11-25).
+-- 펫 산책로 (removed with friends, fame and minigames by the user, 2026-11-25): its one-time gifts are kept
+-- as requests that complete when they open ("open" goal); Frod's gift also gives the 산책로 medal.
+-- Minigame quests are not included (their rewards are minigame items only).
 -- NPC names are the WoW-skin quest givers; `maple` is the original NPC / quest.
 local ADDON, ns = ...
 ns.Data = ns.Data or {}
@@ -58,4 +59,11 @@ D.SpecialRequests = {
       goal = { "count", "potential", 3 }, rewards = { cubeMiracle = 3 } },
     { id = "casey", npc = "탐험가 협회 브란 브론즈비어드", maple = "케이시의 제안", text = "무기 소환 1회", gate = { ch = 10, st = 1 },
       goal = { "count", "summon_weapon", 1 }, rewards = { spellTrace = 500 } },
+    -- 구 펫 산책로 선물 (Doofus checkpoints 3-4, Bartos 2-1, Frod top 2-1)
+    { id = "walkDoofus", npc = "사육사 메리", maple = "펫 산책로: 두퍼스", text = "산책로 선물 받기", gate = { ch = 3, st = 4 },
+      goal = { "open" }, rewards = { weaponTicket = 10 } },
+    { id = "walkBartos", npc = "사육사 메리", maple = "펫 산책로: 바르토스", text = "산책로 선물 받기", gate = { ch = 2, st = 1 },
+      goal = { "open" }, rewards = { timeSkip1m = 100 } },
+    { id = "walkFrod", npc = "사육사 메리", maple = "펫 산책로: 프로드", text = "산책로 꼭대기 선물 받기 (훈장)", gate = { ch = 2, st = 1 },
+      goal = { "open" }, rewards = { timeSkip1m = 1000 } },
 }
