@@ -615,6 +615,7 @@ function Battle:DealDamage(att, tgt, amount, crit, info)
         amount = amount - absorbed
     end
     tgt.hp = tgt.hp - amount
+    tgt.aggro = true
     att.dmgDealt = att.dmgDealt + amount
     local key = info.skillId or 0
     self.stats.damage[key] = (self.stats.damage[key] or 0) + amount
@@ -1261,8 +1262,20 @@ end
 function Battle:CooldownFor(c, inst)
     local base = self:SkillField(inst, "SkillCoolTimeMs", inst.data.CoolTimeMs or 0)
     if base <= 0 then return 0 end
+    -- % reduction first, then the flat reduction; below 7 s each second of flat
+    -- reduction only counts half and the result never drops under 4 s
     local cdr = c:Stat("CoolTimeReduceRatio")
-    local v = base * (1000 - cdr) / 1000 - c:Stat("CoolTimeReduce")
+    local v = base * (1000 - cdr) / 1000
+    local flat = c:Stat("CoolTimeReduce")
+    if flat > 0 and v > 4000 then
+        local above = math.max(0, v - 7000)
+        if flat <= above then
+            v = v - flat
+        else
+            v = math.min(v, 7000) - (flat - above) * 0.5
+            if v < 4000 then v = 4000 end
+        end
+    end
     return math.max(0, trunc(v))
 end
 
@@ -1357,6 +1370,11 @@ function Battle:MonsterThink(c, dt)
     if c:IsCC() then return end
     local target, dist = self:Nearest(c)
     if not target then return end
+    -- field monsters stay put until the hero comes close or hits them
+    if c.def.aggroMm and not c.aggro then
+        if dist > c.def.aggroMm then return end
+        c.aggro = true
+    end
     c.facing = (target.x >= c.x) and 1 or -1
     local reach = c.def.reachMm or 600
     if dist > reach then

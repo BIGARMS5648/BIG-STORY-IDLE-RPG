@@ -14,8 +14,15 @@ Core\Serializer.lua
 Data\Jobs.lua
 Data\Skills.lua
 Data\World.lua
+Data\Currencies.lua
+Data\BaseStats.lua
 
 Engine\Expr.lua
 Engine\Creature.lua
 Engine\Battle.lua
 Engine\SkillBook.lua
+
+Systems\Hero.lua
+Systems\Mastery.lua
+Systems\Campaign.lua
+Systems\Game.lua
