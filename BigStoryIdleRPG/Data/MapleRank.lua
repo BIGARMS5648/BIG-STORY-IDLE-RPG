@@ -33,7 +33,8 @@ D.MapleRank = {
     -- per point by rank. Screens: rank 1 main +1 / defense +3 / HP +10; rank 15 main +50 / defense +150 /
     -- HP +2,500. Main stat = defense / 3 holds at both ranks.
     mainPerPoint = function(rank) return math.max(1, math.floor(D.MapleRank.defencePerPoint[rank] / 3)) end,
-    -- PROVISIONAL between the two known ranks: power law through (main 1 -> HP 10) and (main 50 -> HP 2,500)
+    -- ESTIMATE (no public data; settled with the user 2026-11-24): power law through the two known ranks,
+    -- (main 1 -> HP 10) and (main 50 -> HP 2,500)
     hpPerPoint = function(rank)
         if rank == 1 then return 10 end
         if rank == 15 then return 2500 end
@@ -41,7 +42,7 @@ D.MapleRank = {
         return math.floor(10 * m ^ (math.log(250) / math.log(50)) + 0.5)
     end,
     -- special stat points per completed rank: 10 early, 20 from about Lv30. Ranks complete every
-    -- 5 levels, so ranks 1-6 give 10 and later ranks 20 (PROVISIONAL boundary: "about Lv30").
+    -- 5 levels, so ranks 1-6 (completed by Lv30) give 10 and later ranks 20 (ESTIMATE of "about Lv30").
     specialPointsPerRank = function(rank) return rank <= 6 and 10 or 20 end,
     -- costs: an upgrade costs 1 special point (screen: "★1 강화"); opening is assumed to cost 1 as well
     specialOpenCost = 1,
@@ -57,7 +58,7 @@ D.MapleRank = {
         { key = "MaxDamageRatio", label = "최대 데미지 배율", unlock = 35, max = 20, base = 50, step = 3 },
         { key = "HitChance", label = "명중", unlock = 45, max = 20, base = 3, step = 1, flat = true },
         { key = "CriticalPower", label = "크리티컬 데미지", unlock = 55, max = 30, base = 50, step = 5 },
-        -- PROVISIONAL unlock levels 60 / 65 (between 55 and 75; already opened on the screen)
+        -- ESTIMATE unlock levels 60 / 65 (between 55 and 75; already opened on the screen)
         { key = "AttackPowerExcludeBoss", label = "일반 몬스터 데미지", unlock = 60, max = 30, base = 50, step = 5 },
         { key = "AttackPowerToBoss", label = "보스 몬스터 데미지", unlock = 65, max = 30, base = 50, step = 5 },
         { key = "SkillPower", label = "스킬 데미지", unlock = 75, max = 30, base = 100, step = 5 },

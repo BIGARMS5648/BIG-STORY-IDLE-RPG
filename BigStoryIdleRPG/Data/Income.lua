@@ -60,7 +60,6 @@ D.WeeklyMissions = {
     { id = "elite", text = "엘리트 몬스터 소환하기", track = "elite", goal = 200, rewards = { eliteSummonPoint = 500 } },
     { id = "weaponSummon", text = "무기 소환하기", track = "summon_weapon", goal = 1000,
         rewards = { weaponTicket = 100, timeSkip1m = 50 } },
-    -- goal hidden under the cursor on the screen; 15 like the other dungeons except 강화 던전
     { id = "weaponDungeon", text = "무기 던전 클리어하기", track = "dungeon_weapon", goal = 15, rewards = { redDia = 500 } },
     { id = "expDungeon", text = "경험치 던전 클리어하기", track = "dungeon_exp", goal = 15,
         rewards = { redDia = 500, expBooster50 = 3 } },
@@ -72,7 +71,7 @@ D.WeeklyMissions = {
 
 -- usable EXP boosters (경험치 부스터 100% / 50%).
 D.Boosters = {
-    expBooster = { exp = 1000, seconds = 1800 },   -- PROVISIONAL duration
+    expBooster = { exp = 1000, seconds = 600 },    -- 10 minutes (user, 2026-11-24)
     expBooster50 = { exp = 500, seconds = 600 },   -- item info: "10분간 경험치 보너스 50% 효과를 얻습니다."
 }
 
