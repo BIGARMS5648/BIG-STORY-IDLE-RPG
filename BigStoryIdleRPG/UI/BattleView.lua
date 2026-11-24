@@ -1,0 +1,453 @@
+-- Battle view: the player's own character (DressUpModel, wearing the addon gear
+-- looks), creature models for monsters, floating damage, HP bars, skill cooldowns.
+local ADDON, ns = ...
+local W = ns.W
+local U = ns.U
+
+local BV = {}
+ns.BattleView = BV
+
+local MM_PER_PIXEL = 18          -- battle x (mm) -> screen pixels
+local GROUND_Y = 40              -- ground line from the bottom of the view
+local HERO_SCREEN_X = 0.28       -- hero anchor (fraction of width)
+local MAX_MONSTER_MODELS = 14
+
+-- WoW animation ids
+local ANIM = { stand = 0, death = 1, walk = 4, run = 5, hit = 9, attack1H = 17, attack2H = 18,
+    unarmed = 16, spellDirected = 53, spellOmni = 54, bow = 46, rifle = 49, ready = 26, dead = 6 }
+
+local FACE_RIGHT = math.rad(70)
+local FACE_LEFT = math.rad(-70)
+
+local function safe(fn, ...)
+    local ok, r = pcall(fn, ...)
+    if ok then return r end
+end
+
+---------------------------------------------------------------------------
+-- Creation
+---------------------------------------------------------------------------
+function BV.Create(parent)
+    local v = CreateFrame("Frame", nil, parent)
+    v:SetAllPoints()
+    v:SetClipsChildren(true)
+    BV.frame = v
+
+    v.bg = v:CreateTexture(nil, "BACKGROUND")
+    v.bg:SetAllPoints()
+    v.bg:SetColorTexture(0.08, 0.1, 0.12, 1)
+    v.bgArt = v:CreateTexture(nil, "BACKGROUND", nil, 1)
+    v.bgArt:SetAllPoints()
+    v.bgArt:SetTexCoord(0, 1, 0.12, 0.82)
+    v.bgArt:SetAlpha(0.85)
+    v.ground = v:CreateTexture(nil, "BORDER")
+    v.ground:SetPoint("BOTTOMLEFT")
+    v.ground:SetPoint("BOTTOMRIGHT")
+    v.ground:SetHeight(GROUND_Y)
+    v.ground:SetColorTexture(0, 0, 0, 0.45)
+
+    -- hero model (player character wearing addon gear)
+    local hero = CreateFrame("DressUpModel", nil, v)
+    hero:SetSize(170, 220)
+    hero:SetPoint("BOTTOM", v, "BOTTOMLEFT", 0, GROUND_Y - 20)
+    BV.heroModel = hero
+    BV.SetupHeroModel()
+
+    -- monster model pool
+    BV.mobs = {}
+    for i = 1, MAX_MONSTER_MODELS do
+        local m = CreateFrame("PlayerModel", nil, v)
+        m:SetSize(120, 150)
+        m:Hide()
+        m.hp = W.Bar(m, 70, 5, 0.85, 0.15, 0.15)
+        m.hp:SetPoint("BOTTOM", m, "TOP", 0, -18)
+        m.hp.text:Hide()
+        BV.mobs[i] = m
+    end
+
+    -- boss bar
+    v.bossBar = W.Bar(v, 420, 16, 0.75, 0.1, 0.1)
+    v.bossBar:SetPoint("TOP", 0, -8)
+    v.bossBar:Hide()
+    v.bossName = W.Text(v.bossBar, 12, W.COLORS.gold, "CENTER")
+    v.bossName:SetPoint("BOTTOM", v.bossBar, "TOP", 0, 2)
+
+    -- hero bars
+    v.heroHp = W.Bar(v, 120, 8, 0.2, 0.85, 0.2)
+    v.heroMp = W.Bar(v, 120, 5, 0.2, 0.45, 1)
+    v.heroHp.text:Hide(); v.heroMp.text:Hide()
+
+    -- stage label + mode + buttons
+    v.stage = W.Text(v, 13, W.COLORS.white, "LEFT")
+    v.stage:SetPoint("TOPLEFT", 10, -8)
+    v.timer = W.Text(v, 13, W.COLORS.orange, "RIGHT")
+    v.timer:SetPoint("TOPRIGHT", -10, -8)
+    v.challenge = W.Button(v, "도전", 70, 22, function()
+        local ok, err = ns.Game.StartChallenge()
+        if not ok and err then W.Toast(err) end
+    end)
+    v.challenge:SetPoint("TOPLEFT", 10, -26)
+    v.auto = CreateFrame("CheckButton", nil, v, "UICheckButtonTemplate")
+    v.auto:SetSize(22, 22)
+    v.auto:SetPoint("LEFT", v.challenge, "RIGHT", 6, 0)
+    v.autoText = W.Text(v, 11, W.COLORS.white, "LEFT")
+    v.autoText:SetPoint("LEFT", v.auto, "RIGHT", 0, 0)
+    v.autoText:SetText("자동 도전")
+    v.auto:SetScript("OnClick", function(self)
+        local hero = ns.Hero.Active()
+        if hero then
+            hero.campaign.autoChallenge = self:GetChecked() and true or false
+            hero.campaign.autoChallengeBlocked = nil
+        end
+    end)
+
+    -- skill bar (active skills with cooldown sweep)
+    v.skills = {}
+    for i = 1, 12 do
+        local b = W.Icon(v, 30)
+        b:SetPoint("BOTTOMLEFT", v, "BOTTOMLEFT", 8 + (i - 1) * 33, 4)
+        b.cd = CreateFrame("Cooldown", nil, b, "CooldownFrameTemplate")
+        b.cd:SetAllPoints()
+        b:Hide()
+        v.skills[i] = b
+    end
+
+    -- floating combat text pool
+    v.texts = {}
+    v.textIndex = 0
+    for i = 1, 40 do
+        local t = W.Text(v, 14, W.COLORS.white, "CENTER")
+        t:Hide()
+        v.texts[i] = t
+    end
+
+    v:SetScript("OnUpdate", function(_, elapsed) BV.OnUpdate(elapsed) end)
+    BV.HookGame()
+    return v
+end
+
+---------------------------------------------------------------------------
+-- Hero model + gear looks
+---------------------------------------------------------------------------
+function BV.SetupHeroModel()
+    local m = BV.heroModel
+    if not m then return end
+    safe(m.SetUnit, m, "player")
+    safe(m.SetFacing, m, FACE_RIGHT)
+    safe(m.SetCamDistanceScale, m, 1.25)
+    BV.ApplyLooks()
+end
+
+-- Equipped addon gear -> WoW item appearances (ns.Skin.GearLooks returns {itemId,...})
+function BV.ApplyLooks()
+    local m = BV.heroModel
+    local hero = ns.Hero.Active()
+    if not (m and hero and ns.Skin and ns.Skin.GearLooks) then return end
+    local looks = ns.Skin.GearLooks(hero)
+    if not looks or #looks == 0 then return end
+    safe(m.Undress, m)
+    for _, id in ipairs(looks) do
+        if C_Item and C_Item.RequestLoadItemDataByID then safe(C_Item.RequestLoadItemDataByID, id) end
+        safe(m.TryOn, m, "item:" .. id)
+    end
+end
+
+ns.On("HERO_CHANGED", function(hero, what)
+    if what == "equipment" or what == "weapon" or what == "looks" then
+        if ns.Compat then ns.Compat.After(0.2, BV.ApplyLooks) else BV.ApplyLooks() end
+    end
+end)
+
+-- item data arrives asynchronously the first time an id is used
+if ns.RegisterEvent then
+    ns.RegisterEvent("GET_ITEM_INFO_RECEIVED", function()
+        if BV.looksTimer then return end
+        BV.looksTimer = true
+        ns.Compat.After(0.5, function() BV.looksTimer = nil; BV.ApplyLooks() end)
+    end)
+end
+
+---------------------------------------------------------------------------
+-- Monster models
+---------------------------------------------------------------------------
+local function setCreatureModel(m, c)
+    local model = c.def.model or {}
+    if m.modelKey == (model.displayId or model.npcId or "none") then return end
+    m.modelKey = model.displayId or model.npcId or "none"
+    safe(m.ClearModel, m)
+    local ok = false
+    if model.displayId and m.SetDisplayInfo then ok = safe(m.SetDisplayInfo, m, model.displayId) ~= false end
+    if (not ok or not model.displayId) and model.npcId and m.SetCreature then safe(m.SetCreature, m, model.npcId) end
+    if not model.displayId and not model.npcId then
+        safe(m.SetDisplayInfo, m, 4626) -- fallback look
+    end
+    safe(m.SetCamDistanceScale, m, c.isBoss and 1.6 or 1.2)
+end
+
+function BV.AssignModels(b)
+    -- map creatures to pooled models by screen proximity
+    local hero = b.heroCreature
+    local used = {}
+    local list = {}
+    for _, c in ipairs(b.creatures) do
+        if c.side == 2 and (c.alive or (c.deathAt and b.time - c.deathAt < 900)) and not c.isServant then
+            list[#list + 1] = c
+        end
+    end
+    table.sort(list, function(a, c2) return math.abs(a.x - (hero and hero.x or 0)) < math.abs(c2.x - (hero and hero.x or 0)) end)
+    for _, m in ipairs(BV.mobs) do m.inUse = false end
+    for i, c in ipairs(list) do
+        if i > MAX_MONSTER_MODELS then break end
+        local m = c.viewModel
+        if not m or m.owner ~= c then
+            for _, cand in ipairs(BV.mobs) do
+                if not cand.inUse and (cand.owner == nil or not cand.owner.alive or cand.owner.battle ~= b) then
+                    m = cand
+                    break
+                end
+            end
+        end
+        if m then
+            m.inUse = true
+            m.owner = c
+            c.viewModel = m
+            used[m] = true
+        end
+    end
+    for _, m in ipairs(BV.mobs) do
+        if not used[m] then
+            m:Hide()
+            if m.owner then m.owner.viewModel = nil end
+            m.owner = nil
+        end
+    end
+end
+
+---------------------------------------------------------------------------
+-- Floating combat text
+---------------------------------------------------------------------------
+function BV.FloatText(x, y, text, r, g, b, size)
+    local v = BV.frame
+    if not v or not v:IsVisible() then return end
+    v.textIndex = v.textIndex % #v.texts + 1
+    local t = v.texts[v.textIndex]
+    local font = t:GetFont()
+    t:SetFont(font, size or 14, "OUTLINE")
+    t:SetText(text)
+    t:SetTextColor(r, g, b)
+    t:ClearAllPoints()
+    t:SetPoint("CENTER", v, "BOTTOMLEFT", x + math.random(-12, 12), y)
+    t.x, t.y, t.life = x, y, 1.0
+    t:SetAlpha(1)
+    t:Show()
+end
+
+local function screenX(c, b)
+    local v = BV.frame
+    local hero = b.heroCreature
+    local anchor = v:GetWidth() * HERO_SCREEN_X
+    return anchor + (c.x - (hero and hero.x or 0)) / MM_PER_PIXEL
+end
+
+---------------------------------------------------------------------------
+-- Game hooks
+---------------------------------------------------------------------------
+function BV.HookGame()
+    local H = ns.Game.uiHooks
+    H.onDamage = function(b, att, tgt, amount, crit, info)
+        if not (ns.db.settings.showDamageText and BV.frame and BV.frame:IsVisible()) then return end
+        local x = screenX(tgt, b)
+        local y = GROUND_Y + (tgt.isHero and 150 or 120)
+        if tgt.isHero then
+            BV.FloatText(x, y, "-" .. U.FormatNumber(amount), 1, 0.25, 0.25, 13)
+        elseif crit then
+            BV.FloatText(x, y + 10, U.FormatNumber(amount), 1, 0.55, 0.1, 18)
+        else
+            BV.FloatText(x, y, U.FormatNumber(amount), 1, 0.95, 0.5, 14)
+        end
+        if tgt.viewModel and not tgt.isBoss then safe(tgt.viewModel.SetAnimation, tgt.viewModel, ANIM.hit) end
+    end
+    H.onMiss = function(b, att, tgt)
+        if not (BV.frame and BV.frame:IsVisible()) then return end
+        BV.FloatText(screenX(tgt, b), GROUND_Y + 120, "MISS", 0.7, 0.7, 0.7, 12)
+    end
+    H.onDeath = function(b, c)
+        c.deathAt = b.time
+        if c.viewModel then safe(c.viewModel.SetAnimation, c.viewModel, ANIM.death) end
+        if c.isHero and BV.heroModel then safe(BV.heroModel.SetAnimation, BV.heroModel, ANIM.death) end
+    end
+    H.onRevive = function(b, c)
+        if c.isHero and BV.heroModel then safe(BV.heroModel.SetAnimation, BV.heroModel, ANIM.stand) end
+    end
+    H.onCast = function(b, c, sid, isBasic)
+        if c.isHero and BV.heroModel and BV.frame and BV.frame:IsVisible() then
+            local anim = ns.Skin and ns.Skin.AttackAnim and ns.Skin.AttackAnim(c.job, isBasic) or ANIM.attack1H
+            safe(BV.heroModel.SetAnimation, BV.heroModel, anim)
+            BV.heroAnimUntil = GetTime and (GetTime() + 0.6) or 0
+            if not isBasic then
+                local name = ns.Skin and ns.Skin.SkillName and ns.Skin.SkillName(sid) or ""
+                BV.FloatText(screenX(c, b), GROUND_Y + 200, name, 0.6, 0.85, 1, 13)
+            end
+        end
+    end
+    H.onEnd = function(b, reason)
+        local msg = ({ clear = "|cff40ff40클리어!|r", fail = "|cffff4040실패|r", timeout = "|cffff8040시간 초과|r" })[reason]
+        if msg and BV.frame and BV.frame:IsVisible() then
+            BV.FloatText(BV.frame:GetWidth() / 2, BV.frame:GetHeight() / 2, msg, 1, 1, 1, 24)
+        end
+    end
+end
+
+ns.On("BATTLE_STARTED", function(b, mode)
+    BV.lastBattle = b
+    if not BV.frame then return end
+    for _, m in ipairs(BV.mobs) do m:Hide(); m.owner = nil end
+    local hero = ns.Hero.Active()
+    if hero and ns.Skin and ns.Skin.Background then
+        local tex = ns.Skin.Background(hero, mode, b)
+        if tex then BV.frame.bgArt:SetTexture(tex); BV.frame.bgArt:Show() else BV.frame.bgArt:Hide() end
+    end
+end)
+
+---------------------------------------------------------------------------
+-- Per-frame update
+---------------------------------------------------------------------------
+local refreshAcc = 0
+
+function BV.OnUpdate(elapsed)
+    local v = BV.frame
+    local b = ns.Game.battle
+    if not (v and b) then return end
+    local hero = b.heroCreature
+    local width = v:GetWidth()
+
+    -- hero
+    if hero then
+        local hx = width * HERO_SCREEN_X
+        BV.heroModel:ClearAllPoints()
+        BV.heroModel:SetPoint("BOTTOM", v, "BOTTOMLEFT", hx, GROUND_Y - 20)
+        local now = GetTime and GetTime() or 0
+        if hero.alive and (not BV.heroAnimUntil or now > BV.heroAnimUntil) then
+            local moving = hero.lastX and math.abs(hero.x - hero.lastX) > 1
+            local anim = moving and ANIM.run or ANIM.ready
+            if BV.heroAnim ~= anim then
+                safe(BV.heroModel.SetAnimation, BV.heroModel, anim)
+                BV.heroAnim = anim
+            end
+        else
+            BV.heroAnim = nil
+        end
+        hero.lastX = hero.x
+        safe(BV.heroModel.SetFacing, BV.heroModel, hero.facing > 0 and FACE_RIGHT or FACE_LEFT)
+        v.heroHp:ClearAllPoints()
+        v.heroHp:SetPoint("BOTTOM", v, "BOTTOMLEFT", hx, GROUND_Y + 190)
+        v.heroHp:SetValue(hero.hp / math.max(1, hero:Stat("MaxHp")))
+        v.heroMp:ClearAllPoints()
+        v.heroMp:SetPoint("TOP", v.heroHp, "BOTTOM", 0, -1)
+        v.heroMp:SetValue(hero.mp / math.max(1, hero:Stat("MaxMp")))
+    end
+
+    -- monsters
+    BV.AssignModels(b)
+    local boss
+    for _, m in ipairs(BV.mobs) do
+        local c = m.owner
+        if c and m.inUse then
+            local x = screenX(c, b)
+            if x < -80 or x > width + 80 then
+                m:Hide()
+            else
+                setCreatureModel(m, c)
+                m:ClearAllPoints()
+                m:SetPoint("BOTTOM", v, "BOTTOMLEFT", x, GROUND_Y - 18)
+                if not m:IsShown() then
+                    m:Show()
+                    safe(m.SetAnimation, m, ANIM.stand)
+                end
+                safe(m.SetFacing, m, c.facing > 0 and FACE_RIGHT or FACE_LEFT)
+                m.hp:SetValue(c.hp / math.max(1, c:Stat("MaxHp")))
+                m.hp:SetShown(c.alive and not c.isBoss)
+                if c.isBoss then m:SetSize(190, 230) else m:SetSize(120, 150) end
+            end
+            if c.isBoss and c.alive then boss = c end
+        end
+    end
+    if boss then
+        v.bossBar:Show()
+        v.bossBar:SetValue(boss.hp / math.max(1, boss:Stat("MaxHp")))
+        v.bossBar.text:SetText(U.FormatNumber(math.max(0, boss.hp)) .. " / " .. U.FormatNumber(boss:Stat("MaxHp")))
+        v.bossName:SetText(boss.name)
+    else
+        v.bossBar:Hide()
+    end
+
+    -- floating text
+    for _, t in ipairs(v.texts) do
+        if t:IsShown() then
+            t.life = t.life - elapsed
+            t.y = t.y + elapsed * 40
+            t:ClearAllPoints()
+            t:SetPoint("CENTER", v, "BOTTOMLEFT", t.x, t.y)
+            t:SetAlpha(math.max(0, math.min(1, t.life * 1.5)))
+            if t.life <= 0 then t:Hide() end
+        end
+    end
+
+    -- labels / timer / skills (4x per second)
+    refreshAcc = refreshAcc + elapsed
+    if refreshAcc > 0.25 then
+        refreshAcc = 0
+        BV.RefreshLabels(b)
+    end
+end
+
+function BV.RefreshLabels(b)
+    local v = BV.frame
+    local heroSave = ns.Hero.Active()
+    if not heroSave then return end
+    local cp = heroSave.campaign
+    local mode = ns.Game.mode
+    local label
+    if mode == "hunt" then
+        label = ns.Campaign.StageName(cp.chapter, cp.stage)
+    elseif mode == "challenge" or mode == "boss" then
+        local ctl = b.opts.controller
+        label = (mode == "boss" and "보스 " or "도전 ") .. ns.Campaign.StageName(ctl.ch, ctl.st)
+            .. string.format("  (%d/%d)", ctl.killed or 0, ctl.total or 0)
+    else
+        label = b.opts.controller and b.opts.controller.title or ""
+    end
+    v.stage:SetText(label)
+    if b.timeLimit then
+        v.timer:SetText(string.format("%.0f초", math.max(0, (b.timeLimit - b.time) / 1000)))
+    else
+        v.timer:SetText("")
+    end
+    v.auto:SetChecked(cp.autoChallenge)
+    v.challenge:SetEnabled(mode == "hunt")
+    -- skills
+    local hc = b.heroCreature
+    local i = 0
+    if hc and hc.activeList then
+        for _, inst in ipairs(hc.activeList) do
+            i = i + 1
+            local btn = v.skills[i]
+            if not btn then break end
+            btn:Show()
+            local icon = ns.Skin and ns.Skin.SkillIcon and ns.Skin.SkillIcon(inst.id)
+            btn.icon:SetTexture(icon or "Interface\\Icons\\INV_Misc_QuestionMark")
+            local rem = hc.cooldowns[inst.id] or 0
+            local total = ns.Battle.CooldownFor(b, hc, inst)
+            if rem > 0 and total > 0 and GetTime then
+                btn.cd:SetCooldown(GetTime() - (total - rem) / 1000, total / 1000)
+            elseif btn.cd.Clear then
+                btn.cd:Clear()
+            end
+            W.Tooltip(btn, function(tt)
+                tt:AddLine(ns.Skin and ns.Skin.SkillName(inst.id) or tostring(inst.id), 1, 0.82, 0)
+                tt:AddLine(string.format("스킬 레벨 %d · 재사용 %.1f초", inst.level, total / 1000), 1, 1, 1)
+            end)
+        end
+    end
+    for k = i + 1, #v.skills do v.skills[k]:Hide() end
+end

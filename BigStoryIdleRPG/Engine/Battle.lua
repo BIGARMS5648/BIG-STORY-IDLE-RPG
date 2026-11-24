@@ -620,6 +620,7 @@ function Battle:DealDamage(att, tgt, amount, crit, info)
     local key = info.skillId or 0
     self.stats.damage[key] = (self.stats.damage[key] or 0) + amount
     self:Hook("onDamage", att, tgt, amount, crit, info)
+    if tgt.hp <= 0 and tgt.noDie then tgt.hp = 1 end
     if tgt.hp <= 0 then
         local minHp = tgt:Stat("MinHpRatio")
         if tgt.isHero and minHp > 0 and not tgt.usedMinHp then

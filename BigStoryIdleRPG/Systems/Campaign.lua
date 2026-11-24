@@ -131,17 +131,26 @@ end
 C.MonsterDef = monsterDef
 
 ---------------------------------------------------------------------------
--- Rewards (EXP is client data; meso / points come from Data.Rewards when known)
+-- Rewards: EXP per kill (client chapter table) + per-kill drops (Data.HuntDrops)
 ---------------------------------------------------------------------------
-function C.KillRewards(hero, sd, profileStats)
+local function stageKey(ch, st) return ch .. "-" .. st end
+
+-- online: every drop rolls independently (probability per 1,000,000)
+function C.KillRewards(hero, ch, st, sd, stats, rng)
     local rewards = {}
-    local expBonus = (profileStats and profileStats.BonusExpPercent or 0)
+    local expBonus = stats and stats.BonusExpPercent or 0
     rewards.exp = (sd.exp or 0) * (1 + expBonus / 1000)
-    local R = D.Rewards and D.Rewards.huntKill
-    if R then
-        for k, fn in pairs(R) do
-            local v = type(fn) == "function" and fn(sd, hero) or fn
-            if v and v > 0 then rewards[k] = v end
+    local drops = D.HuntDrops and D.HuntDrops[stageKey(ch, st)]
+    if drops then
+        rng = rng or U.rng
+        for _, dr in ipairs(drops) do
+            if rng:Float() * 1000000 < dr.ppm then
+                local n = dr.n
+                if dr.key == "meso" and stats and stats.BonusGoldPercent then
+                    n = math.floor(n * (1 + stats.BonusGoldPercent / 1000))
+                end
+                rewards[dr.key] = (rewards[dr.key] or 0) + n
+            end
         end
     end
     return rewards
@@ -155,6 +164,15 @@ function C.ApplyRewards(hero, rewards, reason)
             Hero.Add(hero, k, v, reason)
         end
     end
+end
+
+function C.FirstClearRewards(ch, st, kind)
+    if kind == "boss" then
+        local b = D.BossRewards and D.BossRewards[ch]
+        return b and b.rewards
+    end
+    local t = D.TrialRewards and D.TrialRewards[stageKey(ch, st)]
+    return t and t.rewards
 end
 
 ---------------------------------------------------------------------------
@@ -189,6 +207,11 @@ function Hunt:Spawn(b)
 end
 
 function Hunt:Update(b, dt)
+    if not self.init then
+        self.init = true
+        -- 1-1 is NoUserDie in the client; other hunt stages restart on death (ExitToRetry)
+        if self.ch == 1 and self.st == 1 and b.heroCreature then b.heroCreature.noDie = true end
+    end
     if b.time >= self.nextSpawn then
         self:Spawn(b)
         local cycle = (self.sd.spawn and self.sd.spawn.cycle) or 20
@@ -196,7 +219,15 @@ function Hunt:Update(b, dt)
     end
     local hero = b.heroCreature
     if hero and not hero.alive then
-        hero.reviveAt = hero.reviveAt or (b.time + C.HERO_REVIVE_MS)
+        if not hero.reviveAt then
+            hero.reviveAt = b.time + C.HERO_REVIVE_MS
+            -- stage restarts: clear the field and respawn after the revive
+            for _, c in ipairs(b.creatures) do
+                if c.side == 2 and c.alive then c.alive = false; b:Hook("onDespawn", c) end
+            end
+            self.nextSpawn = hero.reviveAt
+            hero.x = 0
+        end
         if b.time >= hero.reviveAt then
             hero.reviveAt = nil
             hero.alive = true
@@ -213,7 +244,7 @@ end
 function Hunt:OnKill(b, victim)
     if victim.side ~= 2 then return end
     local hero = self.hero
-    local rewards = C.KillRewards(hero, self.sd, b.heroCreature and b.heroCreature.statCache)
+    local rewards = C.KillRewards(hero, self.ch, self.st, self.sd, b.heroCreature and b.heroCreature.statCache, b.rng)
     C.ApplyRewards(hero, rewards, "hunt")
     hero.stats.kills = (hero.stats.kills or 0) + 1
     ns.Fire("MONSTER_KILLED", hero, victim, rewards, "hunt")
@@ -241,7 +272,16 @@ function C.NewChallengeController(hero)
     local self = setmetatable({ hero = hero, ch = ch, st = st, sd = sd, row = row or {}, kind = kind, spawned = 0,
         killed = 0 }, Chal)
     self.total = (row and row.monsterCount) or 1
-    self.timeLimit = (kind == "boss") and C.BOSS_TIME_MS or C.CHALLENGE_TIME_MS
+    if kind == "boss" then
+        local br = D.BossRewards and D.BossRewards[ch]
+        self.bossInfo = br
+        self.timeLimit = (br and br.time and br.time * 1000) or C.BOSS_TIME_MS
+    else
+        local tr = D.TrialRewards and D.TrialRewards[ch .. "-" .. st]
+        self.timeLimit = (tr and tr.time and tr.time * 1000) or C.CHALLENGE_TIME_MS
+        if tr and tr.maxAcc then self.total = tr.maxAcc end
+    end
+    self.alreadyCleared = hero.campaign.cleared[key(ch, st)] and true or false
     return self
 end
 
@@ -273,8 +313,11 @@ function Chal:SpawnWave(b)
     local hunt = sd.hunt or (C.StageData(self.ch, self.st - 1) or {}).hunt or {}
     if self.kind == "boss" or remaining == 1 then
         local atk = (hunt.atk or 1) * (self.kind == "boss" and C.BOSS_ATTACK_MULT or C.CHALLENGE_ATTACK_MULT)
+        local bi = self.bossInfo
+        if bi and bi.atk then atk = bi.atk end
         b:AddCreature(monsterDef(self.ch, self.st, { boss = true, x = baseX + 2500, hp = row.bossHp, atk = atk,
-            def = row.defense, hit = row.hitChance, avoid = row.avoidChance, level = self.ch * 3 + 5 }))
+            def = row.defense, hit = row.hitChance, avoid = row.avoidChance, level = self.ch * 3 + 5,
+            name = self.kind == "boss" and ns.Skin and ns.Skin.BossName and ns.Skin.BossName(self.ch) or nil }))
         self.spawned = self.spawned + 1
         return
     end
@@ -309,10 +352,10 @@ function Chal:OnEnd(b, reason)
             cp.maxChapter, cp.maxStage = self.ch, self.st
             cp.chapter, cp.stage = self.ch, self.st
         end
-        local R = D.Rewards and D.Rewards.firstClear
-        if R then
-            local rw = type(R) == "function" and R(self.ch, self.st, self.kind) or nil
-            if rw then Hero.Grant(hero, rw, "firstClear") end
+        if not self.alreadyCleared then
+            local rw = C.FirstClearRewards(self.ch, self.st, self.kind)
+            if rw then C.ApplyRewards(hero, rw, "firstClear") end
+            self.firstRewards = rw
         end
         ns.Fire("STAGE_CLEARED", hero, self.ch, self.st, self.kind)
         Hero.Changed(hero, "stage")
@@ -322,25 +365,37 @@ function Chal:OnEnd(b, reason)
 end
 
 ---------------------------------------------------------------------------
--- Offline rewards (client rule: 0.9 kills/s, clamp 300..86400 s)
+-- Offline rewards: 0.9 kills/s at the furthest stage reached, 5 min minimum,
+-- 24 h cap (KR 2026-02-12), whole minutes; drops are deterministic
+-- floor(kills x rate) x amount (global wiki Hunting_and_Offline_Rewards).
 ---------------------------------------------------------------------------
-function C.OfflineRewards(hero, seconds, statCache)
+C.OFFLINE_CAP_SECONDS = 24 * 3600
+
+function C.OfflineRewards(hero, seconds, stats)
     local off = D.Combat.offline
     local minS = tonumber(off.minimumRewardSeconds) or 300
-    local maxS = tonumber(off.maximumRewardSeconds) or 86400
     if seconds < minS then return nil end
-    seconds = math.min(seconds, maxS)
+    seconds = math.min(seconds, C.OFFLINE_CAP_SECONDS)
+    seconds = math.floor(seconds / 60) * 60
     local kps = tonumber(off.killsPerSecond) or 0.9
     local kills = math.floor(kps * seconds)
-    local _, _, sd = C.Stage(hero)
+    local cp = hero.campaign
+    local ch, st = cp.maxChapter, cp.maxStage
+    local sd = C.StageData(ch, st)
+    if not sd or not sd.hunt then ch, st, sd = C.Stage(hero) end
     if not sd then return nil end
-    local per = C.KillRewards(hero, sd, statCache)
     local total = { kills = kills, seconds = seconds }
-    for k, v in pairs(per) do total[k] = v * kills end
-    local R = D.Rewards and D.Rewards.offlineExtra
-    if R then
-        local extra = R(hero, sd, seconds, kills)
-        if extra then for k, v in pairs(extra) do total[k] = (total[k] or 0) + v end end
+    local expBonus = stats and stats.BonusExpPercent or 0
+    total.exp = (sd.exp or 0) * kills * (1 + expBonus / 1000)
+    local drops = D.HuntDrops and D.HuntDrops[stageKey(ch, st)]
+    if drops then
+        for _, dr in ipairs(drops) do
+            local n = math.floor(kills * dr.ppm / 1000000) * dr.n
+            if dr.key == "meso" and stats and stats.BonusGoldPercent then
+                n = math.floor(n * (1 + stats.BonusGoldPercent / 1000))
+            end
+            if n > 0 then total[dr.key] = (total[dr.key] or 0) + n end
+        end
     end
     return total
 end
