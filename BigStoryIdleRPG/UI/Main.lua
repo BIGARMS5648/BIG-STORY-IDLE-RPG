@@ -109,6 +109,7 @@ end
 function UI.ShowPanel(key)
     local def = UI.panels[key]
     if not def then return end
+    if ns.Requests and ns.Hero.Active() then ns.Requests.Visited(ns.Hero.Active(), key) end
     for k, d in pairs(UI.panels) do
         if d.frame then d.frame:Hide() end
         if UI.tabs[k] then UI.tabs[k]:UnlockHighlight() end

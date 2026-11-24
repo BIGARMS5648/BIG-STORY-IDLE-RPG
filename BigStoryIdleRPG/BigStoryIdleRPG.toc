@@ -29,6 +29,7 @@ Data\SkinData.lua
 Data\Income.lua
 Data\JobAdvancement.lua
 Data\Medals.lua
+Data\SpecialRequests.lua
 
 Engine\Expr.lua
 Engine\Creature.lua
@@ -64,6 +65,7 @@ Systems\RelocatedRewards.lua
 Systems\Arena.lua
 Systems\Income.lua
 Systems\Medals.lua
+Systems\SpecialRequests.lua
 
 
 UI\Widgets.lua

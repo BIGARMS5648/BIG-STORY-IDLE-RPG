@@ -89,11 +89,39 @@ local fresh = Hero.New("hero", "S")
 Hero.Add(fresh, "weaponTicket", 100)
 for _ = 1, 10 do assert(S.Pull(fresh, "weapon", 10), "pull") end
 assert(S.Info(fresh, "weapon").level == 2 and Hero.Count(fresh, "weaponTicket") == 50, "Lv2 pays 50 weapon tickets")
+-- 특별 의뢰: gates, counting from the opening, state goals, visit goals, one-time claim
+do
+    local R = ns.Requests
+    local h = Hero.New("hero", "Q")
+    Hero.SetActive(h)
+    local function row(id) for _, r in ipairs(R.List(h)) do if r.def.id == id then return r end end end
+    assert(not row("stan1").open, "3-3 gate closed")
+    for _ = 1, 50 do ns.Fire("MONSTER_KILLED", h, {}, {}, "hunt") end
+    h.campaign.maxChapter, h.campaign.maxStage = 3, 3
+    assert(row("stan1").open and row("stan1").progress == 0, "kills count only after opening")
+    for _ = 1, 1000 do ns.Fire("MONSTER_KILLED", h, {}, {}, "hunt") end
+    local t0 = Hero.Count(h, "weaponTicket")
+    assert(R.Claim(h, "stan1") and Hero.Count(h, "weaponTicket") - t0 == 30, "stan1 pays 30 weapon tickets")
+    assert(not R.Claim(h, "stan1"), "one-time")
+    for _ = 1, 5 do ns.Fire("ELITE_SUMMONED", h, 1) end
+    local items0 = 0
+    for _ in pairs(h.equipment.items) do items0 = items0 + 1 end
+    assert(R.Claim(h, "eliteX5"), "elite x5 request")
+    local items1 = 0
+    for _ in pairs(h.equipment.items) do items1 = items1 + 1 end
+    assert(items1 == items0 + 1, "Lv15 belt granted")
+    assert(not R.Claim(h, "level60"), "level 60 request closed before Lv58")
+    h.campaign.maxChapter, h.campaign.maxStage = 7, 1
+    ns.UI.Create()
+    ns.UI.ShowPanel("medals")
+    assert(R.Claim(h, "mingming2"), "visit goal")
+    Hero.SetActive(hero)
+end
 -- UI
 local ef = ns.eventFrame
 ns.UI.Toggle()
 ns.UI.ShowPanel("income")
-for s = 1, 5 do ns.UI.panels.income.frame.section = s; ns.UI.RefreshPanel() end
+for s = 1, 6 do ns.UI.panels.income.frame.section = s; ns.UI.RefreshPanel() end
 print(string.format("income ok: tickets %d, companion tickets %d, redDia %d, errors %d", Hero.Count(hero, "weaponTicket"),
     Hero.Count(hero, "companionTicket"), Hero.Count(hero, "redDia"), errors))
 assert(errors == 0)
