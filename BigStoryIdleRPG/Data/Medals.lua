@@ -8,7 +8,8 @@
 --     핑크빈 헌터 (핑크빈 어려움 5회, 보스 몬스터 데미지 10%); later 혼테일 파괴자
 --   KR notices: 오르비스 방범대 (여신의 흔적 50회), 마가티아 평화주의자 (로미오와 줄리엣 50회),
 --     핑크빈 슬레이어 (길드 레이드 핑크빈, 최종 데미지 +3%), 팀 플레이어 (길드 레이드 자쿰, 최종 데미지 +3%)
--- Not included: costume / royal hair / royal face medals (paid styles), 인기도 (fame), pet walkway,
+-- Not included: costume / royal hair / royal face medals (paid styles), 인기도 (fame) and pet walkway (removed
+--   with friends and minigames by the user, 2026-11-25),
 --   event and ranking medals.
 -- ADAPTED: guild raid medals are earned by the top difficulty of the boss raid (guild content was
 --   removed, see Systems/RelocatedRewards.lua); "도전 모드 MVP" raid medals count party-mode raid clears.

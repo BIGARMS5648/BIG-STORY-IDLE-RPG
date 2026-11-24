@@ -109,7 +109,7 @@ D.Newcomer14 = {
     perMission = { weaponTicket = 10 },
     finalAt = 79,
     days = {
-        { m = { "kill:4000", "level:30", "elite:7", "summonLv_weapon:4", "free:펫 산책로 방문하기" }, clear = { weaponTicket = 150 } },
+        { m = { "kill:4000", "level:30", "elite:7", "summonLv_weapon:4", "free:훈장 창 확인하기" }, clear = { weaponTicket = 150 } },
         { m = { "kill:10000", "dungeon_weapon:15", "summonLv_companion:3", "ability:2", "worldboss:4" }, clear = { companionTicket = 60 } },
         { m = { "kill:10000", "dungeon_gear:15", "enchant:5", "summonLv_weapon:8", "chapterBoss:6" }, clear = { spellTrace = 1500 } },
         { m = { "free:파티 퀘스트 반지 장착", "star:3", "dungeon_weapon:22", "dungeon_exp:20", "worldboss:5" }, clear = { starforceScroll = 6 } },

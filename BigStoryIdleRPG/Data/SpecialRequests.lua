@@ -6,7 +6,8 @@
 -- published, so those requests open from the start (GQ 147 at chapter 5).
 -- ADAPTED: "Cloy's Costume Proposal" (check costumes) and "Mrs. Ming Ming's Request 2" (check Royal
 -- Style) point at paid style shops, which are removed; they ask to look at the 장비 / 훈장 windows.
--- Not included: 펫 산책로 jump quests and minigame quests (no such content).
+-- Not included: 펫 산책로 jump quests and minigame quests (friends, fame, minigames and the pet walkway are
+-- removed from this game by the user, 2026-11-25).
 -- NPC names are the WoW-skin quest givers; `maple` is the original NPC / quest.
 local ADDON, ns = ...
 ns.Data = ns.Data or {}
