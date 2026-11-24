@@ -33,7 +33,7 @@ A.REFRESH_COST_DIA = 150
 A.SNAPSHOT_TTL = 3600           -- re-request profiles older than 1 h
 A.HELLO_INTERVAL = 300
 -- research/spec/research-arena.md
-A.START_SCORE = 1000            -- World Arena / Colosseum start; matches observed arena week-end scores
+A.START_SCORE = 1000            -- the (removed) World Arena / Colosseum start; matches observed arena week-end scores
 A.WIN_SCORE = 20                -- about +20, scaled by CP (doubling own CP halves the gain)
 A.DEFENSE_WIN_SCORE = 5
 A.DEFENSE_LOSS_SCORE = -9
@@ -85,6 +85,33 @@ A.TIER_TOP_PERCENT = { 100, 90, 80, 70, 60, 52, 46, 40, 35, 30, 26, 22, 18, 15, 
 A.TIER_SCORE = { 0, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750,
     1800, 1850, 1900, 1950, 2000, 2050, 2100 }
 
+-- 결투장 시즌: 콜로세움 / 월드 아레나 were removed (user, 2026-11-25); their round rewards are paid here
+-- at the end of every season of SEASON_WEEKS weekly settlements (ESTIMATE cadence: the originals ran as
+-- irregular event rounds). Needs at least one arena battle in the season.
+--   콜로세움 rank rewards (스타포스 강화 주문서, global wiki): rank in a 25-player group; with more addon users
+--     the rank is scaled to 25 (ceil(rank / total x 25)).
+--   콜로세움 bingo lines: lines 1-4 +5 스타포스 each, 5-8 메소 350,000 / 400,000 / 450,000 / 500,000;
+--     ESTIMATE: one line per SEASON_WINS_PER_LINE attack wins in the season.
+--   월드 아레나 individual (미라클 큐브) and guild (에디셔널 큐브, 7-day EXP booster) columns, by the row of the
+--     same tier name as the arena tier (World Arena has no 챌린저 tier: 챌린저 uses 그랜드마스터1).
+A.SEASON_WEEKS = 4
+A.SEASON_WINS_PER_LINE = 10
+A.COLOSSEUM_RANK_SF = { 80, 70, 60, 56, 52, 48, 44, 40, 38, 36, 34, 32, 30, 27, 27, 24, 24, 21, 21, 18, 18, 15, 15 }
+A.COLOSSEUM_PARTICIPATION_SF = 12
+A.COLOSSEUM_LINES = { { starforceScroll = 5 }, { starforceScroll = 5 }, { starforceScroll = 5 }, { starforceScroll = 5 },
+    { meso = 350000 }, { meso = 400000 }, { meso = 450000 }, { meso = 500000 } }
+A.WORLD_ARENA = {
+    ["챔피언1"] = { cube = 300, add = 100, exp = 250 }, ["챔피언2"] = { cube = 270, add = 90, exp = 200 },
+    ["챔피언3"] = { cube = 250, add = 80, exp = 150 }, ["그랜드마스터1"] = { cube = 230, add = 75, exp = 120 },
+    ["그랜드마스터2"] = { cube = 215, add = 70, exp = 100 }, ["그랜드마스터3"] = { cube = 200, add = 60, exp = 100 },
+    ["그랜드마스터4"] = { cube = 180, add = 50, exp = 100 }, ["그랜드마스터5"] = { cube = 160, add = 40, exp = 80 },
+    ["마스터1"] = { cube = 140, add = 35, exp = 80 }, ["마스터2"] = { cube = 120, add = 30, exp = 60 },
+    ["마스터3"] = { cube = 110, add = 27, exp = 60 }, ["마스터4"] = { cube = 100, add = 24, exp = 40 },
+    ["마스터5"] = { cube = 80, add = 21, exp = 40 }, ["다이아몬드1"] = { cube = 65, add = 18, exp = 40 },
+    ["플래티넘1"] = { cube = 50, add = 15, exp = 40 }, ["골드1"] = { cube = 40, add = 12, exp = 40 },
+    ["실버1"] = { cube = 30, add = 10, exp = 40 }, ["브론즈1"] = { cube = 10, add = 5, exp = 0 },
+}
+
 -- shop (KR weekly limits; prices from the global guide where KR is unknown)
 A.SHOP = {
     { key = "artifactChest", n = 1, price = 500, weekly = 10 },
@@ -103,6 +130,7 @@ Hero.RegisterSystem("arena", {
             opponents = {}, log = {}, bought = {}, attempts = 0, best = A.START_SCORE,
         }
         hero.arena.bought = hero.arena.bought or {}
+        hero.arena.season = hero.arena.season or { weeks = 0, played = false, wins = 0 }
     end,
     daily = function(hero)
         local ar = hero.arena
@@ -127,9 +155,50 @@ Hero.RegisterSystem("arena", {
         -- weekly benefit until the next settlement, then ranking points reset
         ar.buff = nil
         for _, bf in ipairs(A.BUFFS) do if idx >= bf.minTier then ar.buff = bf end end
+        A.SeasonWeek(hero, idx)
         ar.score = A.START_SCORE
     end,
 })
+
+-- season rewards (see A.SEASON_WEEKS); called from the weekly settlement with this week's tier
+function A.SeasonRewards(hero, tierIdx)
+    local ar = hero.arena
+    local _, row, rank, total = A.Tier(hero)
+    row = A.TIERS[tierIdx] or row
+    local out, buff = {}, nil
+    local colRank = total > 25 and math.ceil(rank / total * 25) or rank
+    out.starforceScroll = A.COLOSSEUM_RANK_SF[colRank] or A.COLOSSEUM_PARTICIPATION_SF
+    local lines = math.min(#A.COLOSSEUM_LINES, math.floor((ar.season.wins or 0) / A.SEASON_WINS_PER_LINE))
+    for i = 1, lines do
+        for k, v in pairs(A.COLOSSEUM_LINES[i]) do out[k] = (out[k] or 0) + v end
+    end
+    local name = row and row.name or "브론즈1"
+    if name:find("^챌린저") then name = "그랜드마스터1" end
+    local wa = A.WORLD_ARENA[name] or A.WORLD_ARENA["브론즈1"]
+    out.cubeMiracle = wa.cube
+    out.cubeAdditional = wa.add
+    if wa.exp > 0 then buff = wa.exp end
+    return out, buff, lines, colRank
+end
+
+function A.SeasonWeek(hero, tierIdx)
+    local ar = hero.arena
+    local se = ar.season
+    se.weeks = (se.weeks or 0) + 1
+    if se.weeks < A.SEASON_WEEKS then return end
+    if se.played then
+        local rewards, buff, lines, colRank = A.SeasonRewards(hero, tierIdx)
+        Hero.Grant(hero, rewards, "arenaSeason")
+        if buff and ns.Content and ns.Content.AddBuff then
+            ns.Content.AddBuff(hero, { id = "arenaSeasonExp", nameKo = "결투장 시즌 경험치 부스터", ["until"] = U.Now() + 7 * 86400,
+                stats = { BonusExpPercent = buff } })
+        end
+        ar.lastSeason = { rewards = rewards, expBuff = buff, lines = lines, colRank = colRank }
+    else
+        ar.lastSeason = { rewards = {}, missed = true }
+    end
+    ar.season = { weeks = 0, played = false, wins = 0 }
+end
 
 local function db()
     ns.db.arena = ns.db.arena or {}
@@ -337,6 +406,9 @@ function A.Finish(hero, opponent, won, seed)
     ar.score = math.max(0, ar.score + delta)
     ar.best = math.max(ar.best or 0, ar.score)
     if won then ar.wins = ar.wins + 1 else ar.losses = ar.losses + 1 end
+    ar.season = ar.season or { weeks = 0, played = false, wins = 0 }
+    ar.season.played = true
+    if won then ar.season.wins = (ar.season.wins or 0) + 1 end
     table.insert(ar.log, 1, { at = U.Now(), kind = "attack", opp = opponent, won = won, delta = delta, score = ar.score })
     while #ar.log > 30 do table.remove(ar.log) end
     ns.Fire("ARENA_RESULT", hero, opponent, won, delta)

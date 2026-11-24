@@ -35,7 +35,7 @@ UI.RegisterPanel("arena", {
         p.opps = {}
         for i = 1, 3 do
             local box = W.Panel(p, 300, 120, 0.85)
-            box:SetPoint("TOPLEFT", 4 + (i - 1) * 306, -42)
+            box:SetPoint("TOPLEFT", 4 + (i - 1) * 306, -50)
             box.icon = W.Icon(box, 36)
             box.icon:SetPoint("TOPLEFT", 8, -8)
             box.name = W.Text(box, 13, W.COLORS.white, "LEFT")
@@ -75,8 +75,13 @@ UI.RegisterPanel("arena", {
         local idx, row, rank, total = A.Tier(hero)
         p.head:SetText(string.format("%s  ·  점수 %d  ·  %d위 / %d명  ·  %d승 %d패 (방어 %d승 %d패)", row.name, ar.score,
             rank, total, ar.wins, ar.losses, ar.defWins or 0, ar.defLosses or 0))
-        p.sub:SetText(string.format("입장권 %d/%d · 무료 새로고침 %d · 일일 보상 %s · 주간 보상 %s + 스타포스 주문서 %d",
-            ar.tickets, A.TICKET_CAP, ar.refresh, (W.Money("arenaCoin", row.daily)), (W.Money("arenaCoin", row.weekly)), row.sf))
+        local se = ar.season or { weeks = 0, wins = 0 }
+        local sr = A.SeasonRewards(hero, idx)
+        p.sub:SetText(string.format("입장권 %d/%d · 무료 새로고침 %d · 일일 보상 %s · 주간 보상 %s + 스타포스 주문서 %d\n"
+            .. "시즌 %d/%d주 · 시즌 공격 승리 %d · 시즌 보상(예상): 스타포스 %d, 미라클 큐브 %d, 에디셔널 큐브 %d%s",
+            ar.tickets, A.TICKET_CAP, ar.refresh, (W.Money("arenaCoin", row.daily)), (W.Money("arenaCoin", row.weekly)), row.sf,
+            (se.weeks or 0) + 1, A.SEASON_WEEKS, se.wins or 0, sr.starforceScroll or 0, sr.cubeMiracle or 0,
+            sr.cubeAdditional or 0, sr.meso and (", 메소 " .. U.FormatNumber(sr.meso)) or ""))
         local opps = A.Opponents(hero)
         p.empty:SetShown(#opps == 0)
         for i, box in ipairs(p.opps) do

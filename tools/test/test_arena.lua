@@ -86,4 +86,22 @@ assert(found, "result not sent")
 ns.Hero.systems.arena.daily(me)
 print("daily coins:", Hero.Count(me, "arenaCoin"), "tickets:", me.arena.tickets)
 assert(A.Buy(me, 2, 1), "shop buy failed")
+-- season (relocated Colosseum / World Arena rewards): paid on the 4th weekly settlement if played
+do
+    local ar = me.arena
+    ar.season = { weeks = 0, played = true, wins = 25 }
+    local sf0, cube0, add0 = Hero.Count(me, "starforceScroll"), Hero.Count(me, "cubeMiracle"), Hero.Count(me, "cubeAdditional")
+    for w = 1, A.SEASON_WEEKS - 1 do ns.Hero.systems.arena.weekly(me) end
+    assert(Hero.Count(me, "cubeMiracle") == cube0, "no season reward before the season ends")
+    local before = { sf = Hero.Count(me, "starforceScroll") }
+    ar.season.played, ar.season.wins = true, 25
+    ns.Hero.systems.arena.weekly(me)
+    local ls = ar.lastSeason
+    assert(ls and not ls.missed and ls.lines == 2, "season paid with 2 bingo lines")
+    assert(Hero.Count(me, "cubeMiracle") > cube0 and Hero.Count(me, "cubeAdditional") > add0, "world arena cubes relocated")
+    assert(ls.rewards.starforceScroll >= 12 + 10, "colosseum rank SF + 2 lines x 5")
+    assert(ar.season.weeks == 0 and ar.season.wins == 0, "season reset")
+    for w = 1, A.SEASON_WEEKS do ns.Hero.systems.arena.weekly(me) end
+    assert(ar.lastSeason.missed, "no reward without a battle in the season")
+end
 print("arena ok, errors", errors)
