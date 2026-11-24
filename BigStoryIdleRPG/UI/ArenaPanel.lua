@@ -77,11 +77,11 @@ UI.RegisterPanel("arena", {
             rank, total, ar.wins, ar.losses, ar.defWins or 0, ar.defLosses or 0))
         local se = ar.season or { weeks = 0, wins = 0 }
         local sr = A.SeasonRewards(hero, idx)
-        p.sub:SetText(string.format("입장권 %d/%d · 무료 새로고침 %d · 일일 보상 %s · 주간 보상 %s + 스타포스 주문서 %d\n"
-            .. "시즌 %d/%d주 · 시즌 공격 승리 %d · 시즌 보상(예상): 스타포스 %d, 미라클 큐브 %d, 에디셔널 큐브 %d%s",
+        p.sub:SetText(string.format("입장권 %d/%d · 무료 새로고침 %d · 일일 보상 %s · 주간 보상 %s + 별빛 강화 주문서 %d\n"
+            .. "시즌 %d/%d주 · 시즌 공격 승리 %d · 시즌 보상(예상): 별빛 강화 %d, 잠재 큐브 %d, 추가 잠재 큐브 %d%s",
             ar.tickets, A.TICKET_CAP, ar.refresh, (W.Money("arenaCoin", row.daily)), (W.Money("arenaCoin", row.weekly)), row.sf,
             (se.weeks or 0) + 1, A.SEASON_WEEKS, se.wins or 0, sr.starforceScroll or 0, sr.cubeMiracle or 0,
-            sr.cubeAdditional or 0, sr.meso and (", 메소 " .. U.FormatNumber(sr.meso)) or ""))
+            sr.cubeAdditional or 0, sr.meso and (", 골드 " .. U.FormatNumber(sr.meso)) or ""))
         local opps = A.Opponents(hero)
         p.empty:SetShown(#opps == 0)
         for i, box in ipairs(p.opps) do

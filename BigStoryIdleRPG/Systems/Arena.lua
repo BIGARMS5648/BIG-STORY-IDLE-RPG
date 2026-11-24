@@ -298,7 +298,7 @@ function A.Refresh(hero)
         ar.refresh = ar.refresh - 1
         if ar.refresh == A.FREE_REFRESH - 1 then ar.refreshAt = U.Now() end
     elseif not Hero.Spend(hero, "redDia", A.REFRESH_COST_DIA, "arenaRefresh") then
-        return false, "레드 다이아가 부족합니다."
+        return false, "붉은 다이아가 부족합니다."
     end
     A.Pick(hero)
     A.RequestSnapshots()

@@ -354,7 +354,7 @@ function I.BuyRed(hero, idx)
     if row.once and s.shopOnce[idx] then return false, "이미 구매했습니다." end
     local bought = s.weekShop[idx] or 0
     if row.limit and bought >= row.limit then return false, "이번 주 구매 한도입니다." end
-    if not Hero.Spend(hero, "redDia", row.price, "redShop") then return false, "레드 다이아가 부족합니다." end
+    if not Hero.Spend(hero, "redDia", row.price, "redShop") then return false, "붉은 다이아가 부족합니다." end
     s.weekShop[idx] = bought + 1
     if row.once then s.shopOnce[idx] = true end
     Hero.Grant(hero, row.items, "redShop")

@@ -191,9 +191,9 @@ C.RegisterMode("worldBoss", {
         end
         if wt then
             lines[#lines + 1] = string.format("주간 정산 예정: 월드보스 코인 %s%s", U.Comma(wt.weekly),
-                wt.cubes > 0 and (" · 미라클 큐브 " .. wt.cubes) or "")
+                wt.cubes > 0 and (" · 잠재 큐브 " .. wt.cubes) or "")
         end
-        lines[#lines + 1] = "|cff999999티어 = 개인 최고 점수 기준 임시 구간 (원본은 서버 순위)|r"
+        lines[#lines + 1] = "|cff999999티어 = 개인 최고 점수 기준|r"
         return lines
     end,
     actions = { { label = "도전", fn = function(hero, sel) local b, e = W.Enter(hero, sel.level); return b ~= nil, e end } },
@@ -582,7 +582,7 @@ function R.BuyTicket(hero)
     local ct = hero.content.raids
     local price = RD.rules.refillRedDia[(ct.refills or 0) + 1]
     if not price then return false, "이번 주 충전 횟수를 모두 사용했습니다." end
-    if not Hero.Spend(hero, "redDia", price, "bossRaidRefill") then return false, "레드 다이아가 부족합니다." end
+    if not Hero.Spend(hero, "redDia", price, "bossRaidRefill") then return false, "붉은 다이아가 부족합니다." end
     ct.refills = (ct.refills or 0) + 1
     Hero.Add(hero, "bossRaidTicket", 1, "bossRaidRefill")
     return true, nil, { "보스 레이드 입장권 +1" }
@@ -622,7 +622,7 @@ for i, boss in ipairs(R.BOSSES) do
             local drops = {}
             for _, g in ipairs(dd.drops) do drops[#drops + 1] = string.format("%s %.0f%%", g.item, g.permille / 10) end
             lines[#lines + 1] = "장비: " .. table.concat(drops, ", ")
-            lines[#lines + 1] = "장비 없을 때: 메소 10만 / 엘리트 포인트 400 / 무기 강화석 2만 / 주문의 흔적 400 / 시간 단축 200 중 1"
+            lines[#lines + 1] = "장비 없을 때: 골드 10만 / 정예 포인트 400 / 무기 연마석 2만 / 마력의 흔적 400 / 시간 단축 200 중 1"
             return lines
         end,
         actions = {
@@ -675,13 +675,13 @@ function BLFight:Tick(b)
 end
 
 function BLFight:UpdateTitle(b)
-    self.title = string.format("마왕 발록 %d단계 · 피해 %s", self.stage, F(self.damage))
+    self.title = string.format("남작 게돈 %d단계 · 피해 %s", self.stage, F(self.damage))
 end
 
 function BLFight:Finish(b, reason)
     local hero = self.hero
     local s = hero.content.balrog
-    local head = string.format("마왕 발록 %d단계", self.stage)
+    local head = string.format("남작 게돈 %d단계", self.stage)
     if self.stage == BD.unkillableStage then
         s.best20 = math.max(s.best20 or 0, self.damage)
     end
@@ -705,18 +705,18 @@ function BL.Enter(hero, stage)
     stage = stage or math.min(#BD.stages, s.max + 1)
     if hero.level < BD.unlockLevel then return nil, string.format("%d레벨부터 참여할 수 있습니다.", BD.unlockLevel) end
     if stage < 1 or stage > #BD.stages or stage > s.max + 1 then return nil, "도전할 수 없는 단계입니다." end
-    if not Hero.Spend(hero, "balrogTicket", 1, "balrog") then return nil, "마왕 발록 입장권이 없습니다." end
+    if not Hero.Spend(hero, "balrogTicket", 1, "balrog") then return nil, "남작 게돈 입장권이 없습니다." end
     local row = BD.stages[stage]
     local ctl = C.NewFight(BLFight, { kind = "balrog", modeKey = "balrog", stage = stage, allies = BL.GROUP_ALLIES,
         timeLimit = row.time * 1000, dungeonType = "GroupChallenge", revive = true,
-        title = "마왕 발록 " .. stage .. "단계" })
+        title = "남작 게돈 " .. stage .. "단계" })
     local b, err = C.Start(hero, ctl)
     if not b then Hero.Add(hero, "balrogTicket", 1, "balrogRefund") end
     return b, err
 end
 
 C.RegisterMode("balrog", {
-    order = 35, group = "보스", title = "마왕 발록",
+    order = 35, group = "보스", title = "남작 게돈",
     selectors = {
         { key = "stage", label = "단계", min = 1,
           max = function(hero) return math.min(#BD.stages, hero.content.balrog.max + 1) end,

@@ -505,7 +505,6 @@ for i, key in ipairs(G.KEYS) do
             local rl = C.RewardLines(preview)
             if key == "enhance" then rl[#rl + 1] = "강화 주문서 10% (단계별 등급표)" end
             lines[#lines + 1] = "보상: " .. table.concat(rl, ", ")
-            if key ~= "exp" then lines[#lines + 1] = "|cff999999(보상 수량은 임시값 — 원본 미공개)|r" end
             lines[#lines + 1] = key == "enhance" and "클리어 시 열쇠 1개 사용 · 실패 시 반환"
                 or "클리어 시 열쇠 반환 · 실패해도 열쇠는 소모되지 않습니다 · 소탕 = 열쇠 1개"
             return lines
@@ -590,7 +589,7 @@ function Q.Use(hero, pay)
         if not Hero.Spend(hero, "quickHuntTicket", 1, "quickHunt") then return false, "빠른 사냥 티켓이 없습니다." end
     elseif pay == "red" then
         if not o.red then return false, "오늘 구매 가능 횟수를 모두 사용했습니다." end
-        if not Hero.Spend(hero, "redDia", o.red, "quickHunt") then return false, "레드 다이아가 부족합니다." end
+        if not Hero.Spend(hero, "redDia", o.red, "quickHunt") then return false, "붉은 다이아가 부족합니다." end
         q.red = q.red + 1
     else
         return false, "알 수 없는 결제 방식"
@@ -614,14 +613,14 @@ C.RegisterMode("quickHunt", {
         return {
             string.format("다음 사용: %s마리 처치 (최고 도달 사냥터 %s 기준, 부스터·경험치%% 미적용)",
                 U.Comma(Q.Kills(hero)), ns.Campaign.StageName(cp.maxChapter, cp.maxStage)),
-            string.format("무료 %d회 · 추가 무료 %d회 · 티켓 %d장 · 레드 다이아 구매 %d회 남음%s", o.free, o.ad, o.ticket,
+            string.format("무료 %d회 · 추가 무료 %d회 · 티켓 %d장 · 붉은 다이아 구매 %d회 남음%s", o.free, o.ad, o.ticket,
                 o.redLeft, o.red and string.format(" (다음 %s)", U.Comma(o.red)) or ""),
             "사용할 때마다 처치 수 +5 (최대 3,000)",
         }
     end,
     actions = {
         { label = "사용", fn = function(hero) return Q.Use(hero) end },
-        { label = "레드 다이아", fn = function(hero) return Q.Use(hero, "red") end },
+        { label = "붉은 다이아", fn = function(hero) return Q.Use(hero, "red") end },
     },
 })
 

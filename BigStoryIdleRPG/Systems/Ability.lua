@@ -106,7 +106,7 @@ end
 function A.Convert(hero, rng)
     local ab = hero.ability
     local slots = A.SlotCount(hero)
-    if slots == 0 then return false, "용사의 힘 2단계에서 개방됩니다." end
+    if slots == 0 then return false, "영웅의 힘 2단계에서 개방됩니다." end
     if A.LockedCount(hero) >= slots then return false, "모든 칸이 잠겨 있어 변환할 수 없습니다." end
     local cost = A.ConvertCost(hero)
     if not Hero.Spend(hero, "honorMedal", cost, "ability") then

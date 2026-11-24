@@ -336,7 +336,7 @@ end
 
 function SF.CanEnhance(hero, item, opts)
     if SF.IsDestroyed(item) then return false, "파괴된 장비입니다. 먼저 복구하세요." end
-    if (item.star or 0) >= DS.maxStar then return false, "최대 스타포스입니다." end
+    if (item.star or 0) >= DS.maxStar then return false, "최대 별빛 강화입니다." end
     return UP.CanPay(hero, SF.Cost(item, opts))
 end
 

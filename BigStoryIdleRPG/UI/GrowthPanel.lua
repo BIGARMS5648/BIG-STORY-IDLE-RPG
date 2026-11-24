@@ -9,7 +9,7 @@ local D = ns.Data
 
 local VIEW_Y = -26
 local VIEWS = {
-    { key = "heroPower", label = "용사의 힘", sys = "HeroPower" },
+    { key = "heroPower", label = "영웅의 힘", sys = "HeroPower" },
     { key = "ability", label = "어빌리티", sys = "Ability" },
     { key = "artifacts", label = "유물", sys = "Artifacts" },
     { key = "journey", label = "여정", sys = "Journey" },
@@ -112,7 +112,7 @@ local function hpLevelUp(slot, count)
     local hero = ns.Hero.Active()
     if not hero then return end
     local n, err = call("heroPowerLevelUp", ns.HeroPower.LevelUp, hero, slot, count)
-    if n and n > 0 then W.Toast(string.format("용사의 힘 +%d", n), W.COLORS.green) elseif err then W.Toast(err, W.COLORS.red) end
+    if n and n > 0 then W.Toast(string.format("영웅의 힘 +%d", n), W.COLORS.green) elseif err then W.Toast(err, W.COLORS.red) end
     refreshNow()
 end
 
@@ -155,7 +155,7 @@ local function buildHeroPower(p)
         local hero = ns.Hero.Active()
         if not hero then return end
         local ok, err = call("heroPowerAdvance", ns.HeroPower.StartAdvance, hero)
-        if ok then W.Toast("용사의 힘 승급을 시작했습니다.", W.COLORS.green) elseif err then W.Toast(err, W.COLORS.red) end
+        if ok then W.Toast("영웅의 힘 승급을 시작했습니다.", W.COLORS.green) elseif err then W.Toast(err, W.COLORS.red) end
         refreshNow()
     end)
     v.advBtn:SetPoint("TOPLEFT", 430, -192)
@@ -171,7 +171,7 @@ local function buildHeroPower(p)
 
     v.sumTitle = W.Text(v, 12, W.COLORS.gold, "LEFT")
     v.sumTitle:SetPoint("TOPLEFT", 680, 0)
-    v.sumTitle:SetText("현재 용사의 힘 효과")
+    v.sumTitle:SetText("현재 영웅의 힘 효과")
     v.sum = W.Text(v, 11, W.COLORS.white, "LEFT")
     v.sum:SetPoint("TOPLEFT", 680, -20)
     v.sum:SetWidth(260)
@@ -201,7 +201,7 @@ local function refreshHeroPower(p, v, hero)
     call("heroPowerUpdate", HP.Update, hero)
     local stage, st = HP.Stage(hero)
     local maxStage = D.HeroPower and D.HeroPower.maxStage or 9
-    v.title:SetText(string.format("용사의 힘 |cffffffff%d단계|r |cff999999/ %d|r   %s", stage, maxStage,
+    v.title:SetText(string.format("영웅의 힘 |cffffffff%d단계|r |cff999999/ %d|r   %s", stage, maxStage,
         (W.Money("heroToken", ns.Hero.Count(hero, "heroToken")))))
     local bonus = statList(st and st.bonus or {})
     v.bonus:SetText(#bonus > 0 and ("단계 보너스: |cff40ff40" .. table.concat(bonus, ", ") .. "|r") or "|cff808080단계 보너스 없음|r")
@@ -350,7 +350,7 @@ local function refreshAbility(p, v, hero)
             end
         else
             r.lock:Hide()
-            r.text:SetText(string.format("|cff555555잠김 · 용사의 힘 %d단계에서 개방|r", unlockStage[i] or 0))
+            r.text:SetText(string.format("|cff555555잠김 · 영웅의 힘 %d단계에서 개방|r", unlockStage[i] or 0))
         end
     end
     local locked = A.LockedCount(hero)
@@ -358,9 +358,9 @@ local function refreshAbility(p, v, hero)
         local cost = A.ConvertCost(hero)
         v.cost:SetText(string.format("변환 비용  %s  |cff999999(잠금 %d줄)|r", costText({ honorMedal = cost or 0 }, hero), locked))
         v.convBtn:SetEnabled(locked < slots and ns.Hero.Count(hero, "honorMedal") >= (cost or 0))
-        v.unlock:SetText(slots < MAX_AB_LINES and string.format("다음 줄: 용사의 힘 %d단계", unlockStage[slots + 1] or 0) or "모든 줄 개방")
+        v.unlock:SetText(slots < MAX_AB_LINES and string.format("다음 줄: 영웅의 힘 %d단계", unlockStage[slots + 1] or 0) or "모든 줄 개방")
     else
-        v.cost:SetText("|cffff6060용사의 힘 2단계에서 개방됩니다.|r")
+        v.cost:SetText("|cffff6060영웅의 힘 2단계에서 개방됩니다.|r")
         v.convBtn:SetEnabled(false)
         v.unlock:SetText("")
     end

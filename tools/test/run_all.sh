@@ -19,3 +19,4 @@ lua5.1 tools/test/test_medals.lua | tail -1
 lua5.1 tools/test/test_content.lua | tail -1
 lua5.1 tools/test/test_ui.lua 4 | tail -1
 lua5.1 tools/test/test_panels.lua | tail -1
+lua5.1 tools/test/scan_names.lua | tail -1

@@ -37,13 +37,13 @@ local ARMOR_ICON = {
     Glove = "INV_Gauntlets_04", Cape = "INV_Misc_Cape_02", Belt = "INV_Belt_03", Shoes = "INV_Boots_05",
 }
 local VIEWS = {
-    { key = "info", label = "정보" }, { key = "sf", label = "스타포스" }, { key = "pot", label = "잠재능력" },
+    { key = "info", label = "정보" }, { key = "sf", label = "별빛 강화" }, { key = "pot", label = "잠재능력" },
     { key = "scroll", label = "주문서" }, { key = "elite", label = "정예 소환" },
 }
 local KIND_TITLE = { main = "주 옵션", sub = "부 옵션", fixed = "고정 옵션" }
 local CUBE_KINDS = {
     { kind = "miracle", field = "potential", title = "잠재능력", cube = "cubeMiracle" },
-    { kind = "additional", field = "additional", title = "에디셔널 잠재능력", cube = "cubeAdditional" },
+    { kind = "additional", field = "additional", title = "추가 잠재능력", cube = "cubeAdditional" },
 }
 
 ---------------------------------------------------------------------------
@@ -187,7 +187,7 @@ local function itemTooltip(tt, item, hero)
                 if i > 4 then parts[#parts + 1] = "..." break end
                 parts[#parts + 1] = fmtStat(s[1], s[2])
             end
-            tt:AddLine("스타포스: " .. table.concat(parts, ", "), 1, 0.82, 0.3, true)
+            tt:AddLine("별빛 강화: " .. table.concat(parts, ", "), 1, 0.82, 0.3, true)
         end
     end
     local P = ns.Potential
@@ -699,7 +699,7 @@ local function refreshInfo(p, v, hero, item)
     local pot = item.potential and item.potential.lines and #item.potential.lines > 0 and P and P.GradeName(item.potential.grade) or "없음"
     local add = item.additional and item.additional.lines and #item.additional.lines > 0 and P and P.GradeName(item.additional.grade) or "없음"
     local nScroll = item.scroll and item.scroll.slots and #item.scroll.slots or 0
-    foot[#foot + 1] = string.format("잠재 %s · 에디셔널 %s · 주문서 %d/%d · 분해 시 %s", pot, add, nScroll,
+    foot[#foot + 1] = string.format("잠재 %s · 추가 %s · 주문서 %d/%d · 분해 시 %s", pot, add, nScroll,
         D.Scrolls and D.Scrolls.slots or 10, (W.Money("gearStone", E.DismantleValue(item))))
     v.foot:SetText(table.concat(foot, "\n"))
 end
@@ -772,7 +772,7 @@ local function pctM(x) return string.format("%.2f%%", (x or 0) / 10000) end
 
 local function refreshStarForce(p, v, hero, item)
     local SF = ns.StarForce
-    if not SF then v.title:SetText("스타포스 시스템이 없습니다.") return end
+    if not SF then v.title:SetText("별빛 강화 시스템이 없습니다.") return end
     local star = item.star or 0
     local destroyed = SF.IsDestroyed(item)
     local row = SF.Row(star)
@@ -781,7 +781,7 @@ local function refreshStarForce(p, v, hero, item)
     v.pxCheck:SetChecked(p.sfPreventDestroy and true or false)
     v.last:SetText(p.sfLast or "")
     if not row then
-        v.title:SetText(string.format("|cffffd100★ %d|r  최대 스타포스", star))
+        v.title:SetText(string.format("|cffffd100★ %d|r  최대 별빛 강화", star))
         v.chance:SetText("")
         v.pointLabel:SetText("")
         v.points:Hide()
@@ -808,7 +808,7 @@ local function refreshStarForce(p, v, hero, item)
         if guaranteed then sp[#sp + 1] = reason == "chance" and "찬스타임! 다음 강화 성공 확정" or "포인트 확정! 다음 강화 성공" end
         if (item.sfDowns or 0) > 0 then sp[#sp + 1] = string.format("|cffff8040연속 하락 %d회|r", item.sfDowns) end
         if star < (SF.POTENTIAL_STAR or 3) then sp[#sp + 1] = string.format("|cff999999%d성에서 잠재능력 개방|r", SF.POTENTIAL_STAR or 3)
-        elseif star < (SF.ADDITIONAL_STAR or 12) then sp[#sp + 1] = string.format("|cff999999%d성에서 에디셔널 개방|r", SF.ADDITIONAL_STAR or 12) end
+        elseif star < (SF.ADDITIONAL_STAR or 12) then sp[#sp + 1] = string.format("|cff999999%d성에서 추가 개방|r", SF.ADDITIONAL_STAR or 12) end
         v.special:SetText(table.concat(sp, "\n"))
         local canPD = (row.pdScroll or 0) > 0
         local canPX = (row.pxScroll or 0) > 0
@@ -922,7 +922,7 @@ local function refreshPotential(p, v, hero, item)
             if unlocked then b.lock:SetText("") else
                 local need = ck.kind == "additional" and (ns.StarForce and ns.StarForce.ADDITIONAL_STAR or 12)
                     or (ns.StarForce and ns.StarForce.POTENTIAL_STAR or 3)
-                b.lock:SetText(string.format("스타포스 %d성 이상에서 사용할 수 있습니다.", need))
+                b.lock:SetText(string.format("별빛 강화 %d성 이상에서 사용할 수 있습니다.", need))
             end
             b.last:SetText(p.cubeLast and p.cubeLast[ck.kind] or "")
         end

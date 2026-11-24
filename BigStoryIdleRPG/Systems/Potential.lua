@@ -112,7 +112,7 @@ function P.UseCube(hero, item, kind, rng)
     if not part or not DP.pools[part] then return nil, "잠재능력을 설정할 수 없는 장비입니다." end
     if not P.Unlocked(item, kind) then
         local need = (kind == "additional") and ns.StarForce.ADDITIONAL_STAR or ns.StarForce.POTENTIAL_STAR
-        return nil, string.format("스타포스 %d성 이상에서 사용할 수 있습니다.", need)
+        return nil, string.format("별빛 강화 %d성 이상에서 사용할 수 있습니다.", need)
     end
     local ok, err = UP.Pay(hero, P.Cost(item, kind), "cube")
     if not ok then return nil, err end

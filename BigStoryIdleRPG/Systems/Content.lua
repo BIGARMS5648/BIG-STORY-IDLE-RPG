@@ -333,7 +333,7 @@ function C.MakeAllies(hero, profile, n, rng)
             level = level,
             job = job,
             jobKey = job.key,
-            jobDisplay = skin.display or job.mapleNameKo,
+            jobDisplay = skin.display,
             stats = C.RemapStats(profile and profile.stats or {}, fromJob, job, factor),
             statFactor = factor,
             skillSet = set,

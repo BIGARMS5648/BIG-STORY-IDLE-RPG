@@ -263,7 +263,7 @@ function MPFight:Refill(b)
             self:Spawn(b, { name = "미지의 재카로프", hp = sd.jackalope.hp, atk = sd.atkProvisional.normal,
                 def = sd.jackalope.def, avoid = sd.jackalope.avoid, x = x, aggro = 1500, tag = "jackalope" })
         else
-            local c = self:Spawn(b, { name = "몬스터파크 몬스터", hp = sd.normal.hp, atk = sd.atkProvisional.normal,
+            local c = self:Spawn(b, { name = "구루바시 투기장 몬스터", hp = sd.normal.hp, atk = sd.atkProvisional.normal,
                 def = sd.normal.def, avoid = sd.normal.avoid, x = x, aggro = 1500, tag = "mob" })
             c.mission = b.rng:Int(1, MD.missions)
         end
@@ -308,14 +308,14 @@ end
 
 function MPFight:UpdateTitle(b)
     local m = self.missions
-    self.title = string.format("몬스터파크 %d단계 · 미션 %d/%d/%d/%d%s", self.stage, math.min(m[1], 15),
+    self.title = string.format("구루바시 투기장 %d단계 · 미션 %d/%d/%d/%d%s", self.stage, math.min(m[1], 15),
         math.min(m[2], 15), math.min(m[3], 15), math.min(m[4], 15), self.bigfoot and (" · 빅풋 " .. self.appear) or "")
 end
 
 function MPFight:Finish(b, reason)
     local hero = self.hero
     local sd = MD.stages[self.stage]
-    local head = string.format("몬스터파크 익스트림 %d단계%s", self.stage, self.practice and " (도전 모드)" or "")
+    local head = string.format("구루바시 투기장 %d단계%s", self.stage, self.practice and " (도전 모드)" or "")
     if reason ~= "clear" then
         return C.Result(false, reason, head .. " " .. (C.REASON_KO[reason] or reason) .. " · 입장권 미사용")
     end
@@ -331,7 +331,7 @@ function MPFight:Finish(b, reason)
     local exp = sf >= sd.starForce and sd.expBonus or sd.exp
     local rewards = { exp = exp }
     local lines = C.Grant(hero, rewards, "monsterPark")
-    if sf >= sd.starForce then lines[#lines + 1] = string.format("스타포스 %d ≥ %d: +%d%%", sf, sd.starForce, MD.bonusPct) end
+    if sf >= sd.starForce then lines[#lines + 1] = string.format("별빛 강화 %d ≥ %d: +%d%%", sf, sd.starForce, MD.bonusPct) end
     return C.Result(true, reason, head .. " 클리어", lines, { rewards = rewards })
 end
 
@@ -343,12 +343,12 @@ function MP.Enter(hero, stage, practice)
     if not practice and Hero.Count(hero, "monsterParkTicket") < 1 then return nil, "입장권이 없습니다." end
     local ctl = C.NewFight(MPFight, { kind = "monsterPark", modeKey = "monsterPark", stage = stage, practice = practice,
         allies = MP.ALLIES, revive = true, timeLimit = MD.timeSec * 1000, dungeonType = "MonsterPark",
-        noSupporter = MD.noSupporter, title = "몬스터파크 익스트림 " .. stage .. "단계" })
+        noSupporter = MD.noSupporter, title = "구루바시 투기장 " .. stage .. "단계" })
     return C.Start(hero, ctl)
 end
 
 C.RegisterMode("monsterPark", {
-    order = 58, group = "파티 퀘스트", title = "몬스터파크 익스트림",
+    order = 58, group = "파티 퀘스트", title = "구루바시 투기장",
     selectors = { { key = "stage", label = "단계", min = 1, max = function() return #MD.stages end, default = function() return 1 end } },
     info = function(hero, sel)
         local stage = sel.stage or 1
@@ -359,7 +359,7 @@ C.RegisterMode("monsterPark", {
                 F(sd.normal.hp), F(sd.bigfoot.hp), MP.ALLIES) .. (ok and "" or " |cffff6060잠김|r"),
             string.format("미션 4종 × %d마리 → 빅풋 등장 (1~4번째 %s초 후 도망) · 재카로프 처치 시 모든 미션 +%d", MD.killsPerMission,
                 table.concat(MD.fleeSec, "/"), MD.jackalopeMissionBonus),
-            string.format("보상: 경험치 %s (스타포스 %d 이상 %s) · 현재 스타포스 %d", F(sd.exp), sd.starForce, F(sd.expBonus),
+            string.format("보상: 경험치 %s (별빛 강화 %d 이상 %s) · 현재 별빛 강화 %d", F(sd.exp), sd.starForce, F(sd.expBonus),
                 MP.StarForce(hero)),
             string.format("입장권 %d장 (매주 월요일 +%d, 최대 %d) · 보상 수령 시에만 사용", Hero.Count(hero, "monsterParkTicket"),
                 MD.weeklyTickets, MD.ticketCap),

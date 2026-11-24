@@ -112,7 +112,6 @@ UI.RegisterPanel("skills", {
             end)
             W.Tooltip(r.icon, function(tt)
                 tt:AddLine(ns.Skin.SkillName(e.row.SkillIndex), 1, 0.82, 0)
-                tt:AddLine(e.row.nameKo and ("원본: " .. e.row.nameKo) or "", 0.6, 0.6, 0.6)
                 if s and s.Mp then tt:AddLine("MP " .. s.Mp, 0.4, 0.7, 1) end
             end)
         end)

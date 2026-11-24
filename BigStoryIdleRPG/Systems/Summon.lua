@@ -186,7 +186,7 @@ function S.CanPull(hero, kind, count)
         end
     end
     local _, _, ok = S.Cost(hero, kind, count)
-    if not ok then return false, "소환권 또는 레드 다이아가 부족합니다." end
+    if not ok then return false, "소환서 또는 붉은 다이아가 부족합니다." end
     return true
 end
 

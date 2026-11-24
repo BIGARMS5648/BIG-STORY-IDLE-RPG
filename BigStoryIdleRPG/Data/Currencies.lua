@@ -40,9 +40,9 @@ D.Currencies = {
     scrollHorntail2   = { maple = "혼테일의 주문서(중급)", name = "검은 용의 주문서(중급)", icon = "Interface\\Icons\\INV_Scroll_05", order = 83 },
     scrollPinkBean1   = { maple = "핑크빈의 주문서(하급)", name = "분홍 신의 주문서(하급)", icon = "Interface\\Icons\\INV_Scroll_04", order = 84 },
     scrollPinkBean2   = { maple = "핑크빈의 주문서(중급)", name = "분홍 신의 주문서(중급)", icon = "Interface\\Icons\\INV_Scroll_04", order = 85 },
-    scrollBruce1      = { maple = "브루스의 주문서(하급)", name = "브루스의 주문서(하급)", icon = "Interface\\Icons\\INV_Scroll_03", order = 86 },
-    scrollBruce2      = { maple = "브루스의 주문서(중급)", name = "브루스의 주문서(중급)", icon = "Interface\\Icons\\INV_Scroll_03", order = 87 },
-    scrollBruce3      = { maple = "브루스의 주문서(상급)", name = "브루스의 주문서(상급)", icon = "Interface\\Icons\\INV_Scroll_03", order = 88 },
+    scrollBruce1      = { maple = "브루스의 주문서(하급)", name = "지니의 주문서(하급)", icon = "Interface\\Icons\\INV_Scroll_03", order = 86 },
+    scrollBruce2      = { maple = "브루스의 주문서(중급)", name = "지니의 주문서(중급)", icon = "Interface\\Icons\\INV_Scroll_03", order = 87 },
+    scrollBruce3      = { maple = "브루스의 주문서(상급)", name = "지니의 주문서(상급)", icon = "Interface\\Icons\\INV_Scroll_03", order = 88 },
     -- enchantPouch (above) is the 하급 pouch; the higher pouches:
     enchantPouchMid   = { maple = "중급 마법 부여 주머니", name = "중급 마법 부여 주머니", icon = "Interface\\Icons\\INV_Misc_Bag_09", order = 89 },
     enchantPouchHigh  = { maple = "상급 마법 부여 주머니", name = "상급 마법 부여 주머니", icon = "Interface\\Icons\\INV_Misc_Bag_11", order = 90 },

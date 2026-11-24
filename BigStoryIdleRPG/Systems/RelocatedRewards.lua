@@ -172,14 +172,14 @@ Hero.RegisterSystem("relocated", {
         if r then
             grant(hero, { cubeAdditional = r.cubeAdditional }, "raidWeek")
             buff(hero, "raidWeek", any and "레이드 정복 혜택" or "레이드 도전 혜택", r.exp, r.gold)
-            out[#out + 1] = string.format("보스 레이드 주간: 에디셔널 큐브 %d", r.cubeAdditional)
+            out[#out + 1] = string.format("보스 레이드 주간: 추가 잠재 큐브 %d", r.cubeAdditional)
         end
         -- monster park best stage (former 길드 대항전)
         for _, row in ipairs(R.PARK) do
             if s.parkBest >= row.stage then
                 grant(hero, { cubeMiracle = row.cubeMiracle }, "parkWeek")
                 buff(hero, "parkWeek", "투기장 혜택", row.exp, row.gold)
-                out[#out + 1] = string.format("몬스터파크 주간: 미라클 큐브 %d", row.cubeMiracle)
+                out[#out + 1] = string.format("구루바시 투기장 주간: 잠재 큐브 %d", row.cubeMiracle)
                 break
             end
         end
@@ -190,7 +190,7 @@ Hero.RegisterSystem("relocated", {
             for _, row in ipairs(R.TRAINING) do
                 if max >= row.stage then
                     grant(hero, { weaponTicket = row.weaponTicket }, "trainingWeek")
-                    out[#out + 1] = string.format("용사의 수련장 주간: 무기 소환권 %d", row.weaponTicket)
+                    out[#out + 1] = string.format("영웅의 수련장 주간: 무기 소환서 %d", row.weaponTicket)
                     break
                 end
             end

@@ -30,7 +30,7 @@ function S.Job(job)
     if not job then return {} end
     local sj = D.SkinJobs and D.SkinJobs[job.key]
     if not sj then
-        return { display = job.mapleNameKo, icon = "Interface\\Icons\\INV_Misc_QuestionMark" }
+        return { display = "모험가", icon = "Interface\\Icons\\INV_Misc_QuestionMark" }
     end
     return {
         display = sj.display,
@@ -251,3 +251,73 @@ function S.CompanionLooks(info)
     end
     return looks
 end
+
+---------------------------------------------------------------------------
+-- Display names: every 메이플 키우기 proper noun in the loaded data is replaced by its WoW-skin
+-- name (Data/SkinNames.lua); the original stays in `mapleName` and is never shown.
+---------------------------------------------------------------------------
+function S.CompanionName(def)
+    local N = D.SkinNames
+    local sj = D.SkinJobs and D.SkinJobs[def.job]
+    local cls = N.classKo[sj and sj.classToken or ""] or "모험가"
+    if (def.grade or 1) <= 1 then return cls .. " " .. N.companionTitle[1] end
+    return (N.companionTitle[def.grade] or "") .. " " .. (sj and sj.display or cls)
+end
+
+local function rename(t, field, new)
+    if not (t and new) or t[field] == new then return end
+    t.mapleName = t.mapleName or t[field]
+    t[field] = new
+end
+
+function S.ApplyNames()
+    local N = D.SkinNames
+    if not N or S.namesApplied then return end
+    S.namesApplied = true
+    -- companions
+    if ns.Companions and ns.Companions.All then
+        for _, sid in ipairs(ns.Companions.All()) do
+            local def = ns.Companions.Def(sid)
+            if def then rename(def, "name", S.CompanionName(def)) end
+        end
+    end
+    -- artifacts
+    for _, a in ipairs(D.Artifacts and D.Artifacts.list or {}) do rename(a, "name", N.artifacts[a.id]) end
+    -- raid gear
+    for _, g in pairs(D.Gear or {}) do
+        if g.name and N.gear[g.name] then rename(g, "name", N.gear[g.name]) end
+    end
+    -- party quests (+ difficulty labels)
+    local function diffs(list)
+        for _, d in ipairs(list or {}) do rename(d, "nameKo", N.difficulty[d.nameKo]) end
+    end
+    for _, q in ipairs(D.ContentPartyQuests and D.ContentPartyQuests.quests or {}) do
+        local n = N.partyQuests[q.id]
+        if n then
+            rename(q, "nameKo", n.name)
+            q.mapleRegion = q.mapleRegion or q.regionKo
+            q.regionKo = n.region
+        end
+        diffs(q.difficulties)
+    end
+    -- boss raids: the WoW boss of the skin
+    local cont = D.SkinWorld and D.SkinWorld.content
+    for boss, rd in pairs(D.ContentRaids or {}) do
+        if type(rd) == "table" and rd.nameKo then
+            local e = cont and cont.raids and cont.raids[boss]
+            rename(rd, "nameKo", e and e.nameKo)
+            diffs(rd.difficulties)
+        end
+    end
+    if D.ContentBalrog then rename(D.ContentBalrog, "nameKo", N.balrog) end
+    if D.ContentMonsterPark then rename(D.ContentMonsterPark, "nameKo", N.monsterPark) end
+    -- growth dungeons: 수련장 name, boss names of the skin
+    local G = D.ContentGrowth
+    if G then
+        if G.training then rename(G.training, "nameKo", N.growth.training) end
+        local dun = cont and cont.dungeons
+        if G.weapon and dun and dun.weapon then rename(G.weapon, "monsterKo", dun.weapon.nameKo) end
+        if G.enhance and dun and dun.enhancement then rename(G.enhance, "monsterKo", dun.enhancement.nameKo) end
+    end
+end
+S.ApplyNames()

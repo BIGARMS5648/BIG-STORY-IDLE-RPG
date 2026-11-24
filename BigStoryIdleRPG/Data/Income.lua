@@ -36,14 +36,14 @@ D.Attendance = {
 D.DailyMissionClear = { need = 8, rewards = { weaponTicket = 100, redDia = 5000 } }
 D.DailyMissions = {
     { id = "kill", text = "몬스터 처치하기", track = "kill", goal = 2000, rewards = { redDia = 300 } },
-    { id = "elite", text = "엘리트 몬스터 소환하기", track = "elite", goal = 15, rewards = { eliteSummonPoint = 300 } },
+    { id = "elite", text = "정예 몬스터 소환하기", track = "elite", goal = 15, rewards = { eliteSummonPoint = 300 } },
     { id = "weaponSummon", text = "무기 소환하기", track = "summon_weapon", goal = 30,
         rewards = { weaponTicket = 20, timeSkip1m = 20 } },
     { id = "weaponDungeon", text = "무기 던전 클리어하기", track = "dungeon_weapon", goal = 3, rewards = { redDia = 300 } },
     { id = "expDungeon", text = "경험치 던전 클리어하기", track = "dungeon_exp", goal = 3, rewards = { redDia = 300 } },
     { id = "gearDungeon", text = "장비 던전 클리어하기", track = "dungeon_gear", goal = 3, rewards = { redDia = 300 } },
     { id = "enhanceDungeon", text = "강화 던전 클리어하기", track = "dungeon_enhance", goal = 3, rewards = { redDia = 300 } },
-    { id = "training", text = "용사의 수련장 클리어하기", track = "dungeon_training", goal = 3, rewards = { redDia = 300 } },
+    { id = "training", text = "영웅의 수련장 클리어하기", track = "dungeon_training", goal = 3, rewards = { redDia = 300 } },
     { id = "ad", text = "광고 시청하기 (무료 보상 받기)", track = "ad", goal = 1, rewards = { redDia = 300, timeSkip1m = 20 } },
     { id = "booster", text = "부스터 사용하기", track = "booster", goal = 1, rewards = { redDia = 300 } },
 }
@@ -57,13 +57,13 @@ D.WeeklyMissionClear = {
 }
 D.WeeklyMissions = {
     { id = "kill", text = "몬스터 처치하기", track = "kill", goal = 15000, rewards = { redDia = 500 } },
-    { id = "elite", text = "엘리트 몬스터 소환하기", track = "elite", goal = 200, rewards = { eliteSummonPoint = 500 } },
+    { id = "elite", text = "정예 몬스터 소환하기", track = "elite", goal = 200, rewards = { eliteSummonPoint = 500 } },
     { id = "weaponSummon", text = "무기 소환하기", track = "summon_weapon", goal = 1000,
         rewards = { weaponTicket = 100, timeSkip1m = 50 } },
     { id = "weaponDungeon", text = "무기 던전 클리어하기", track = "dungeon_weapon", goal = 15, rewards = { redDia = 500 } },
     { id = "expDungeon", text = "경험치 던전 클리어하기", track = "dungeon_exp", goal = 15,
         rewards = { redDia = 500, expBooster50 = 3 } },
-    { id = "training", text = "용사의 수련장 클리어하기", track = "dungeon_training", goal = 15, rewards = { redDia = 500 } },
+    { id = "training", text = "영웅의 수련장 클리어하기", track = "dungeon_training", goal = 15, rewards = { redDia = 500 } },
     { id = "gearDungeon", text = "장비 던전 클리어하기", track = "dungeon_gear", goal = 15, rewards = { redDia = 500 } },
     { id = "enhanceDungeon", text = "강화 던전 클리어하기", track = "dungeon_enhance", goal = 10, rewards = { redDia = 500 } },
     { id = "worldBoss", text = "월드보스 플레이하기", track = "worldboss", goal = 1, rewards = { redDia = 500 } },
@@ -77,7 +77,7 @@ D.Boosters = {
 
 -- ad rewards -> one free claim a day each
 D.FreeDaily = {
-    { id = "dia", text = "레드 다이아 1,000", rewards = { redDia = 1000 } },
+    { id = "dia", text = "붉은 다이아 1,000", rewards = { redDia = 1000 } },
     { id = "weaponSummon", text = "무료 무기 소환 10회", summon = "weapon", count = 10 },
     { id = "companionSummon", text = "무료 동료 소환 10회", summon = "companion", count = 10 },
     { id = "booster", text = "부스터 (경험치 +100%, 골드 +150%, 20분)", booster = { seconds = 1200, exp = 1000, gold = 1500 } },
@@ -85,21 +85,21 @@ D.FreeDaily = {
     { id = "speedup", text = "학습·강화 가속 30분 ×3", rewards = { timeSkip1m = 90 } },
     -- former 친구 reward (friends removed, user 2026-11-25): 엘리트 몬스터 소환 포인트, daily cap 500
     -- (send 10 / receive 20 per friend, global wiki Friends)
-    { id = "friendPoints", text = "엘리트 소환 포인트 500 (구 친구 보상)", rewards = { eliteSummonPoint = 500 } },
+    { id = "friendPoints", text = "정예 소환 포인트 500 (구 친구 보상)", rewards = { eliteSummonPoint = 500 } },
 }
 
 -- weekly red-diamond shop (KR 1.18.0 rows that cost red diamonds)
 D.RedShop = {
     { name = "명예의 훈장 1,000개", price = 1500, limit = 5, items = { honorMedal = 1000 } },
     { name = "챕터 돌파 선물", price = 100, limit = 1, once = true, unlock = { 4, 10 }, items = { meso = 50000, spellTrace = 1500, redDia = 1000 } },
-    { name = "무기 소환권 100개", price = 1000, limit = 1, unlock = { 5, 10 }, items = { weaponTicket = 100 } },
-    { name = "동료 소환권 30개", price = 750, limit = 1, unlock = { 6, 10 }, items = { companionTicket = 30 } },
-    { name = "주문의 흔적 1,000개", price = 1000, limit = 1, unlock = { 7, 10 }, items = { spellTrace = 1000 } },
-    { name = "스타포스 강화 주문서 5개", price = 1500, limit = 3, items = { starforceScroll = 5 } },
-    { name = "미라클 큐브 1개", price = 1000, limit = 5, items = { cubeMiracle = 1 } },
+    { name = "무기 소환서 100개", price = 1000, limit = 1, unlock = { 5, 10 }, items = { weaponTicket = 100 } },
+    { name = "동료 소환서 30개", price = 750, limit = 1, unlock = { 6, 10 }, items = { companionTicket = 30 } },
+    { name = "마력의 흔적 1,000개", price = 1000, limit = 1, unlock = { 7, 10 }, items = { spellTrace = 1000 } },
+    { name = "별의 주문서 5개", price = 1500, limit = 3, items = { starforceScroll = 5 } },
+    { name = "잠재 큐브 1개", price = 1000, limit = 5, items = { cubeMiracle = 1 } },
     { name = "유물 상자", price = 1500, limit = 5, items = { artifactChest = 1 } },
     { name = "유물 성장 지원", price = 7500, limit = 1, once = true, items = { artifactChest = 5, artifactStone = 15000 } },
-    { name = "에디셔널 큐브 1개", price = 1500, limit = 3, items = { cubeAdditional = 1 } },
+    { name = "추가 잠재 큐브 1개", price = 1500, limit = 3, items = { cubeAdditional = 1 } },
     { name = "300,000 골드", price = 1500, limit = nil, unlock = { 8, 10 }, items = { meso = 300000 } },
     { name = "여정의 기운 1개", price = 1000, limit = 5, unlock = { 20, 10 }, items = { journeyEnergy = 1 } },
 }

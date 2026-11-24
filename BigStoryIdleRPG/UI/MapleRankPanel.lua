@@ -18,7 +18,7 @@ local function act(fn, ...)
 end
 
 UI.RegisterPanel("mapleRank", {
-    title = "메이플 등급", order = 12,
+    title = "모험가 등급", order = 12,
     build = function(p)
         p.head = W.Text(p, 14, W.COLORS.gold, "LEFT")
         p.head:SetPoint("TOPLEFT", 4, -2)
@@ -60,7 +60,7 @@ UI.RegisterPanel("mapleRank", {
     refresh = function(p, hero)
         local M = ns.MapleRank
         local st = M.State(hero)
-        p.head:SetText(string.format("메이플 등급  %d 단계%s", st.rank, st.maxed and "  (최대)" or ""))
+        p.head:SetText(string.format("모험가 등급  %d 단계%s", st.rank, st.maxed and "  (최대)" or ""))
         p.bar:SetValue(st.inRank / math.max(1, st.need))
         p.bar.text:SetText(string.format("%d/%d", st.inRank, st.need))
         p.points:SetText(string.format("능력치 포인트 %d · 특별 능력치 포인트 %d", st.pointsFree, st.specialFree))

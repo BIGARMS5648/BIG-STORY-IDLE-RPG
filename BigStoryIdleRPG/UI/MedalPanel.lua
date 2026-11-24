@@ -52,7 +52,6 @@ UI.RegisterPanel("medals", {
                 tt:AddLine(d.name, 1, 0.82, 0)
                 tt:AddLine(d.text, 1, 1, 1)
                 tt:AddLine("보유 효과: " .. effText(d.eff), 0.3, 1, 0.3)
-                tt:AddLine("원본: " .. d.maple, 0.6, 0.6, 0.6)
             end)
             p.lines[i] = r
         end

@@ -42,7 +42,7 @@ end
 local function jobDisplay(jobKey)
     local job = jobDef(jobKey)
     local skin = job and ns.Skin and ns.Skin.Job(job)
-    return (skin and skin.display) or (job and job.mapleNameKo) or tostring(jobKey or "")
+    return (skin and skin.display) or tostring(jobKey or "")
 end
 
 local iconCache = {}

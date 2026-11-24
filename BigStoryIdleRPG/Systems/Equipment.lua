@@ -450,7 +450,7 @@ function E.ConvertSubOption(hero, id, lineIndex)
     local stones, meso = E.ConversionCost(item)
     if not stones then return false, meso end
     if H.Count(hero, "subOptionStone") < stones then return false, "장비 부 옵션 변환석이 부족합니다." end
-    if H.Count(hero, "meso") < meso then return false, "메소가 부족합니다." end
+    if H.Count(hero, "meso") < meso then return false, "골드가 부족합니다." end
     spend(hero, "subOptionStone", stones, "subConvert")
     spend(hero, "meso", meso, "subConvert")
     local g = GEAR[item.code]
@@ -509,7 +509,7 @@ end
 function E.CanEliteSummon(hero)
     local row = eliteRow(state(hero).elite.level)
     if H.Count(hero, "eliteSummonPoint") < row.cost then
-        return false, "엘리트 몬스터 소환 포인트가 부족합니다."
+        return false, "정예 소환 포인트가 부족합니다."
     end
     return true
 end
@@ -596,7 +596,7 @@ end
 function E.EliteStartLevelUp(hero)
     local info = E.EliteInfo(hero)
     if not info.canLevelUp then return false, "레벨업 조건을 만족하지 않습니다." end
-    if not spend(hero, "meso", info.meso, "eliteLevelUp") then return false, "메소가 부족합니다." end
+    if not spend(hero, "meso", info.meso, "eliteLevelUp") then return false, "골드가 부족합니다." end
     state(hero).elite.upgradeEndsAt = U.Now() + info.delay
     E.EliteUpdate(hero)
     return true
