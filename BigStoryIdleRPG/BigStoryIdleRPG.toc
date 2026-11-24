@@ -1,0 +1,21 @@
+## Interface: 16001
+## Title: |cffffd100빅 스토리 키우기|r
+## Notes: 방치형 키우기 RPG - 같은 애드온 사용자끼리 결투장 PvP
+## Author: bigarms5648
+## Version: 0.1.0
+## SavedVariables: BigStoryIdleDB
+## X-Category: Minigames
+
+Core\Init.lua
+Core\Util.lua
+Core\Compat.lua
+Core\Serializer.lua
+
+Data\Jobs.lua
+Data\Skills.lua
+Data\World.lua
+
+Engine\Expr.lua
+Engine\Creature.lua
+Engine\Battle.lua
+Engine\SkillBook.lua
