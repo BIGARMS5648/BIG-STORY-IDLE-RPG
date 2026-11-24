@@ -79,6 +79,16 @@ assert(next(hero.income.week.count) == nil and not hero.income.week.claimed.__cl
 -- daily reset
 ns.Hero.systems.income.daily(hero)
 assert(hero.income.passClaimed == 0, "daily reset")
+-- summon level rewards: screen values and the level-up grant
+local S = ns.Summon
+assert(S.LevelReward("weapon", 5).weaponTicket == 100 and S.LevelReward("weapon", 6).weaponTicket == 150
+    and S.LevelReward("weapon", 13).weaponTicket == 500, "weapon summon level rewards")
+assert(S.LevelReward("companion", 7).companionTicket == 120 and S.LevelReward("companion", 8).companionTicket == 140,
+    "companion summon level rewards")
+local fresh = Hero.New("hero", "S")
+Hero.Add(fresh, "weaponTicket", 100)
+for _ = 1, 10 do assert(S.Pull(fresh, "weapon", 10), "pull") end
+assert(S.Info(fresh, "weapon").level == 2 and Hero.Count(fresh, "weaponTicket") == 50, "Lv2 pays 50 weapon tickets")
 -- UI
 local ef = ns.eventFrame
 ns.UI.Toggle()

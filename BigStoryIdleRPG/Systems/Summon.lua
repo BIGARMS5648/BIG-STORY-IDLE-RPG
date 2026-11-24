@@ -28,7 +28,7 @@
 --       results = list of { kind = "weapon", idx, grade, tier, isNew, guaranteed }
 --                      or { kind = "companion", sid, grade, isNew, guaranteed }
 --       results.counts = { [idx|sid] = n }, results.spent = { ticket = n, redDia = n }, results.levelUps = n
---   S.LevelReward(kind, level) -> rewards table or nil (summon level rewards; none in the data)
+--   S.LevelReward(kind, level) -> rewards table or nil (paid on reaching `level`)
 -- Events: "SUMMON_RESULT"(hero, kind, results), "SUMMON_LEVEL_UP"(hero, kind, level)
 local ADDON, ns = ...
 local U = ns.U
@@ -52,9 +52,14 @@ S.PICKUP_GUARANTEES = { { level = 13, grade = 5, count = 6250 } }
 -- PROVISIONAL: the 30/30/40 split is published for 레전드리 only; the KR notices say the pickup also raises
 -- the pickup jobs' 유니크 odds, so the same split is used for grade 4.
 S.PICKUP_GRADES = { [4] = true, [5] = true }
--- PROVISIONAL: summon level rewards exist in the original ("Tickets are rewarded once a level is reached")
--- but no amounts are published. Fill { [kind] = { [level] = { {walletKey, n}, ... } } } when known.
+-- Summon level rewards, paid when the level is reached: { [kind] = { [level] = { walletKey = n } } }.
+-- Seen on in-game screens (global wiki, Pocket Gamer, LDPlayer TW, KR play; via the user 2026-11-25):
+--   weapon   Lv5 100 · Lv6 150 · Lv13 500   -> all on 50 x (level - 3)
+--   companion Lv7 120 · Lv8 140             -> 20 x (level - 1)
+-- The other levels follow those lines (ESTIMATE); weapon Lv2-3 fall below the line and get 50 like Lv4.
 S.LEVEL_REWARDS = { weapon = {}, companion = {} }
+for lv = 2, 19 do S.LEVEL_REWARDS.weapon[lv] = { weaponTicket = math.max(50, 50 * (lv - 3)) } end
+for lv = 2, 13 do S.LEVEL_REWARDS.companion[lv] = { companionTicket = 20 * (lv - 1) } end
 
 local CFG = {
     weapon = { data = WS, ticket = "weaponTicket", state = "weapon" },

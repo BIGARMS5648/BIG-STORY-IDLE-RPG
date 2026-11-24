@@ -96,7 +96,7 @@ Builder: `scripts_income/build_income_json.py`.
 | Daily mission boost (cumulative) | 30 missions: 250 | event | NX_DMB_1119 |
 | Red-diamond weekly shop | 100 for 1,000 레드 다이아 (×1) | weekly | SPEC_SHOP, IV121 |
 | Guide quests / Battle pass (global wiki) | "rewarded when completing Guide Quests". Amount ? | once | WIKI_SUMMON |
-| Summon-level rewards | "Tickets are rewarded once a level is reached". Amount ? | once | WIKI_SUMMON |
+| Summon-level rewards | Paid on reaching the level. Seen on screens: weapon Lv5 100, Lv6 150, Lv13 500 (= 50 × (Lv−3)); companion Lv7 120, Lv8 140 (= 20 × (Lv−1)). Other levels follow those lines (estimate) | once | WIKI_SUMMON, Pocket Gamer, LDPlayer TW (via the user, 2026-11-25) |
 
 ### 2.3 동료 소환권 (and 3차 전직 동료 소환권)
 

@@ -458,7 +458,11 @@ UI.RegisterPanel("summon", {
             if info.need then
                 tt:AddLine(string.format("다음 레벨까지 %s회 소환", U.Comma(info.need - info.exp)), 0.7, 0.7, 0.7)
                 local rew = ns.Summon.LevelReward and ns.Summon.LevelReward(p.kind == "pickup" and "companion" or p.kind, info.level + 1)
-                if rew then tt:AddLine("레벨 보상 있음", 0.3, 1, 0.3) end
+                if rew then
+                    local parts = {}
+                    for k, n in pairs(rew) do parts[#parts + 1] = (W.Money(k, n)) end
+                    tt:AddLine("Lv." .. (info.level + 1) .. " 달성 보상: " .. table.concat(parts, " "), 0.3, 1, 0.3)
+                end
             end
             for _, g in ipairs(info.guarantees or {}) do
                 tt:AddLine(string.format("확정 소환 Lv.%d: %s (%s회)", g.level, guaranteeLabel(p.kind, g), U.Comma(g.count)),
