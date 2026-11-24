@@ -40,7 +40,7 @@ G.SKIN = { weapon = "weapon", exp = "exp", gear = "gear", training = "heroTraini
 C.GROWTH_REWARDS_PROVISIONAL = {
     weapon = function(st) return { weaponTicket = 5 + math.floor(st / 5), weaponStone = 500 * st } end,
     gear = function(st) return { eliteSummonPoint = 100 + 10 * st } end,
-    training = function(st) return { heroToken = 500 + 200 * st } end,
+    training = function(st) return { heroToken = 240 + 10 * st } end,  -- global 1.14 formula; KR 141-150 unpublished
     enhance = function(st) return { spellTrace = 100 + 10 * st } end,
 }
 
@@ -360,7 +360,13 @@ local function finish(self, b, reason)
         note = "열쇠 1개 사용"
     else
         -- key returned on clear; the first clear of a new stage pays that stage's reward
-        if first then rewards = G.StageReward(self.key, self.stage, b.rng) end
+        if first then
+            rewards = G.StageReward(self.key, self.stage, b.rng)
+            -- every 10th stage pays an extra first-clear bonus (published for 용사의 수련장)
+            local bonus = D.ContentGrowthFirstClear and D.ContentGrowthFirstClear[self.key]
+                and D.ContentGrowthFirstClear[self.key][self.stage]
+            if bonus then for k, v in pairs(bonus) do rewards[k] = (rewards[k] or 0) + v end end
+        end
         note = first and "최초 클리어 · 열쇠 반환" or "열쇠 반환"
     end
     local lines = C.Grant(hero, rewards, "growth")

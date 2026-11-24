@@ -104,7 +104,9 @@ Paths tried: the official guide (403), the MSI battle-system guides (they summar
 - **maplestoryidle.info:**
   - `game-data-library.json` and `target-context-model.json` have growth-dungeon rows with `rewardIndex: null` and `rewards: []`.
   - `hero-token-calculator.json` is the only DungeonTable→RewardTable join published, and only for the `UPGRADE_HEROPOWER` reward.
-- **Global wiki:** the Weapon, Equipment, Enhancement, EXP and Growth Dungeon pages are prose only, and their stage caps are outdated (70/90).
+- **Global wiki:**
+  - The Weapon, Equipment, Enhancement, EXP and Growth Dungeon pages are prose only, and their stage caps are outdated (70/90).
+  - `Module:Dungeons/maps.json` has 700 growth-dungeon rows (1000-1 … 1004-140), all with `killReward: []`.
 - **KR patch notes and notices:** no reward tables.
 - **Community searches:**
   - Inven "무기던전 보상" and "강화던전": no posts.

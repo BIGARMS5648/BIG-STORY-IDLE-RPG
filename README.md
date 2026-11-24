@@ -63,5 +63,6 @@ python3 -I tools/gen_rewards.py   # 드랍·첫 클리어 보상
 python3 -I tools/gen_items.py     # 소환·무기·동료·장비
 python3 -I tools/gen_upgrades.py  # 스타포스·잠재·주문서·용사의 힘·어빌리티·유물·여정
 python3 -I tools/gen_skin.py      # WoW 외형 매핑
+python3 -I tools/gen_growth_rewards.py  # 성장 던전 단계별 보상(공개된 값만)
 sh tools/test/run_all.sh          # 전체 테스트 (lua5.1 필요)
 ```

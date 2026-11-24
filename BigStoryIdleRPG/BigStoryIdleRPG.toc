@@ -23,6 +23,7 @@ Data\Upgrades.lua
 Data\BaseStats.lua
 Data\RewardTables.lua
 Data\Content.lua
+Data\GrowthRewards.lua
 Data\SkinData.lua
 Data\Income.lua
 
