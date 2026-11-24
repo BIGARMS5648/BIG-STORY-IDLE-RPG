@@ -76,14 +76,19 @@ UI.RegisterPanel("mapleRank", {
         p.specialHead:SetText("특별 능력치")
         for i, d in ipairs(D.MapleRank.special) do
             local row = p.special[i]
-            local lv = hero.mapleRank.special[i] or 0
+            local opened = hero.mapleRank.opened[i]
+            local n = hero.mapleRank.special[i] or 0
             local function fmt(v) return d.flat and tostring(v) or string.format("%.1f%%", v / 10) end
-            local cur, nxt = M.SpecialValue(d, lv), M.SpecialValue(d, lv + 1)
+            local cur = opened and M.SpecialValue(d, true, n) or d.base
+            local nxt = opened and M.SpecialValue(d, true, n + 1) or d.base
             local locked = hero.level < d.unlock
-            row.text:SetText(string.format("%s %d/%d  %s » %s%s", d.label, lv, d.max, fmt(lv > 0 and cur or d.base),
-                fmt(lv > 0 and nxt or d.base + d.step), locked and string.format("  |cffff6060%d 레벨 필요|r", d.unlock) or ""))
-            row.btn:SetText(lv == 0 and "능력치 개방" or "강화")
-            row.btn:SetEnabled(not locked and lv < d.max and st.specialFree > 0)
+            local cost = M.SpecialCost(hero, i)
+            local maxed = opened and n >= d.max
+            row.text:SetText(string.format("%s %d/%d  %s%s%s", d.label, n, d.max, opened and fmt(cur) or "-",
+                maxed and "" or (" » " .. fmt(opened and nxt or cur)),
+                locked and string.format("  |cffff6060%d 레벨 필요|r", d.unlock) or ""))
+            row.btn:SetText(maxed and "최대" or string.format("%s (%d)", opened and "강화" or "능력치 개방", cost))
+            row.btn:SetEnabled(not locked and not maxed and st.specialFree >= cost)
         end
     end,
 })

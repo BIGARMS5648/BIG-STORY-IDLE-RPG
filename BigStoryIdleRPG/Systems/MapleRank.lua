@@ -6,7 +6,7 @@
 --   ns.MapleRank.Upgrade(hero, stat, n)   stat = "main" | "defence" | "hp"  -> ok, err
 --   ns.MapleRank.AutoUpgrade(hero)         spends every free point
 --   ns.MapleRank.UpgradeSpecial(hero, index) -> ok, err ("능력치 개방" / 강화)
---   ns.MapleRank.SpecialValue(def, level)
+--   ns.MapleRank.SpecialValue(def, opened, upgrades) / SpecialCost(hero, index)
 local ADDON, ns = ...
 local D = ns.Data
 local Hero = ns.Hero
@@ -18,7 +18,8 @@ local R = D.MapleRank
 Hero.RegisterSystem("mapleRank", {
     init = function(hero)
         hero.mapleRank = hero.mapleRank or { rank = 1, spent = { main = 0, defence = 0, hp = 0 }, done = 0,
-            special = {}, specialSpent = 0 }
+            special = {}, opened = {}, specialSpent = 0 }
+        hero.mapleRank.opened = hero.mapleRank.opened or {}
         -- completed ranks' totals are recomputed from the rank number; nothing else to store
     end,
 })
@@ -50,7 +51,7 @@ function M.State(hero)
     return {
         rank = s.rank, spent = s.spent, caps = caps(s.rank), inRank = inRank, need = need,
         pointsFree = math.max(0, M.PointsEarned(hero) - M.PointsSpent(hero)),
-        specialFree = math.max(0, (s.rank - 1) * R.specialPointsPerRank - (s.specialSpent or 0)),
+        specialFree = math.max(0, M.SpecialEarned(hero) - (s.specialSpent or 0)),
         maxed = s.rank >= R.maxRank and inRank >= need,
     }
 end
@@ -102,9 +103,28 @@ function M.AutoUpgrade(hero)
     return total
 end
 
-function M.SpecialValue(def, level)
-    if not level or level < 1 then return 0 end
-    return def.base + (level - 1) * def.step
+-- special points earned from completed ranks
+function M.SpecialEarned(hero)
+    local s = hero.mapleRank
+    local total = 0
+    for r = 1, s.rank - 1 do total = total + R.specialPointsPerRank(r) end
+    if s.rank >= R.maxRank and s.spent.main + s.spent.defence + s.spent.hp >= M.RankPoints(s.rank) then
+        total = total + R.specialPointsPerRank(s.rank)
+    end
+    return total
+end
+
+-- value of a special stat: 0 until opened, then base + upgrades x step
+function M.SpecialValue(def, opened, upgrades)
+    if not opened then return 0 end
+    return def.base + (upgrades or 0) * def.step
+end
+
+-- cost of the next action on a special stat (open or upgrade)
+function M.SpecialCost(hero, idx)
+    local s = hero.mapleRank
+    if not s.opened[idx] then return R.specialOpenCost end
+    return R.specialUpgradeCost(s.special[idx] or 0)
 end
 
 function M.UpgradeSpecial(hero, idx)
@@ -112,11 +132,17 @@ function M.UpgradeSpecial(hero, idx)
     if not def then return false end
     local s = hero.mapleRank
     if hero.level < def.unlock then return false, string.format("%d 레벨 달성 필요", def.unlock) end
-    local lv = s.special[idx] or 0
-    if lv >= def.max then return false, "최대 레벨입니다." end
-    if M.State(hero).specialFree < R.specialCost then return false, "특별 능력치 포인트가 부족합니다." end
-    s.special[idx] = lv + 1
-    s.specialSpent = (s.specialSpent or 0) + R.specialCost
+    local n = s.special[idx] or 0
+    if s.opened[idx] and n >= def.max then return false, "최대 레벨입니다." end
+    local cost = M.SpecialCost(hero, idx)
+    if M.State(hero).specialFree < cost then return false, "특별 능력치 포인트가 부족합니다." end
+    if not s.opened[idx] then
+        s.opened[idx] = true
+        s.special[idx] = 0
+    else
+        s.special[idx] = n + 1
+    end
+    s.specialSpent = (s.specialSpent or 0) + cost
     Hero.Changed(hero, "mapleRank")
     return true
 end
@@ -141,7 +167,7 @@ Hero.RegisterStatProvider("mapleRank", function(hero, acc)
     acc:Add("Defence", def)
     acc:Add("MaxHp", hp)
     for i, d in ipairs(R.special) do
-        local v = M.SpecialValue(d, s.special[i])
+        local v = M.SpecialValue(d, s.opened and s.opened[i], s.special[i])
         if v > 0 then acc:Add(d.key, v) end
     end
 end)
