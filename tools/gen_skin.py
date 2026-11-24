@@ -109,6 +109,7 @@ def main():
             "specIcon": j.get("specIcon") or SPEC_ICON.get(key),
             "classIcon": j.get("classIcon"),
             "skills": {}, "masteries": {},
+            "linked": {int(k): int(v) for k, v in (j.get("linkedSkills") or {}).items()},
         }
         for part in ("skills", "masteries"):
             for sid, e in (j.get(part) or {}).items():

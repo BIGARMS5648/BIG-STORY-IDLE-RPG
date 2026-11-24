@@ -1480,7 +1480,7 @@ function Battle:Step()
 
     for _, c in ipairs(self.creatures) do
         if c.alive then
-            if c.side == 1 and (c.isHero or c.isSupporter) then
+            if c.isHero or c.isSupporter then
                 self:HeroThink(c, dt)
             else
                 self:MonsterThink(c, dt)

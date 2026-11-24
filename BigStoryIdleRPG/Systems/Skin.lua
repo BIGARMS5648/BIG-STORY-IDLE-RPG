@@ -52,6 +52,12 @@ local function buildSkillIndex()
         for sid, e in pairs(sj.skills or {}) do skillIndex[tonumber(sid)] = e end
         for mid, e in pairs(sj.masteries or {}) do skillIndex[tonumber(mid)] = e end
     end
+    -- linked sub-skills inherit their owning row's look
+    for _, sj in pairs(D.SkinJobs) do
+        for sub, owner in pairs(sj.linked or {}) do
+            if not skillIndex[sub] and skillIndex[owner] then skillIndex[sub] = skillIndex[owner] end
+        end
+    end
 end
 
 local function skillEntry(sid)
