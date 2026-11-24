@@ -55,3 +55,4 @@ UI\Widgets.lua
 UI\Main.lua
 UI\BattleView.lua
 UI\CorePanels.lua
+UI\ArenaPanel.lua
