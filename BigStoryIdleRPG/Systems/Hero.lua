@@ -264,6 +264,7 @@ function H.BuildProfile(hero, opts)
         stats = { adds = acc.adds, ratios = acc.ratios, chains = acc.chains, mults = acc.mults },
         skillSet = set,
         companions = acc.companions,
+        masteries = hero.masteries,
     }
 end
 
@@ -284,23 +285,80 @@ function H.CreatureDef(profile, side, x)
 end
 
 ---------------------------------------------------------------------------
--- Combat power (전투력): expected one-hit damage of the 4-scenario average
--- against the client's reference target (defense 10000, calcv4 default).
+-- 전투력 / PvP 전투력: official formula (in-game guide 3.1 / 3.2). Stats are the
+-- profile's own stats (skills do not count), masteries count only when learned.
 ---------------------------------------------------------------------------
-function H.CombatPower(profile)
-    local b = ns.Battle.New({ seed = 7 })
-    local c = b:AddCreature(H.CreatureDef(profile, 1, 0))
-    local function pf(raw) return math.max(0, 1 + raw / 1000) end
-    local s = function(k) return c:Stat(k) end
-    local atk = s("Attack")
-    local critAvg = 1 + U.clamp(s("CriticalChance") / 1000, 0, 1) * math.max(0, s("CriticalPower") / 1000)
-    local rangeAvg = (math.min(s("MinDamageRatio"), s("MaxDamageRatio")) + s("MaxDamageRatio")) / 2000
-    local eff = U.trunc(10000 * (1000 - math.min(999, s("PiercePower"))) / 1000)
-    local defMult = 5000 / (eff + 6000)
-    local common = atk * pf(s("AttackPower")) * pf(s("MainDamagePower")) * critAvg * rangeAvg * defMult
-        * pf(s("FinalDamage")) * pf(s("FinalDamage2")) * pf(s("FinalDamage3"))
-    local target = (pf(s("AttackPowerToBoss")) + pf(s("AttackPowerExcludeBoss"))) / 2
-    local route = (pf(s("BaseAttackPower")) + pf(s("SkillPower"))) / 2
-    local speed = 1 + math.min(1500, s("AttackSpeed")) / 1000
-    return math.floor(common * target * route * speed)
+local CP_MAIN_GROUPS = {
+    { 12, 15, 19, 22, 26 }, { 32, 37, 42, 47, 52, 56 }, { 62, 66, 71, 76, 80, 84, 88, 92, 96 },
+    { 102, 106, 111, 116, 120, 124, 128, 132, 136 },
+}
+local CP_SUB_GROUPS = {
+    { 21, 24 }, { 39, 44, 49, 54 }, { 68, 73, 78, 82, 90, 94 }, { 98, 104, 108, 113, 118, 122, 126, 130, 134, 138 },
+}
+
+local function masteryFactors(profile)
+    local job = ns.SkillBook.JobByKey(profile.jobKey)
+    local learned = profile.masteries or {}
+    local mainAt, subAt = {}, {}
+    for _, m in ipairs(job and job.masteries or {}) do
+        if learned[m.MasteryIndex] then
+            if m.IsMainNode then mainAt[m.RequireCreatureLevel] = true else subAt[m.RequireCreatureLevel] = true end
+        end
+    end
+    local f = 1
+    for _, g in ipairs(CP_MAIN_GROUPS) do
+        local n = 0
+        for _, lv in ipairs(g) do if mainAt[lv] then n = n + 1 end end
+        f = f * (1 + n * 80000 / 1e6)
+    end
+    for _, g in ipairs(CP_SUB_GROUPS) do
+        local n = 0
+        for _, lv in ipairs(g) do if subAt[lv] then n = n + 1 end end
+        f = f * (1 + n * 25000 / 1e6)
+    end
+    return f
 end
+
+function H.ProfileCreature(profile)
+    local b = ns.Battle.New({ seed = 7 })
+    local def = H.CreatureDef(profile, 1, 0)
+    def.skillSet = nil
+    return ns.Creature.New(b, { name = def.name, side = 1, level = def.level, job = def.job, stats = def.stats })
+end
+
+local function combatPower(profile, pvp)
+    local c = H.ProfileCreature(profile)
+    local function s(k) return c:Stat(k) end
+    local function g(x) return 1 + x / 1e6 end
+    local cp = (s("Attack") * 4 + s("MaxHp") * 0.1 + s("Defence") * 0.2)
+        * g(s("MaxHp") * 0.9 + s("Defence") * 20 + (s("MaxMp") - 500) * 10)
+        * g(s("AttackPower") * 700)
+        * g(s("AttackSpeed") * 700)
+        * g(s("CriticalChance") * 350 + (s("CriticalPower") - 300) * 550 + s("CriticalResist") * (pvp and 1500 or 350))
+        * g((s("MaxDamageRatio") - 1000) * 350 + (s("MinDamageRatio") - 650) * 350)
+        * g(pvp and (s("HitChance") * 5000 + s("AvoidChance") * 5000) or (s("HitChance") * 2800 + s("AvoidChance") * 800))
+    if not pvp then
+        cp = cp * g(s("AttackPowerExcludeBoss") * 350 + s("AttackPowerToBoss") * 350)
+    end
+    cp = cp * g(s("AttackPowerInCc") * 350)
+        * g(s("SkillPower") * 300 + s("BaseAttackPower") * 500)
+        * g(s("PiercePower") * 1000)
+        * g(s("JobStep1SkillLevel") * 500 + s("JobStep2SkillLevel") * 1000 + s("JobStep3SkillLevel") * 2500
+            + s("JobStep4SkillLevel") * 4500 + s("AllSkillLevel") * 7000)
+        * g(s("BuffDurationRatio") * 250)
+        * g(s("SupporterDurationRatio") * 250)
+        * g(s("CoolTimeReduce") * 25 + s("CoolTimeReduceRatio") * 250)
+    if not pvp then
+        cp = cp * g(s("BaseAttackMaxHitCount") * 30000)
+    end
+    cp = cp * g(s("Toughness") * (pvp and 600 or 200))
+        * g(s("MainDamagePower") * 700)
+        * g(s("FinalDamage") * 700)
+        * g(s("AttackPower2") * 700)
+        * g((s("DebuffResist") + s("DebuffResistIgnore")) * (pvp and 1500 or 300))
+        * masteryFactors(profile)
+    return math.floor(math.max(0, cp))
+end
+
+function H.CombatPower(profile) return combatPower(profile, false) end
+function H.PvpCombatPower(profile) return combatPower(profile, true) end

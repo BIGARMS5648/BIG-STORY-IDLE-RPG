@@ -126,14 +126,21 @@ local function computeStats(c)
         for i = 1, #list do l[i] = list[i] end
         mults[k] = l
     end
+    -- skill / buff modifiers form their own layer for "합 + 배율" stats (official guide 1.1):
+    -- profile flat sum -> profile % -> skill % -> skill flat
+    local sAdds, sRatios = {}, {}
     for i = 1, #c.mods do
         local m = c.mods[i]
         if not m.disabled then
             local v = modValue(c, m)
             if v ~= 0 then
                 local s = m.stat
+                local layered = MAIN_STATS[s] or PLUS_RATIO[s] or s == "MainStat"
                 if m.kind == "ratio" then
-                    ratios[s] = (ratios[s] or 0) + v
+                    if layered then sRatios[s] = (sRatios[s] or 0) + v
+                    else ratios[s] = (ratios[s] or 0) + v end
+                elseif layered then
+                    sAdds[s] = (sAdds[s] or 0) + v
                 elseif CHAINED[s] then
                     chains[s] = chains[s] or {}
                     table.insert(chains[s], v)
@@ -148,11 +155,14 @@ local function computeStats(c)
     end
 
     local out = {}
+    local function layered(s, plus)
+        local v = trunc(plus * (1000 + (ratios[s] or 0)) / 1000)
+        v = trunc(v * (1000 + (sRatios[s] or 0)) / 1000) + (sAdds[s] or 0)
+        return math.max(0, v)
+    end
     -- main / sub stats
     for s in pairs(MAIN_STATS) do
-        local plus = adds[s] or 0
-        local r = ratios[s] or 0
-        out[s] = math.max(0, trunc(plus * (1000 + r) / 1000))
+        out[s] = layered(s, adds[s] or 0)
     end
     -- additive stats (incl. ratio scaling for non base stats)
     for s, v in pairs(adds) do
@@ -198,7 +208,7 @@ local function computeStats(c)
     local mainV, subV = 0, 0
     if job then
         local function key(t) return t:sub(1, 1) .. t:sub(2):lower() end
-        mainV = (out[key(job.mainStat)] or 0) + (adds.MainStat or 0)
+        mainV = (out[key(job.mainStat)] or 0) + (adds.MainStat or 0) + (sAdds.MainStat or 0)
         subV = out[key(job.subStat)] or 0
         out.MainStatFinal = mainV
         out.SubStatFinal = subV
@@ -207,7 +217,7 @@ local function computeStats(c)
     for s in pairs(PLUS_RATIO) do
         local plus = adds[s] or 0
         if s == "Attack" then plus = plus + trunc(mainV) + trunc(subV / 4) end
-        out[s] = math.max(0, trunc(plus * (1000 + (ratios[s] or 0)) / 1000))
+        out[s] = layered(s, plus)
     end
     -- MainDamagePower (stat-proportional damage), raw 0.1% units
     out.MainDamagePower = (out.MainDamagePower or 0) + trunc(mainV / 10) + trunc(subV / 40)

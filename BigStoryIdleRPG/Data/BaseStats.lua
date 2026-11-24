@@ -1,9 +1,8 @@
 -- Base character stats.
--- PROVISIONAL: the client keeps a hidden base value for HP/MP/main stat that is not
--- in the extracted data (research/spec/combat-stages.md "hiddenBase"). These values
--- are placeholders sized against chapter monster stats and will be replaced once
--- the real table is found. Everything else (equipment, weapons, companions...)
--- comes from the growth systems.
+-- From the official combat-power formula's baselines (in-game guide 3.1):
+--   크리티컬 데미지 300 (30%), 최소 데미지 배율 650 (65%), 최대 데미지 배율 1000 (100%), 최대 MP 500.
+-- PROVISIONAL: base HP, per-level HP/MP and base main/sub stats are not published
+-- (research/maple_idle_database/missing_data.md); they are placeholders.
 local ADDON, ns = ...
 ns.Data = ns.Data or {}
 local D = ns.Data
@@ -13,14 +12,14 @@ local MAIN_KEY = { STR = "Str", DEX = "Dex", INT = "Int", LUK = "Luk" }
 D.BaseStats = {
     PROVISIONAL = true,
     hpBase = 300, hpPerLevel = 60,
-    mpBase = 200, mpPerLevel = 12,
+    mpBase = 500, mpPerLevel = 12,
     mpRegen = 8,                 -- per second
     mainBase = 20, mainPerLevel = 5,
     subBase = 4, subPerLevel = 2,
     critChance = 50,             -- 5%
-    critPower = 500,             -- +50% on crit
-    minDamage = 800,             -- 80%
-    maxDamage = 1000,            -- 100%
+    critPower = 300,             -- +30% on crit (CP formula baseline)
+    minDamage = 650,             -- 65% (CP formula baseline)
+    maxDamage = 1000,            -- 100% (CP formula baseline)
     hitChance = 0,
     runSpeed = 3000,             -- mm/s
 }

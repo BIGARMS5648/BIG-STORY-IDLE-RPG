@@ -60,9 +60,17 @@ function S.Spawn(b, hero, profile, info, ownerC)
     if not (heroC and heroC.alive) then return end
     local set, job = supporterSkillSet(info.jobKey, info.jobStep or 0, profile.level)
     if not set then return end
-    -- attack = hero final attack x inheritance (permille)
-    local atk = U.trunc(heroC:Stat("Attack") * (info.attackInheritM or 0) / 1000)
+    -- attack = hero final attack x inheritance (permille, capped at 90%: official guide 2.5)
+    local inherit = math.min(900, info.attackInheritM or 0)
+    local atk = U.trunc(heroC:Stat("Attack") * inherit / 1000)
     local stats = copyStats(profile.stats)
+    -- not applied to companions: cooldown reduction, skill levels, basic-attack targets, buff duration
+    for _, k in ipairs({ "CoolTimeReduceRatio", "CoolTimeReduce", "AllSkillLevel", "JobStep1SkillLevel",
+        "JobStep2SkillLevel", "JobStep3SkillLevel", "JobStep4SkillLevel", "BaseAttackMaxHitCount",
+        "BuffDurationRatio" }) do
+        stats.adds[k] = nil
+        stats.chains[k] = nil
+    end
     stats.adds.Attack = atk
     stats.ratios.Attack = 0
     stats.adds.Str, stats.adds.Dex, stats.adds.Int, stats.adds.Luk, stats.adds.MainStat = 0, 0, 0, 0, 0

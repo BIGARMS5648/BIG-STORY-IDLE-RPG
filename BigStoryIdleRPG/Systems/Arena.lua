@@ -292,7 +292,7 @@ A.PvpStats = pvpStats
 
 function A.CanQuick(hero, name)
     local p = db().peers[name]
-    local my = ns.Game.profile and Hero.CombatPower(ns.Game.profile) or 0
+    local my = ns.Game.profile and Hero.PvpCombatPower(ns.Game.profile) or 0
     return p and (p.cp or 0) > 0 and my >= (p.cp or 0) * A.QUICK_BATTLE_CP
 end
 
@@ -324,7 +324,7 @@ end
 
 function A.WinScore(hero, opponent)
     local p = db().peers[opponent]
-    local my = ns.Game.profile and Hero.CombatPower(ns.Game.profile) or 0
+    local my = ns.Game.profile and Hero.PvpCombatPower(ns.Game.profile) or 0
     local opp = p and p.cp or my
     if my <= 0 or opp <= 0 then return A.WIN_SCORE end
     return math.max(1, math.floor(A.WIN_SCORE * U.clamp(opp / my, 0.25, 4) + 0.5))
@@ -370,7 +370,7 @@ function A.Log(hero) return hero.arena.log end
 local function myInfo()
     local hero = Hero.Active()
     if not hero then return nil end
-    local cp = ns.Game.profile and Hero.CombatPower(ns.Game.profile) or 0
+    local cp = ns.Game.profile and Hero.PvpCombatPower(ns.Game.profile) or 0
     local race, sex, class
     if UnitRace then race = select(2, UnitRace("player")) end
     if UnitSex then sex = UnitSex("player") end

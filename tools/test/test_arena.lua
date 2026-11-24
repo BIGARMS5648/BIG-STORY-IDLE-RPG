@@ -24,6 +24,8 @@ strong(rival, 120)
 ns.Hero.SetActive(rival)
 local sentBefore = #Stub.sent
 ns.Comm.handlers.AREQ("Me", { v = A.VERSION })   -- rival answers our request
+local tick = 100
+while #ns.Comm.queue > 0 do tick = tick + 2; GetTime = function() return tick end; ns.Comm.Pump() end
 local rivalMsgs = {}
 for i = sentBefore + 1, #Stub.sent do rivalMsgs[#rivalMsgs + 1] = Stub.sent[i] end
 

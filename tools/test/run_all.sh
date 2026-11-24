@@ -6,6 +6,7 @@ echo "syntax ok"
 lua5.1 tools/test/test_expr.lua | tail -1
 lua5.1 tools/test/test_skills_lv140.lua | tail -1
 lua5.1 tools/test/test_battle.lua | tail -1
+lua5.1 tools/test/test_rules.lua | tail -1
 lua5.1 tools/test/test_items.lua | tail -1
 lua5.1 tools/test/test_upgrades.lua | tail -1
 lua5.1 tools/test/test_comm.lua | tail -1

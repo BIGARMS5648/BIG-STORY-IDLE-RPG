@@ -526,7 +526,7 @@ function Battle:PvpDivisor(c)
     local critW = 1 + math.max(0, s("CriticalPower")) / 1000 * U.clamp(s("CriticalChance") / 1000, 0, 1)
     local offense = math.max(0, s("Attack")) * f("PiercePower") * f("AttackPower") * f("AttackPower2")
         * (1 + (s("BaseAttackPower") + s("SkillPower")) / 2000) * f("MainDamagePower") * critW
-        * ((s("MinDamageRatio") + s("MaxDamageRatio")) / 2000) * f("FinalDamage")
+        * ((math.min(s("MinDamageRatio"), s("MaxDamageRatio")) + s("MaxDamageRatio")) / 2000) * f("FinalDamage")
     local A = (offense + 1e9) ^ 0.23
     local B = (math.max(1, s("MaxHp")) * 1e8) ^ 0.12
     local C = ((math.max(0, s("Defence")) + 6000) * 1e12) ^ 0.14
@@ -557,7 +557,8 @@ function Battle:ComputePvpHit(att, tgt, line)
     base = base * pf2(att:Stat("FinalDamage")) * pf2(att:Stat("FinalDamage2")) * pf2(att:Stat("FinalDamage3"))
     local const = Battle.PVP_CONST[self.dungeonType] or Battle.PVP_CONST.Arena
     -- PROVISIONAL: "레벨에 의한 피해량 감소% x 2" - the attacker's level band factor, times 2 as written
-    local dmg = math.sqrt(base) * ((line.pct or 100) / 100) * self:PvpLevelFactor(att.level or 1) * 2 * const
+    local inner, coef = Battle.SplitLine(line)
+    local dmg = math.sqrt(base * inner) * (coef / 100) * self:PvpLevelFactor(att.level or 1) * 2 * const
         / self:PvpDivisor(tgt) / 1e6
     if line.extraMult then dmg = dmg * line.extraMult end
     if dmg < 1 then dmg = 1 end
@@ -568,6 +569,27 @@ end
 function Battle:SetPvpBaseline(c, def)
     local base = Creature.New(self, { name = def.name, side = def.side, level = def.level, job = def.job, stats = def.stats })
     c.pvpDivisor = self:PvpDivisor(base)
+end
+
+-- skill coefficient (outside the root) and the rest of the line multipliers (inside):
+-- mastery / passive damage increases belong to the base formula (official guide 1.3)
+local function splitLine(line)
+    local pct = line.pct or 100
+    local coef = line.coef
+    if not coef or coef <= 0 then return 1, pct end
+    return pct / coef, coef
+end
+Battle.SplitLine = splitLine
+
+-- 파티 퀘스트 and 자쿰·혼테일 boss raids: √ damage adjustment before the skill coefficient
+function Battle:SqrtContent()
+    local dt = self.dungeonType
+    if dt == "PartyDungeon" then return true end
+    if dt == "BossRaid" then
+        local ctl = self.opts.controller
+        return not (ctl and ctl.boss == "pinkbean")
+    end
+    return false
 end
 
 function Battle:IsPvp(att, tgt)
@@ -637,7 +659,12 @@ function Battle:ComputeHit(att, tgt, line, ctx)
     local tough = tgt:Stat("Toughness")
     if tough > 0 then dmg = dmg * (1 - tough / 1000) end
     if line.extraMult then dmg = dmg * line.extraMult end
-    dmg = dmg * (line.pct or 100) / 100
+    if self:SqrtContent() and att.side == 1 then
+        local inner, coef = Battle.SplitLine(line)
+        dmg = math.sqrt(math.max(0, dmg * inner)) * coef / 100
+    else
+        dmg = dmg * (line.pct or 100) / 100
+    end
     if dmg < 1 then dmg = 1 end
     return math.floor(dmg), crit, false
 end
@@ -805,10 +832,11 @@ function Battle:ExecOp(ctx, opNo)
     elseif t == "Stun" or t == "Frozen" then
         local targets = self:ResolveTargets(ctx, o)
         for _, tg in ipairs(targets) do
+            local dur = (op.DurationMs or 1000) * (1 - self:DebuffReduction(c, tg))
             if tg.side ~= c.side and tg.alive and not tg.isBoss then
-                tg:AddState(t, op.DurationMs or 1000, c, { cc = true, debuff = true })
+                tg:AddState(t, dur, c, { cc = true, debuff = true })
             elseif tg.side ~= c.side and tg.alive then
-                tg:AddState(t == "Frozen" and "Frozen" or "Stun", math.floor((op.DurationMs or 1000) / 4), c, { cc = true, debuff = true })
+                tg:AddState(t == "Frozen" and "Frozen" or "Stun", math.floor(dur / 4), c, { cc = true, debuff = true })
             end
         end
     elseif t == "UseSkill" then
@@ -969,7 +997,8 @@ function Battle:OpDamage(ctx, opNo)
         if tg.alive and tg.side ~= c.side then
             hitList[#hitList + 1] = tg
             local pct = self:LinePercent(ctx, inst, opNo, ratio, tg) * (ctx.dmgScale or 1)
-            local line = { pct = pct, isBase = isBase, localStats = localStats, attr = inst.data.AttrFlag }
+            local line = { pct = pct, coef = ratio / 10 * (ctx.dmgScale or 1), isBase = isBase, localStats = localStats,
+                attr = inst.data.AttrFlag }
             local total, anyCrit = 0, false
             for h = 1, hits do
                 local dmg, crit, miss = self:ComputeHit(c, tg, line, ctx)
@@ -1015,13 +1044,22 @@ function Battle:ApplyDot(ctx, tg, ratio, op)
             if tg.dots[key] ~= token or not tg.alive or not c.alive then return end
             local stacks = math.max(1, tg:StateCountBy(stateName, c))
             local pct = self:LinePercent(ctx, inst, 0, ratio, tg) * (ctx.dmgScale or 1)
-            local dmg, crit, miss = self:ComputeHit(c, tg, { pct = pct * stacks, isBase = false }, ctx)
+            local dmg, crit, miss = self:ComputeHit(c, tg, { pct = pct * stacks,
+                coef = ratio / 10 * (ctx.dmgScale or 1) * stacks, isBase = false }, ctx)
             if not miss then
                 self:DealDamage(c, tg, dmg, crit, { skillId = ctx.rootSkill or inst.id, dot = true,
                     flag = E.DamageFlag.Dot, depth = ctx.depth + 1 })
             end
         end)
     end
+end
+
+-- 디버프 내성 vs 디버프 내성 무시: a gap of 100 or more reduces debuff duration by 85% (cap).
+-- PROVISIONAL: values between 0 and 100 are not published; linear interpolation is used.
+function Battle:DebuffReduction(att, tgt)
+    local gap = tgt:Stat("DebuffResist") - att:Stat("DebuffResistIgnore")
+    if gap <= 0 then return 0 end
+    return math.min(0.85, 0.85 * gap / 100)
 end
 
 function Battle:Heal(c, amount)
@@ -1397,7 +1435,12 @@ function Battle:Cast(c, inst, target, isBasic)
         duration = duration * speedScale
     end
     if target then c.facing = (target.x >= c.x) and 1 or -1 end
-    c.castUntil = self.time + math.max(100, duration)
+    -- time that ran past the previous cast of the same skill carries over (official guide 4.1)
+    if c.castSkill == inst.id and c.castUntil and self.time - c.castUntil < Battle.TICK then
+        duration = math.max(0, duration - (self.time - c.castUntil))
+    end
+    c.castSkill = inst.id
+    c.castUntil = self.time + math.max(50, duration)
     c.castCanMove = inst.flags.CanMoveWhileUse
     if not isBasic then
         c.cooldowns[inst.id] = self:CooldownFor(c, inst)
@@ -1580,16 +1623,25 @@ end
 -- HpPotionPower / MpPotionPower and the cooldown stats scale these defaults).
 Battle.POTION = { hpThreshold = 500, mpThreshold = 300, hpRatio = 300, mpRatio = 300, cooldownMs = 10000 }
 
+-- content potion rules (official guide 2.4): Arena / Colosseum / World Arena HP 10%, MP 80%;
+-- 자쿰·혼테일 raids: HP potion cooldown 30 s, then the cooldown reduction applies
+Battle.POTION_RULES = {
+    Arena = { hp = 0.1, mp = 0.8 }, Colosseum = { hp = 0.1, mp = 0.8 }, WorldArena = { hp = 0.1, mp = 0.8 },
+}
+
 function Battle:Potions(c)
     local P = Battle.POTION
+    local rule = Battle.POTION_RULES[self.dungeonType] or {}
+    local hpCd = P.cooldownMs
+    if self.dungeonType == "BossRaid" and self:SqrtContent() then hpCd = 30000 end
     c.hpPotionReady = c.hpPotionReady or 0
     c.mpPotionReady = c.mpPotionReady or 0
     if c:HpRatioM() < P.hpThreshold and self.time >= c.hpPotionReady then
-        self:Heal(c, c:Stat("MaxHp") * P.hpRatio / 1000 * pf(c:Stat("HpPotionPower")))
-        c.hpPotionReady = self.time + P.cooldownMs * (1 - c:Stat("HpPotionCoolTimeReduceRatio") / 1000)
+        self:Heal(c, c:Stat("MaxHp") * P.hpRatio / 1000 * pf(c:Stat("HpPotionPower")) * (rule.hp or 1))
+        c.hpPotionReady = self.time + hpCd * (1 - c:Stat("HpPotionCoolTimeReduceRatio") / 1000)
     end
     if c:MpRatioM() < P.mpThreshold and self.time >= c.mpPotionReady then
-        c.mp = math.min(c:Stat("MaxMp"), c.mp + c:Stat("MaxMp") * P.mpRatio / 1000 * pf(c:Stat("MpPotionPower")))
+        c.mp = math.min(c:Stat("MaxMp"), c.mp + c:Stat("MaxMp") * P.mpRatio / 1000 * pf(c:Stat("MpPotionPower")) * (rule.mp or 1))
         c.mpPotionReady = self.time + P.cooldownMs * (1 - c:Stat("MpPotionCoolTimeReduceRatio") / 1000)
     end
 end
