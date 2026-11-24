@@ -1,0 +1,129 @@
+{
+ "dataset": "growth_dungeon_rules",
+ "description": "Growth dungeon entry/key/sweep/medal rules",
+ "generated_at": "2026-11-24",
+ "record_count": 9,
+ "expected_record_count": null,
+ "coverage_note": "9 rules.",
+ "records": [
+  {
+   "rule": "free_keys_per_day",
+   "value": "3 per dungeon per day (reset 0시)",
+   "source_id": "WIKI_GROWTH",
+   "source_url": "https://idle.maplestorywiki.net/w/Growth_Dungeon",
+   "game_version": "global wiki rev 2025-11-08",
+   "region": "global",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "wiki_global",
+   "notes": ""
+  },
+  {
+   "rule": "hero_training_keys",
+   "value": {
+    "staminaCode": "TICKET_DUNGEON_HEROPOWER",
+    "contentName": "Hero_Training",
+    "default": 3,
+    "addResetCount": 3,
+    "maxCarry": 10,
+    "resetType": "Daily",
+    "sourceTable": "StaminaTable"
+   },
+   "source_id": "MSI_HERO_TOKEN",
+   "source_url": "https://maplestoryidle.info/assets/data/hero-token-calculator.json",
+   "game_version": "client 1.14.0 (versionCode 10003329; snapshot 2026-08-13_09-41-16)",
+   "region": "global",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "StaminaTable TICKET_DUNGEON_HEROPOWER: default 3, addResetCount 3, maxCarry 10, Daily."
+  },
+  {
+   "rule": "sweep",
+   "value": "일괄 소탕: unlock after clearing stage 50 in all growth dungeons; consumes the same keys; rewards identical to a clear",
+   "source_id": "NX_PN_0813",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3521991",
+   "game_version": "live KR at 2026-08-13",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": ""
+  },
+  {
+   "rule": "hard_stages",
+   "value": "every 10th stage is IsHard (특수 단계)",
+   "source_id": "MII_GROWTH",
+   "source_url": "https://mapleidleindex.com/growth/",
+   "game_version": "KR PC client 1.18.0",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": ""
+  },
+  {
+   "rule": "clear_conditions",
+   "value": {
+    "weapon": "kill 머쉬맘 in 22 s",
+    "exp": "20+ kills, 22 s base, +4 s per 시간연장몹",
+    "equipment": "75-120 kills in 30-40 s",
+    "hero_training": "30 s hunt (+2% ATK/kill, max 100 stacks) then boss within 20 s (50 s total)",
+    "enhancement": "kill 발록 in 25 s"
+   },
+   "source_id": "MII_GROWTH",
+   "source_url": "https://mapleidleindex.com/growth/",
+   "game_version": "KR PC client 1.18.0",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": ""
+  },
+  {
+   "rule": "unlock_guide_quest",
+   "value": {
+    "weapon": 34,
+    "exp": 45,
+    "equipment": 67,
+    "hero_training": null,
+    "enhancement": 131
+   },
+   "source_id": "WIKI_GQ",
+   "source_url": "https://idle.maplestorywiki.net/w/Guide_Quest",
+   "game_version": "global wiki rev 2026-08-11",
+   "region": "global",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "wiki_global",
+   "notes": "Hero Training ties to 용사의 힘 (GQ 79)."
+  },
+  {
+   "rule": "stage_medals",
+   "value": "Main Stat +30 each: clear stage 50 / 70 / 100 of all growth dungeons (global wiki), 125 / 150 (KR 9/22 '125층 용사', '150층 용사')",
+   "source_id": "NX_PN_0922",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3550026",
+   "game_version": "live KR at 2026-09-22",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": "50/70/100 from WIKI_MEDALS."
+  },
+  {
+   "rule": "event_keys",
+   "value": "성장 던전 15일 출석 이벤트 gives keys for all 5 dungeons (8/13 and again with 11/26 update)",
+   "source_id": "NX_PN_0813",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3521991",
+   "game_version": "live KR at 2026-08-13",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": "Event-only; not part of normal rewards."
+  },
+  {
+   "rule": "challenge_grade_buffs",
+   "value": "신규 용사 성장 챌린지 grades add +1 free daily recharge per dungeon (브론즈: 무기, 마스터1: 경험치, 그랜드마스터4: 장비, 그랜드마스터2: 강화, 챌린저5: 용사의 힘)",
+   "source_id": "NX_PN_1105",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3574353",
+   "game_version": "live KR at 2026-11-05",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": "Event-only (2026-11-05 ~ 12-16)."
+  }
+ ]
+}

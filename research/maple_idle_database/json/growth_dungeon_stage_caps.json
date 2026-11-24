@@ -1,0 +1,118 @@
+{
+ "dataset": "growth_dungeon_stage_caps",
+ "description": "Growth dungeon stage-cap history (KR)",
+ "generated_at": "2026-11-24",
+ "record_count": 9,
+ "expected_record_count": null,
+ "coverage_note": "9 changes; dungeon types unchanged (5).",
+ "records": [
+  {
+   "effective_date": "2025-11-06",
+   "max_stage_all_growth_dungeons": 70,
+   "dungeon_types": 5,
+   "source_id": "WIKI_WEAPON_DG",
+   "source_url": "https://idle.maplestorywiki.net/w/Weapon_Dungeon",
+   "game_version": "global wiki rev 2025-11-06",
+   "region": "global",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "wiki_global",
+   "notes": "launch cap (global wiki still shows 70/90)"
+  },
+  {
+   "effective_date": "2025-11-14",
+   "max_stage_all_growth_dungeons": 90,
+   "dungeon_types": 5,
+   "source_id": "NX_PN_1114",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3224718",
+   "game_version": "live KR at 2025-11-13",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": ""
+  },
+  {
+   "effective_date": "2025-12-05",
+   "max_stage_all_growth_dungeons": 100,
+   "dungeon_types": 5,
+   "source_id": "NX_PN_1205",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3296265",
+   "game_version": "live KR at 2025-12-04",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": ""
+  },
+  {
+   "effective_date": "2026-01-08",
+   "max_stage_all_growth_dungeons": 110,
+   "dungeon_types": 5,
+   "source_id": "NX_PN_0108",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3339428",
+   "game_version": "live KR at 2026-01-07",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": ""
+  },
+  {
+   "effective_date": "2026-04-09",
+   "max_stage_all_growth_dungeons": 120,
+   "dungeon_types": 5,
+   "source_id": "NX_PN_0409",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3419376",
+   "game_version": "live KR at 2026-04-09",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": ""
+  },
+  {
+   "effective_date": "2026-06-11",
+   "max_stage_all_growth_dungeons": 130,
+   "dungeon_types": 5,
+   "source_id": "NX_PN_0611",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3473998",
+   "game_version": "live KR at 2026-06-11",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": ""
+  },
+  {
+   "effective_date": "2026-07-02",
+   "max_stage_all_growth_dungeons": 140,
+   "dungeon_types": 5,
+   "source_id": "NX_PN_0702",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3490212",
+   "game_version": "live KR at 2026-07-02",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": ""
+  },
+  {
+   "effective_date": "2026-09-03",
+   "max_stage_all_growth_dungeons": 150,
+   "dungeon_types": 5,
+   "source_id": "NX_PN_0903",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3535860",
+   "game_version": "live KR at 2026-09-03",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": "141~150단계 추가"
+  },
+  {
+   "effective_date": "2026-11-26",
+   "max_stage_all_growth_dungeons": 160,
+   "dungeon_types": 5,
+   "source_id": "NX_PREVIEW_1126",
+   "source_url": "https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3583715",
+   "game_version": "live KR at 2026-11-19",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "official_kr_notice",
+   "notes": "preview, not live on 2026-11-24"
+  }
+ ]
+}

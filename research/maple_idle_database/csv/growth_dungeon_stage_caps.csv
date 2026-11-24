@@ -1,0 +1,10 @@
+﻿effective_date,max_stage_all_growth_dungeons,dungeon_types,source_id,source_url,game_version,region,retrieved_at,verification_status,notes
+2025-11-06,70,5,WIKI_WEAPON_DG,https://idle.maplestorywiki.net/w/Weapon_Dungeon,global wiki rev 2025-11-06,global,2026-11-24,wiki_global,launch cap (global wiki still shows 70/90)
+2025-11-14,90,5,NX_PN_1114,https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3224718,live KR at 2025-11-13,KR,2026-11-24,official_kr_notice,
+2025-12-05,100,5,NX_PN_1205,https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3296265,live KR at 2025-12-04,KR,2026-11-24,official_kr_notice,
+2026-01-08,110,5,NX_PN_0108,https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3339428,live KR at 2026-01-07,KR,2026-11-24,official_kr_notice,
+2026-04-09,120,5,NX_PN_0409,https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3419376,live KR at 2026-04-09,KR,2026-11-24,official_kr_notice,
+2026-06-11,130,5,NX_PN_0611,https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3473998,live KR at 2026-06-11,KR,2026-11-24,official_kr_notice,
+2026-07-02,140,5,NX_PN_0702,https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3490212,live KR at 2026-07-02,KR,2026-11-24,official_kr_notice,
+2026-09-03,150,5,NX_PN_0903,https://forum.nexon.com/maplestoryidle-kr/board_view?board=6698&thread=3535860,live KR at 2026-09-03,KR,2026-11-24,official_kr_notice,141~150단계 추가
+2026-11-26,160,5,NX_PREVIEW_1126,https://forum.nexon.com/maplestoryidle-kr/board_view?board=6633&thread=3583715,live KR at 2026-11-19,KR,2026-11-24,official_kr_notice,"preview, not live on 2026-11-24"

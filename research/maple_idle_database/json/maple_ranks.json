@@ -1,0 +1,735 @@
+{
+ "dataset": "maple_ranks",
+ "description": "Maple Rank (not found) and the verified rank-like progression 용사의 힘 stages 1-9 (KR 1.18.0)",
+ "generated_at": "2026-11-24",
+ "record_count": 10,
+ "expected_record_count": null,
+ "coverage_note": "Maple Rank: 0 verified records (placeholder with nulls). Hero Power stages: 9/9.",
+ "records": [
+  {
+   "record_type": "maple_rank",
+   "rank": null,
+   "name": "메이플 랭크 / 메이플 등급 (Maple Rank)",
+   "requirement": null,
+   "stat_effects": null,
+   "upgrade_cap": null,
+   "special_stat_rules": null,
+   "slot_count": null,
+   "entry_cost_tokens": null,
+   "stage_cost_tokens": null,
+   "stage_up_wait_seconds": null,
+   "stage_bonus": null,
+   "source_id": "REPO_PROGRESSION",
+   "source_url": "research/spec/research-progression.md",
+   "game_version": "n/a",
+   "region": "KR/global",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "not_found",
+   "notes": "No Maple Rank table/notice in: 20 KR patch notes (2025-11-13..2026-11-05), KR notices/FAQ/event boards, global wiki (337 pages), MSI 1.14 data exports, mapleidleindex 1.18 data. Only unverified leads: BlueStacks guide (Maple Rank raises Main Stat/DEF/Max HP), namu.wiki search snippet ('레벨당 5 능력치 포인트, 25포인트 사용 시 메이플 등급 상승, 특수 능력치 포인트'), wiki Bowmaster page ('level-up stat points'). Inven board search for '메이플 등급'/'능력치 포인트' returns no posts."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 1,
+   "name": "용사의 힘 1단계",
+   "requirement": "start",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 0,
+     "max": 100,
+     "max_level": 10
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 0,
+     "max": 2000,
+     "max_level": 10
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 0,
+     "max": 100,
+     "max_level": 10
+    }
+   ],
+   "upgrade_cap": 10,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 3,
+   "entry_cost_tokens": 0,
+   "stage_cost_tokens": 1698,
+   "stage_up_wait_seconds": 0,
+   "cumulative_wait_seconds": 0,
+   "fully_trained_cumulative_tokens": 1698,
+   "stage_bonus": [],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 2,
+   "name": "용사의 힘 2단계",
+   "requirement": "stage 1 fully trained + wait 300 s",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 100,
+     "max": 325,
+     "max_level": 15
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 2000,
+     "max": 6500,
+     "max_level": 15
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 100,
+     "max": 325,
+     "max_level": 15
+    },
+    {
+     "slot": 4,
+     "stat": "MainStat",
+     "label": "주스탯",
+     "start": 0,
+     "max": 150,
+     "max_level": 15
+    }
+   ],
+   "upgrade_cap": 15,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 4,
+   "entry_cost_tokens": 1698,
+   "stage_cost_tokens": 10212,
+   "stage_up_wait_seconds": 300,
+   "cumulative_wait_seconds": 300,
+   "fully_trained_cumulative_tokens": 11910,
+   "stage_bonus": [
+    {
+     "type": "MainStat",
+     "label": "주스탯",
+     "value": 100,
+     "display": "100"
+    },
+    {
+     "type": "MaxHpR",
+     "label": "최대 HP",
+     "value": 100,
+     "display": "10%"
+    }
+   ],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 3,
+   "name": "용사의 힘 3단계",
+   "requirement": "stage 2 fully trained + wait 7200 s",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 325,
+     "max": 725,
+     "max_level": 20
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 6500,
+     "max": 14500,
+     "max_level": 20
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 325,
+     "max": 725,
+     "max_level": 20
+    },
+    {
+     "slot": 4,
+     "stat": "MainStat",
+     "label": "주스탯",
+     "start": 150,
+     "max": 350,
+     "max_level": 20
+    },
+    {
+     "slot": 5,
+     "stat": "AttackPower",
+     "label": "데미지",
+     "start": 0,
+     "max": 60,
+     "max_level": 20
+    }
+   ],
+   "upgrade_cap": 20,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 5,
+   "entry_cost_tokens": 11910,
+   "stage_cost_tokens": 27310,
+   "stage_up_wait_seconds": 7200,
+   "cumulative_wait_seconds": 7500,
+   "fully_trained_cumulative_tokens": 39220,
+   "stage_bonus": [
+    {
+     "type": "MainStat",
+     "label": "주스탯",
+     "value": 200,
+     "display": "200"
+    },
+    {
+     "type": "MaxHpR",
+     "label": "최대 HP",
+     "value": 200,
+     "display": "20%"
+    }
+   ],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 4,
+   "name": "용사의 힘 4단계",
+   "requirement": "stage 3 fully trained + wait 43200 s",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 725,
+     "max": 1625,
+     "max_level": 30
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 14500,
+     "max": 32500,
+     "max_level": 30
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 725,
+     "max": 1625,
+     "max_level": 30
+    },
+    {
+     "slot": 4,
+     "stat": "MainStat",
+     "label": "주스탯",
+     "start": 350,
+     "max": 650,
+     "max_level": 30
+    },
+    {
+     "slot": 5,
+     "stat": "AttackPower",
+     "label": "데미지",
+     "start": 60,
+     "max": 150,
+     "max_level": 30
+    },
+    {
+     "slot": 6,
+     "stat": "HitChance",
+     "label": "명중",
+     "start": 0,
+     "max": 10,
+     "max_level": 10
+    }
+   ],
+   "upgrade_cap": 30,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 6,
+   "entry_cost_tokens": 39220,
+   "stage_cost_tokens": 68825,
+   "stage_up_wait_seconds": 43200,
+   "cumulative_wait_seconds": 50700,
+   "fully_trained_cumulative_tokens": 108045,
+   "stage_bonus": [
+    {
+     "type": "MainStat",
+     "label": "주스탯",
+     "value": 300,
+     "display": "300"
+    },
+    {
+     "type": "MaxHpR",
+     "label": "최대 HP",
+     "value": 300,
+     "display": "30%"
+    }
+   ],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 5,
+   "name": "용사의 힘 5단계",
+   "requirement": "stage 4 fully trained + wait 86400 s",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 1625,
+     "max": 3225,
+     "max_level": 40
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 32500,
+     "max": 64500,
+     "max_level": 40
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 1625,
+     "max": 3225,
+     "max_level": 40
+    },
+    {
+     "slot": 4,
+     "stat": "MainStat",
+     "label": "주스탯",
+     "start": 650,
+     "max": 1050,
+     "max_level": 40
+    },
+    {
+     "slot": 5,
+     "stat": "AttackPower",
+     "label": "데미지",
+     "start": 150,
+     "max": 270,
+     "max_level": 40
+    },
+    {
+     "slot": 6,
+     "stat": "HitChance",
+     "label": "명중",
+     "start": 10,
+     "max": 25,
+     "max_level": 15
+    }
+   ],
+   "upgrade_cap": 40,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 6,
+   "entry_cost_tokens": 108045,
+   "stage_cost_tokens": 130232,
+   "stage_up_wait_seconds": 86400,
+   "cumulative_wait_seconds": 137100,
+   "fully_trained_cumulative_tokens": 238277,
+   "stage_bonus": [
+    {
+     "type": "MainStat",
+     "label": "주스탯",
+     "value": 500,
+     "display": "500"
+    },
+    {
+     "type": "MaxHpR",
+     "label": "최대 HP",
+     "value": 400,
+     "display": "40%"
+    }
+   ],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 6,
+   "name": "용사의 힘 6단계",
+   "requirement": "stage 5 fully trained + wait 259200 s",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 3225,
+     "max": 6225,
+     "max_level": 60
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 64500,
+     "max": 124500,
+     "max_level": 60
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 3225,
+     "max": 6225,
+     "max_level": 60
+    },
+    {
+     "slot": 4,
+     "stat": "MainStat",
+     "label": "주스탯",
+     "start": 1050,
+     "max": 1650,
+     "max_level": 60
+    },
+    {
+     "slot": 5,
+     "stat": "AttackPower",
+     "label": "데미지",
+     "start": 270,
+     "max": 450,
+     "max_level": 60
+    },
+    {
+     "slot": 6,
+     "stat": "HitChance",
+     "label": "명중",
+     "start": 25,
+     "max": 45,
+     "max_level": 20
+    }
+   ],
+   "upgrade_cap": 60,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 6,
+   "entry_cost_tokens": 238277,
+   "stage_cost_tokens": 285705,
+   "stage_up_wait_seconds": 259200,
+   "cumulative_wait_seconds": 396300,
+   "fully_trained_cumulative_tokens": 523982,
+   "stage_bonus": [
+    {
+     "type": "MainStat",
+     "label": "주스탯",
+     "value": 700,
+     "display": "700"
+    },
+    {
+     "type": "MaxHpR",
+     "label": "최대 HP",
+     "value": 500,
+     "display": "50%"
+    }
+   ],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 7,
+   "name": "용사의 힘 7단계",
+   "requirement": "stage 6 fully trained + wait 388800 s",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 6225,
+     "max": 11025,
+     "max_level": 80
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 124500,
+     "max": 220500,
+     "max_level": 80
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 6225,
+     "max": 11025,
+     "max_level": 80
+    },
+    {
+     "slot": 4,
+     "stat": "MainStat",
+     "label": "주스탯",
+     "start": 1650,
+     "max": 2450,
+     "max_level": 80
+    },
+    {
+     "slot": 5,
+     "stat": "AttackPower",
+     "label": "데미지",
+     "start": 450,
+     "max": 690,
+     "max_level": 80
+    },
+    {
+     "slot": 6,
+     "stat": "HitChance",
+     "label": "명중",
+     "start": 45,
+     "max": 70,
+     "max_level": 25
+    }
+   ],
+   "upgrade_cap": 80,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 6,
+   "entry_cost_tokens": 523982,
+   "stage_cost_tokens": 538216,
+   "stage_up_wait_seconds": 388800,
+   "cumulative_wait_seconds": 785100,
+   "fully_trained_cumulative_tokens": 1062198,
+   "stage_bonus": [
+    {
+     "type": "MainStat",
+     "label": "주스탯",
+     "value": 1000,
+     "display": "1000"
+    },
+    {
+     "type": "MaxHpR",
+     "label": "최대 HP",
+     "value": 600,
+     "display": "60%"
+    }
+   ],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 8,
+   "name": "용사의 힘 8단계",
+   "requirement": "stage 7 fully trained + wait 583200 s",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 11025,
+     "max": 18025,
+     "max_level": 100
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 220500,
+     "max": 360500,
+     "max_level": 100
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 11025,
+     "max": 18025,
+     "max_level": 100
+    },
+    {
+     "slot": 4,
+     "stat": "MainStat",
+     "label": "주스탯",
+     "start": 2450,
+     "max": 3450,
+     "max_level": 100
+    },
+    {
+     "slot": 5,
+     "stat": "AttackPower",
+     "label": "데미지",
+     "start": 690,
+     "max": 990,
+     "max_level": 100
+    },
+    {
+     "slot": 6,
+     "stat": "HitChance",
+     "label": "명중",
+     "start": 70,
+     "max": 100,
+     "max_level": 30
+    }
+   ],
+   "upgrade_cap": 100,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 6,
+   "entry_cost_tokens": 1062198,
+   "stage_cost_tokens": 924404,
+   "stage_up_wait_seconds": 583200,
+   "cumulative_wait_seconds": 1368300,
+   "fully_trained_cumulative_tokens": 1986602,
+   "stage_bonus": [
+    {
+     "type": "MainStat",
+     "label": "주스탯",
+     "value": 1500,
+     "display": "1500"
+    },
+    {
+     "type": "MaxHpR",
+     "label": "최대 HP",
+     "value": 700,
+     "display": "70%"
+    }
+   ],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  },
+  {
+   "record_type": "hero_power_stage",
+   "rank": 9,
+   "name": "용사의 힘 9단계",
+   "requirement": "stage 8 fully trained + wait 641520 s",
+   "stat_effects": [
+    {
+     "slot": 1,
+     "stat": "Attack",
+     "label": "공격력",
+     "start": 18025,
+     "max": 27625,
+     "max_level": 120
+    },
+    {
+     "slot": 2,
+     "stat": "MaxHp",
+     "label": "최대 HP",
+     "start": 360500,
+     "max": 552500,
+     "max_level": 120
+    },
+    {
+     "slot": 3,
+     "stat": "Defence",
+     "label": "방어력",
+     "start": 18025,
+     "max": 27625,
+     "max_level": 120
+    },
+    {
+     "slot": 4,
+     "stat": "MainStat",
+     "label": "주스탯",
+     "start": 3450,
+     "max": 4650,
+     "max_level": 120
+    },
+    {
+     "slot": 5,
+     "stat": "AttackPower",
+     "label": "데미지",
+     "start": 990,
+     "max": 1350,
+     "max_level": 120
+    },
+    {
+     "slot": 6,
+     "stat": "HitChance",
+     "label": "명중",
+     "start": 100,
+     "max": 135,
+     "max_level": 35
+    }
+   ],
+   "upgrade_cap": 120,
+   "special_stat_rules": "stage bonus granted on reaching the stage (main stat flat + Max HP %)",
+   "slot_count": 6,
+   "entry_cost_tokens": 1986602,
+   "stage_cost_tokens": 1490806,
+   "stage_up_wait_seconds": 641520,
+   "cumulative_wait_seconds": 2009820,
+   "fully_trained_cumulative_tokens": 3477408,
+   "stage_bonus": [
+    {
+     "type": "MainStat",
+     "label": "주스탯",
+     "value": 2000,
+     "display": "2000"
+    },
+    {
+     "type": "MaxHpR",
+     "label": "최대 HP",
+     "value": 800,
+     "display": "80%"
+    }
+   ],
+   "source_id": "MII_HERO_ABILITY",
+   "source_url": "https://mapleidleindex.com/data/hero-ability-information-117.json",
+   "game_version": "KR PC client 1.18.0 (provenance 1.17.0)",
+   "region": "KR",
+   "retrieved_at": "2026-11-24",
+   "verification_status": "verified_client_table",
+   "notes": "Closest verified analogue of a rank system: each 용사의 힘 stage raises slot caps, adds slots and a stage bonus. Unlock: Guide Quest 79 (wiki/IV398). Global 1.14 (MSI) lists stages 1-8 with identical slot counts/caps."
+  }
+ ]
+}
